@@ -1,0 +1,8 @@
+pydantic
+pythonping
+requests
+textual
+pywin32
+pyinstaller
+fastapi
+uvicorn
