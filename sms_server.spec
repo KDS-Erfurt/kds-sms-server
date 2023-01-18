@@ -44,7 +44,7 @@ service_a = Analysis(
     ['sms_server_service.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('build_number.json', '.')],
     hiddenimports=['win32timezone'],
     hookspath=[],
     hooksconfig={},

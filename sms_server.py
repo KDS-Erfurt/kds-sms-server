@@ -18,6 +18,7 @@ if __name__ == "__main__":
     print("_________________________________________________________________________________\n")
     print(f"by {STATIC.author}")
     print(f"Version: {STATIC.version}")
+    print(f"Build: {STATIC.build_number}")
     print("_________________________________________________________________________________")
 
     main()

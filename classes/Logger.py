@@ -1,7 +1,10 @@
 import logging
 import logging.handlers as handlers
+from copy import deepcopy
 from enum import Enum
 from typing import Callable
+
+import uvicorn
 
 from classes.Console import CONSOLE
 from classes.Settings import SETTINGS
@@ -75,15 +78,15 @@ LOG.add_logging_function(textual_log)
 logger = logging.getLogger("")
 logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+if not SETTINGS.logging_file.parent.exists():
+    SETTINGS.logging_file.parent.mkdir(parents=True)
 log_handler = handlers.TimedRotatingFileHandler(STATIC.cwd / SETTINGS.logging_file,
                                                 when=SETTINGS.logging_file_rotate_when,
                                                 interval=SETTINGS.logging_file_rotate_interval,
                                                 backupCount=SETTINGS.logging_file_rotate_backup_count)
 log_handler.setLevel(logging.DEBUG)
 log_handler.setFormatter(formatter)
-
 logger.addHandler(log_handler)
-
 
 def file_log(message: str, level: Logger.Lvl):
     if level == Logger.Lvl.DEBUG:

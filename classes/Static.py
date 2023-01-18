@@ -3,10 +3,14 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
+from functions.increase_build_number import get_build_number
+
 
 class Static(BaseModel):
     title: str = "KDS SMS-Server"
+    state: str = "beta"
     version: str = "2.0.0"
+    build_number: int = get_build_number()
     author: str = "Kirchhoff Datensysteme Services GmbH & Co. KG"
     author_email: str = "info@kds-kg.de"
     url: str = "kds-kg.de"

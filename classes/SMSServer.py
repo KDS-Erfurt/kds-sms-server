@@ -9,7 +9,7 @@ from classes.TeltonikaModem import TeltonikaModem
 
 class SMSServer(threading.Thread):
     def __init__(self):
-        LOG.debug(f"Initializing SMSServer with host {SETTINGS.server_host} and port {SETTINGS.server_port} ...")
+        LOG.debug(f"Initializing SMSServer. host='{SETTINGS.server_host}', port={SETTINGS.server_port}")
 
         threading.Thread.__init__(self)
         self.server: TCPServer | None = None
