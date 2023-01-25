@@ -37,7 +37,7 @@ class SMSServer(threading.Thread):
         if self.server is None:
             LOG.error("SMSServer is not running.")
             return
-        LOG.debug("Stopping SMSServer ...")
+        LOG.info("Stopping SMSServer ...")
         self.server.shutdown()
         self.server.server_close()
         LOG.debug("SMSServer stopped.")

@@ -1,15 +1,17 @@
-import logging
-
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
 
 from classes.Logger import LOG
+from classes.Settings import SETTINGS
 
 
 class LoggingMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        LOG.debug(f"MetricServer request received. client='{request.client.host}:{request.client.port}'")
+        if not SETTINGS.metric_logging:
+            return await call_next(request)
+
+        LOG.info(f"MetricServer request received. client='{request.client.host}:{request.client.port}'")
         LOG.debug(f"method='{request.method}'")
         LOG.debug(f"url='{request.url}'")
         LOG.debug(f"headers='")
@@ -26,7 +28,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         LOG.debug(f"'")
 
         response: Response = await call_next(request)
-        LOG.debug(f"MetricServer response received. client='{request.client.host}:{request.client.port}'")
+        LOG.info(f"MetricServer send response. client='{request.client.host}:{request.client.port}'")
         LOG.debug(f"status_code={response.status_code}")
         LOG.debug(f"headers='")
         for header_key, header_value in response.headers.items():

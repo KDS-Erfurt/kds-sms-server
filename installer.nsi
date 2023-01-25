@@ -128,6 +128,7 @@ Section "Uninstall"
   Push "$SMPROGRAMS\KDS"
   Call un.isEmptyDir
 
+  ExecWait "$INSTDIR\sms_server_service.exe stop"
   ExecWait "$INSTDIR\sms_server_service.exe remove"
 
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${INSTALLATION_NAME}"

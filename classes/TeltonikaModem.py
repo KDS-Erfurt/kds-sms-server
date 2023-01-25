@@ -22,8 +22,10 @@ class TeltonikaModem(SMSBaseGateway):
         LOG.debug(f"packets_received={result.stats_packets_returned}")
 
         if result.success():
+            self.state = True
             return True
         else:
+            self.state = False
             return False
 
     def send_sms(self, number: str, message: str) -> tuple[bool, str]:

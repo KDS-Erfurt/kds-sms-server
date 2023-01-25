@@ -56,7 +56,7 @@ class SMSServerHandler(socketserver.BaseRequestHandler):
         if SETTINGS.sms_logging:
             LOG.info(f"Received SMS client='{client_ip}:{client_port}' number={number}, message='{message}'")
         else:
-            LOG.info(f"Received SMS client='{client_ip}:{client_port}' number={number}, message='{message}'")
+            LOG.info(f"Received SMS client='{client_ip}:{client_port}' number={number}")
 
         # order gateways, the latest used first
         gateways = []

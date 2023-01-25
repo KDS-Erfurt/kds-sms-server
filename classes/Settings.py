@@ -28,7 +28,7 @@ class Settings(BaseModel):
     logging_file_rotate_when: str = "midnight"  # D: Day, H: Hour, M: Minute, S: Second, W0-W6: Weekday (0=Monday), midnight
     logging_file_rotate_interval: int = 1
     logging_file_rotate_backup_count: int = 30
-    logging_check: bool = False
+    logging_check: bool = True
 
     # server settings
     server_host: str = "0.0.0.0"
@@ -37,6 +37,8 @@ class Settings(BaseModel):
     # metric server settings
     metric_server_host: str = "0.0.0.0"
     metric_server_port: int = 8000
+    metric_logging: bool = True
+    metric_docs: bool = True
 
     # sms settings
     sms_data_max_size: int = 2048
@@ -45,7 +47,7 @@ class Settings(BaseModel):
     sms_number_max_size: int = 20
     sms_message_max_size: int = 160
     sms_success_message: str = "SMS mit Message-Reference 999 ok"
-    sms_logging: bool = True
+    sms_logging: bool = False
 
     # modem settings
     modem_configs: list[ModemConfig] = [
