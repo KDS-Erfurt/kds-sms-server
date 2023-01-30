@@ -13,10 +13,10 @@ from classes.Static import STATIC
 
 class Logger:
     class Lvl(Enum):
-        DEBUG = 0
-        INFO = 1
-        WARNING = 2
-        ERROR = 3
+        DEBUG = logging.DEBUG
+        INFO = logging.INFO
+        WARNING = logging.WARNING
+        ERROR = logging.ERROR
 
     def __init__(self, logging_enabled: bool, logging_level: str):
         self.logging_enabled: bool = logging_enabled
@@ -76,7 +76,7 @@ def textual_log(message: str, level: Logger.Lvl):
 LOG.add_logging_function(textual_log)
 
 logger = logging.getLogger("")
-logger.setLevel(logging.DEBUG)
+logger.setLevel(LOG.logging_level)
 formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
 if not SETTINGS.logging_file.parent.exists():
     SETTINGS.logging_file.parent.mkdir(parents=True)
@@ -87,6 +87,7 @@ log_handler = handlers.TimedRotatingFileHandler(STATIC.cwd / SETTINGS.logging_fi
 log_handler.setLevel(logging.DEBUG)
 log_handler.setFormatter(formatter)
 logger.addHandler(log_handler)
+
 
 def file_log(message: str, level: Logger.Lvl):
     if level == Logger.Lvl.DEBUG:

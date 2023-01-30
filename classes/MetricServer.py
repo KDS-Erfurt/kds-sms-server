@@ -138,7 +138,7 @@ class MetricServer(FastAPI):
         self.last_count_gateway = {}
         self.last_error_count_gateway = {}
 
-        @self.post("/metric/{sms_gateway}", response_model=ModemMetricModel)
+        @self.post("/metric/{sms_gateway_name}", response_model=ModemMetricModel)
         def modem_metric(sms_gateway_name: str) -> ModemMetricModel:
             sms_count = 0
             sms_error_count = 0

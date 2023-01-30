@@ -43,8 +43,8 @@ Function .onInit
   ReadINIStr $author_email "$PLUGINSDIR\static.ini" "static" "author_email"
   ReadINIStr $url "$PLUGINSDIR\static.ini" "static" "url"
   ReadINIStr $description "$PLUGINSDIR\static.ini" "static" "description"
-  
-  SendMessage $HWNDPARENT ${WM_SETTEXT} 0 "STR:Your text"
+
+  nsExec::Exec 'net stop sms_server_service'
 
   ${If} ${FileExists} "$INSTDIR\uninstall.exe"
 
