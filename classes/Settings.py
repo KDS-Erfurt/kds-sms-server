@@ -39,6 +39,7 @@ class Settings(BaseModel):
     metric_server_port: int = 8000
     metric_logging: bool = True
     metric_docs: bool = True
+    metric_test_sms_receiver: str = ""  # "015126695526"
 
     # sms settings
     sms_data_max_size: int = 2048

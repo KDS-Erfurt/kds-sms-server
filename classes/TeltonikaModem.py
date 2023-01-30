@@ -11,7 +11,7 @@ class TeltonikaModem(SMSBaseGateway):
         super().__init__()
         self.modem_config = modem_config
 
-    def check(self) -> bool:
+    def _check(self) -> bool:
         result = ping(self.modem_config.ip, self.modem_config.check_timeout, count=self.modem_config.check_retries)
 
         LOG.debug(f"packets_loss={result.packet_loss}")
@@ -28,7 +28,7 @@ class TeltonikaModem(SMSBaseGateway):
             self.state = False
             return False
 
-    def send_sms(self, number: str, message: str) -> tuple[bool, str]:
+    def _send_sms(self, number: str, message: str) -> tuple[bool, str]:
         response = requests.get(f"http://{self.modem_config.ip}:{self.modem_config.port}/cgi-bin/sms_send",
                                 params={"username": self.modem_config.username,
                                         "password": self.modem_config.password,

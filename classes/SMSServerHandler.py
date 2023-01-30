@@ -75,10 +75,8 @@ class SMSServerHandler(socketserver.BaseRequestHandler):
             else:
                 try:
                     LOG.debug(f"Checking gateway '{gateway.modem_config.name}' ...")
-                    if not gateway.check():
-                        LOG.error(f"Gateway '{gateway.modem_config.name}' is not available.")
-                        continue
-                    LOG.debug(f"Gateway '{gateway.modem_config.name}' is available.")
+                    if gateway.check():
+                        LOG.debug(f"Gateway '{gateway.modem_config.name}' is available.")
                 except Exception as e:
                     LOG.error(f"Gateway '{gateway.modem_config.name}' check failed. error='{e}'")
                     continue

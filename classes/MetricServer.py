@@ -5,7 +5,7 @@ from signal import Signals
 
 import psutil
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi_utils.tasks import repeat_every
 from starlette.middleware import Middleware
 
@@ -67,6 +67,21 @@ class MetricServer(FastAPI):
                     st = f"Gateway '{sms_gateway_name}' is not available."
                     error_text += st
 
+                if sms_gateway_status:
+                    if SETTINGS.metric_test_sms_receiver != "":
+                        try:
+                            success, modem_result = sms_gateway.send_sms(SETTINGS.metric_test_sms_receiver, "test")
+                            if not success:
+                                if error_text != "":
+                                    error_text += " "
+                                st = f"Gateway '{sms_gateway_name}' send failed. error='{modem_result}'"
+                                error_text += st
+                        except Exception as e:
+                            if error_text != "":
+                                error_text += " "
+                            st = f"Gateway '{sms_gateway_name}' send failed. error='{e}'"
+                            error_text += st
+
                 sg_model_dict = {
                     "status": sms_gateway_status,
                     "status_text": st
@@ -88,23 +103,74 @@ class MetricServer(FastAPI):
             status_model = StatusModel(**status_model_dict)
             return status_model
 
+        self.last_count = 0
+        self.last_error_count = 0
+
         @self.post("/metric", response_model=MetricModel)
         def metric() -> MetricModel:
+            sms_count = 0
+            sms_error_count = 0
+
+            for sms_gateway in self.sms_server.sms_gateways:
+                sms_count += sms_gateway.sms_send_count
+                sms_error_count += sms_gateway.sms_send_error_count
+
+            b_sms_count = sms_count
+            sms_count -= self.last_count
+            if sms_count < 0:
+                sms_count = 0
+            self.last_count = b_sms_count
+
+            b_sms_error_count = sms_error_count
+            sms_error_count -= self.last_error_count
+            if sms_error_count < 0:
+                sms_error_count = 0
+            self.last_error_count = b_sms_error_count
+
             metric_model_dict = {
-                "sms_count": 0,
-                "sms_success": 0,
+                "sms_count": sms_count,
+                "sms_error_count": sms_error_count,
                 "end_dt": datetime.now()
             }
             metric_model = MetricModel(**metric_model_dict)
             return metric_model
 
+        self.last_count_gateway = {}
+        self.last_error_count_gateway = {}
+
         @self.post("/metric/{sms_gateway}", response_model=ModemMetricModel)
-        def modem_metric(sms_gateway: str) -> ModemMetricModel:
+        def modem_metric(sms_gateway_name: str) -> ModemMetricModel:
+            sms_count = 0
+            sms_error_count = 0
+
+            found = False
+            for sms_gateway in self.sms_server.sms_gateways:
+                if sms_gateway.modem_config.name == sms_gateway_name:
+                    found = True
+                    sms_count += sms_gateway.sms_send_count
+                    sms_error_count += sms_gateway.sms_send_error_count
+                    break
+
+            if not found:
+                raise HTTPException(status_code=404, detail=f"SMS Gateway '{sms_gateway_name}' not found.")
+
+            b_sms_count = sms_count
+            sms_count -= self.last_count_gateway.get(sms_gateway_name, 0)
+            if sms_count < 0:
+                sms_count = 0
+            self.last_count_gateway[sms_gateway_name] = b_sms_count
+
+            b_sms_error_count = sms_error_count
+            sms_error_count -= self.last_error_count_gateway.get(sms_gateway_name, 0)
+            if sms_error_count < 0:
+                sms_error_count = 0
+            self.last_error_count_gateway[sms_gateway_name] = b_sms_error_count
+
             modem_metric_model_dict = {
-                "sms_count": 0,
-                "sms_success": 0,
+                "sms_count": sms_count,
+                "sms_error_count": sms_error_count,
                 "end_dt": datetime.now(),
-                "sms_gateway": sms_gateway
+                "sms_gateway": sms_gateway_name
             }
             modem_metric_model = ModemMetricModel(**modem_metric_model_dict)
             return modem_metric_model
