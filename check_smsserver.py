@@ -1,3 +1,5 @@
+#!/opt/kds_environments/testing/python/Python-3.7.2/bin/python3.7
+
 from enum import Enum
 
 import requests
@@ -16,11 +18,11 @@ class ExitCodes(Enum):
     UNKNOWN = 3
 
 
-def exit(code: ExitCodes, message: str, **perfdata):
-    if perfdata:
+def exit(code: ExitCodes, message: str, **perf_data):
+    if perf_data:
         message += " | "
-        for key, value in perfdata.items():
-            message += f"{key}={value} "
+        for key, value in perf_data.items():
+            message += f"'{key}'={value};0;0 "
     typer.echo(message)
     raise typer.Exit(code.value)
 
@@ -51,7 +53,7 @@ def request(host: str, port: int, timeout: int, retries: int, path: str = ""):
 
 
 @app.command()
-def status(host: str, port: int = 8000, timeout: int = 1, retries: int = 3):
+def status(host: str, port: int = 8000, timeout: int = 5, retries: int = 3):
     response = request(host, port, timeout, retries, "/status")
 
     if response is None:

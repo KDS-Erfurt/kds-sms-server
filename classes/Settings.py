@@ -46,7 +46,7 @@ class Settings(BaseModel):
     sms_in_encoding: str = "auto"
     sms_out_encoding: str = "utf-8"
     sms_number_max_size: int = 20
-    sms_message_max_size: int = 160
+    sms_message_max_size: int = 1600
     sms_success_message: str = "SMS mit Message-Reference 999 ok"
     sms_logging: bool = False
 
