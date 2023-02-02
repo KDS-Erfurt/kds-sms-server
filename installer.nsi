@@ -44,8 +44,6 @@ Function .onInit
   ReadINIStr $url "$PLUGINSDIR\static.ini" "static" "url"
   ReadINIStr $description "$PLUGINSDIR\static.ini" "static" "description"
 
-  nsExec::Exec 'net stop sms_server_service'
-
   ${If} ${FileExists} "$INSTDIR\uninstall.exe"
 
     MessageBox MB_YESNO "Der KDS SMS-Servers ist bereits installtiert. Möchten Sie ein Update durchführen?" IDYES true IDNO false
@@ -106,6 +104,8 @@ SectionEnd
 
 Section "SMS-Server Dienst"
   ExecWait "$INSTDIR\sms_server_service.exe install"
+  ExecWait "sc start sms_server_service"
+  ExecWait "sc config sms_server_service start=auto"
 SectionEnd
 
 Section "Start Menü Icons"
@@ -113,6 +113,15 @@ Section "Start Menü Icons"
   CreateDirectory "$SMPROGRAMS\KDS\${PROGRAM_FOLDER_NAME}"
   CreateShortCut "$SMPROGRAMS\KDS\${PROGRAM_FOLDER_NAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
   CreateShortCut "$SMPROGRAMS\KDS\${PROGRAM_FOLDER_NAME}\SMS-Server.lnk" "$INSTDIR\sms_server.exe" "" "$INSTDIR\sms_server.exe" 0
+SectionEnd
+
+Section "Desktop Icons"
+  CreateShortCut "C:\Users\Public\Desktop\SMS-Server.lnk" "$INSTDIR\sms_server.exe" "" "$INSTDIR\sms_server.exe" 0
+  CreateShortCut "C:\Users\Public\Desktop\SMS-Server Einstellungen.lnk" "$INSTDIR\settings.json" "" "$INSTDIR\settings.json" 0
+  CreateShortCut "C:\Users\Public\Desktop\SMS-Server Test.lnk" "$INSTDIR\PtcpSend.exe" "" "$INSTDIR\PtcpSend.exe" 0
+  CreateDirectory "C:\KDS"
+  CreateDirectory "C:\KDS\sms_server"
+  CreateShortCut "C:\Users\Public\Desktop\SMS-Server Logs.lnk" "C:\KDS\sms_server" "" "C:\KDS\sms_server" 0
 SectionEnd
 
 Section "Uninstall"
@@ -124,14 +133,24 @@ Section "Uninstall"
 
   Delete "$SMPROGRAMS\KDS\${PROGRAM_FOLDER_NAME}\*"
   RMDir "$SMPROGRAMS\KDS\${PROGRAM_FOLDER_NAME}"
+
+  Delete "C:\Users\Public\Desktop\SMS-Server.lnk"
+  Delete "C:\Users\Public\Desktop\SMS-Server Einstellungen.lnk"
+  Delete "C:\Users\Public\Desktop\SMS-Server Test.lnk"
+  Delete "C:\Users\Public\Desktop\SMS-Server Logs.lnk"
   
   Push "$SMPROGRAMS\KDS"
   Call un.isEmptyDir
 
+  ExecWait "sc stop sms_server_service"
   ExecWait "$INSTDIR\sms_server_service.exe stop"
   ExecWait "$INSTDIR\sms_server_service.exe remove"
 
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${INSTALLATION_NAME}"
-  
+
   RMDir /R /REBOOTOK "$INSTDIR"
+
+  MessageBox MB_YESNO|MB_ICONQUESTION "Sie müssen den Rechner neustarten, um die Deinstallation abzuschließen. Möchten Sie jetzt neustarten?" IDNO +2
+  Reboot
+
 SectionEnd

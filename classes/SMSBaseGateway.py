@@ -29,3 +29,7 @@ class SMSBaseGateway:
 
     def _send_sms(self, number: str, message: str) -> tuple[bool, str]:
         raise NotImplementedError
+
+    def reset_metrics(self):
+        self.sms_send_count = 0
+        self.sms_send_error_count = 0

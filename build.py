@@ -1,3 +1,4 @@
+import shutil
 import subprocess
 
 from classes.Static import STATIC
@@ -21,3 +22,4 @@ if __name__ == '__main__':
         config.write(f)
 
     subprocess.run(["pyinstaller", "sms_server.spec", "--noconfirm"])
+    shutil.copyfile("PtcpSend.exe", "dist/sms_server/PtcpSend.exe")

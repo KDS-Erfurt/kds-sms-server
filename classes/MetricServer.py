@@ -33,11 +33,12 @@ class MetricServer(FastAPI):
 
         self.sms_server = sms_server
         self.start_dt = datetime.now()
+        self.last_metric_reset = None
 
         @self.on_event("startup")
         @repeat_every(seconds=1)
         def check_sms_server():
-            LOG.debug("Checking SMSServer ...") if SETTINGS.logging_check else None
+            LOG.debug("Checking SMSServer ...") if SETTINGS.server_log_alive_check else None
             if not sms_server.is_alive():
                 LOG.error("SMSServer died!")
                 parent = psutil.Process(os.getpid())
@@ -47,7 +48,35 @@ class MetricServer(FastAPI):
                 parent.send_signal(Signals.CTRL_C_EVENT)
                 return
 
-            LOG.debug("SMSServer is alive.") if SETTINGS.logging_check else None
+            LOG.debug("SMSServer is alive.") if SETTINGS.server_log_alive_check else None
+
+        @self.on_event("startup")
+        @repeat_every(seconds=60)
+        def reset_metric():
+            now = datetime.now()
+            if SETTINGS.metric_reset_interval == "m":  # Minute
+                reset = now.minute
+            elif SETTINGS.metric_reset_interval == "H":  # Hour
+                reset = now.hour
+            elif SETTINGS.metric_reset_interval == "D":  # Day
+                reset = now.day
+            elif SETTINGS.metric_reset_interval == "W":  # Week
+                reset = now.isocalendar()[1]
+            elif SETTINGS.metric_reset_interval == "M":  # Month
+                reset = now.month
+            elif SETTINGS.metric_reset_interval == "Y":  # Year
+                reset = now.year
+            else:
+                raise HTTPException(status_code=500, detail="Invalid metric_reset_interval")
+
+            if self.last_metric_reset is None:
+                self.last_metric_reset = reset
+                return
+            if self.last_metric_reset != reset:
+                self.last_metric_reset = reset
+                LOG.debug("Resetting metrics ...")
+                for sms_gateway in self.sms_server.sms_gateways:
+                    sms_gateway.reset_metrics()
 
         @self.post("/status", response_model=StatusModel)
         def status() -> StatusModel:
@@ -103,9 +132,6 @@ class MetricServer(FastAPI):
             status_model = StatusModel(**status_model_dict)
             return status_model
 
-        self.last_count = 0
-        self.last_error_count = 0
-
         @self.post("/metric", response_model=MetricModel)
         def metric() -> MetricModel:
             sms_count = 0
@@ -115,18 +141,6 @@ class MetricServer(FastAPI):
                 sms_count += sms_gateway.sms_send_count
                 sms_error_count += sms_gateway.sms_send_error_count
 
-            b_sms_count = sms_count
-            sms_count -= self.last_count
-            if sms_count < 0:
-                sms_count = 0
-            self.last_count = b_sms_count
-
-            b_sms_error_count = sms_error_count
-            sms_error_count -= self.last_error_count
-            if sms_error_count < 0:
-                sms_error_count = 0
-            self.last_error_count = b_sms_error_count
-
             metric_model_dict = {
                 "sms_count": sms_count,
                 "sms_error_count": sms_error_count,
@@ -134,9 +148,6 @@ class MetricServer(FastAPI):
             }
             metric_model = MetricModel(**metric_model_dict)
             return metric_model
-
-        self.last_count_gateway = {}
-        self.last_error_count_gateway = {}
 
         @self.post("/metric/{sms_gateway_name}", response_model=ModemMetricModel)
         def modem_metric(sms_gateway_name: str) -> ModemMetricModel:
@@ -153,18 +164,6 @@ class MetricServer(FastAPI):
 
             if not found:
                 raise HTTPException(status_code=404, detail=f"SMS Gateway '{sms_gateway_name}' not found.")
-
-            b_sms_count = sms_count
-            sms_count -= self.last_count_gateway.get(sms_gateway_name, 0)
-            if sms_count < 0:
-                sms_count = 0
-            self.last_count_gateway[sms_gateway_name] = b_sms_count
-
-            b_sms_error_count = sms_error_count
-            sms_error_count -= self.last_error_count_gateway.get(sms_gateway_name, 0)
-            if sms_error_count < 0:
-                sms_error_count = 0
-            self.last_error_count_gateway[sms_gateway_name] = b_sms_error_count
 
             modem_metric_model_dict = {
                 "sms_count": sms_count,

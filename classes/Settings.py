@@ -28,18 +28,19 @@ class Settings(BaseModel):
     logging_file_rotate_when: str = "midnight"  # D: Day, H: Hour, M: Minute, S: Second, W0-W6: Weekday (0=Monday), midnight
     logging_file_rotate_interval: int = 1
     logging_file_rotate_backup_count: int = 30
-    logging_check: bool = True
 
     # server settings
     server_host: str = "0.0.0.0"
     server_port: int = 3456
+    server_log_alive_check: bool = True
 
     # metric server settings
     metric_server_host: str = "0.0.0.0"
     metric_server_port: int = 8000
     metric_logging: bool = True
-    metric_docs: bool = True
-    metric_test_sms_receiver: str = ""  # "015126695526"
+    metric_docs: bool = False
+    metric_test_sms_receiver: str = "015126695526"  # "015126695526"
+    metric_reset_interval: str = "D"  # m: Minute, H: Hour, D: Day, W: Week, M: Month, Y: Year
 
     # sms settings
     sms_data_max_size: int = 2048

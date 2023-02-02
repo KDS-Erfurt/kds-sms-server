@@ -9,7 +9,7 @@ from functions.increase_build_number import get_build_number
 class Static(BaseModel):
     title: str = "KDS SMS-Server"
     state: str = "stable"
-    version: str = "2.0.1"
+    version: str = "2.0.3"
     build_number: int = get_build_number()
     author: str = "Kirchhoff Datensysteme Services GmbH & Co. KG"
     author_email: str = "info@kds-kg.de"
