@@ -92,19 +92,20 @@ class BaseGateway(ABC):
             if not self.state:
                 raise RuntimeError(f"SMS gateway {self} is not available!")
             if self._config.dry_run:
-                result, msg = True, f"Dry run mode is enabled. SMS will not be sent via {self}."
+                result = True
+                logger.warning(f"Dry run mode is enabled. SMS will not be sent via {self}.")
             else:
                 result, msg = self._send_sms(number, message)
+                if result:
+                    logger.debug(f"SMS sent successfully via {self}. \nGateway result: {msg}")
+                else:
+                    logger.error(f"Error while sending SMS via {self}.\nGateway result: {msg}")
         except Exception as e:
-            result, msg = False, f"Failed to send SMS via {self}.\nException: {e}"
+            result = False, f"Failed to send SMS via {self}.\nException: {e}"
+            logger.error(f"Failed to send SMS via {self}.\nException: {e}")
 
         if not result:
             self.sms_send_error_count += 1
-
-        if result:
-            logger.debug(f"SMS sent successfully via {self}. \nGateway result: {msg}")
-        else:
-            logger.error(f"Error while sending SMS via {self}.\nGateway result: {msg}")
 
         return result
 
