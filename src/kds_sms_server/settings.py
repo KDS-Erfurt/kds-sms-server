@@ -29,7 +29,6 @@ class Settings(FileConfig, BaseSettings, LoggerSettings):
 
     # gateway settings
     gateway_configs: dict[str, AVAILABLE_CONFIGS] = {}
-    # modem_disable_check: bool = False ToDo: move to config
 
 
 settings = Settings(file_path=Path("settings.json"))

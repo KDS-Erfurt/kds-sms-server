@@ -1,4 +1,5 @@
 import logging
+import threading
 from abc import ABC, abstractmethod
 from typing import Any, TYPE_CHECKING
 
@@ -12,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 class BaseGateway(ABC):
     def __init__(self, server: "SMSServer", name: str, config: "BaseConfig"):
+        self.lock = threading.Lock()
         self._name = name
         self._server = server
         self._config = config
@@ -29,35 +31,54 @@ class BaseGateway(ABC):
 
     @property
     def name(self) -> str:
-        return self._name
+        with self.lock:
+            return self._name
 
     @property
     def state(self) -> bool:
-        return self._state
+        with self.lock:
+            return self._state
+
+    @state.setter
+    def state(self, value: bool):
+        with self.lock:
+            self._state = value
 
     @property
     def sms_send_count(self) -> int:
-        return self._sms_send_count
+        with self.lock:
+            return self._sms_send_count
+
+    @sms_send_count.setter
+    def sms_send_count(self, value: int):
+        with self.lock:
+            self._sms_send_count = value
 
     @property
     def sms_send_error_count(self) -> int:
-        return self._sms_send_error_count
+        with self.lock:
+            return self._sms_send_error_count
+
+    @sms_send_error_count.setter
+    def sms_send_error_count(self, value: int):
+        with self.lock:
+            self._sms_send_error_count = value
 
     def check(self) -> bool:
         if not self._config.check:
             logger.warning(f"Gateway check is disabled for {self}. This is not recommended!")
-            self._state = True
+            self.state = True
             return True
         try:
             logger.debug(f"Checking gateway {self} ...")
             if self._check():
                 logger.debug(f"Gateway {self} is available.")
-                self._state = True
+                self.state = True
                 return True
             logger.warning(f"Gateway {self} is not available.")
         except Exception as e:
             logger.error(f"Gateway {self} check failed.\nException: {e}")
-        self._state = False
+        self.state = False
         return False
 
     @abstractmethod
@@ -66,7 +87,7 @@ class BaseGateway(ABC):
 
     def send_sms(self, number: str, message: str) -> bool:
         logger.debug(f"Sending SMS via {self} ...")
-        self._sms_send_count += 1
+        self.sms_send_count += 1
         try:
             if not self.state:
                 raise RuntimeError(f"SMS gateway {self} is not available!")
@@ -78,7 +99,7 @@ class BaseGateway(ABC):
             result, msg = False, f"Failed to send SMS via {self}.\nException: {e}"
 
         if not result:
-            self._sms_send_error_count += 1
+            self.sms_send_error_count += 1
 
         if result:
             logger.debug(f"SMS sent successfully via {self}. \nGateway result: {msg}")
@@ -92,8 +113,8 @@ class BaseGateway(ABC):
         ...
 
     def reset_metrics(self):
-        self._sms_send_count = 0
-        self._sms_send_error_count = 0
+        self.sms_send_count = 0
+        self.sms_send_error_count = 0
 
 
 class BaseConfig(BaseModel):
