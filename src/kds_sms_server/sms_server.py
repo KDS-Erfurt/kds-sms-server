@@ -1,132 +1,31 @@
 import logging
-import socketserver
-import sys
 import threading
-from typing import Optional
+import time
 
-import chardet
-
+from kds_sms_server.console import console
 from kds_sms_server.settings import settings
 from kds_sms_server.gateways import BaseGateway
+from kds_sms_server.server.api_server import APIServer
+from kds_sms_server.server.tcp_server import TCPServer
 
 logger = logging.getLogger(__name__)
 
 
 class SMSServer:
-    class TCPServer(socketserver.TCPServer, threading.Thread):
-        class TCPServerHandler(socketserver.BaseRequestHandler):
-            server: Optional["SMSServer.TCPServer"]
-
-            def handle(self):
-                # handle incoming SMS
-                try:
-                    client_ip, client_port = self.client_address
-                    logger.debug(f"Received message. client='{client_ip}:{client_port}'")
-
-                    data = self.request.recv(settings.sms_data_max_size).strip()
-                    logger.debug(f"data={data}")
-
-                    # detect encoding
-                    encoding = settings.sms_in_encoding
-                    if encoding == "auto":
-                        encoding = chardet.detect(data)['encoding']
-
-                    logger.debug(f"encoding={encoding}")
-
-                    # decode message
-                    data_str = data.decode(encoding)
-                    logger.debug(f"data_str='{data_str}'")
-
-                    # split message
-                    if "\r\n" not in data_str:
-                        return self.handel_response(message=f"Received data is not valid.", error=True)
-
-                    number, message = data_str.split("\r\n")
-
-                    # check number
-                    if len(number) > settings.sms_number_max_size:
-                        return self.handel_response(message=f"Received number is too long. \n"
-                                                            f"Max size is '{settings.sms_number_max_size}'.\n"
-                                                            f"number_size={len(number)}",
-                                                    error=True)
-
-                    # replace zoro number
-                    if settings.sms_replace_zero_numbers is not None:
-                        if number.startswith("0"):
-                            number = settings.sms_replace_zero_numbers + number[1:]
-
-                    # check a message
-                    if len(message) > settings.sms_message_max_size:
-                        return self.handel_response(message=f"Received message is too long. \n"
-                                                            f"Max size is '{settings.sms_message_max_size}'.\n"
-                                                            f"message_size={len(message)}",
-                                                    error=True)
-                except Exception as e:
-                    return self.handel_response(message=str(e), error=True)
-
-                # sms received successfully
-                if settings.sms_logging:
-                    logger.info(f"Received SMS client='{client_ip}:{client_port}' number={number}, message='{message}'")
-                else:
-                    logger.info(f"Received SMS client='{client_ip}:{client_port}' number={number}")
-
-                # send sms to gateways
-                result = False
-                for gateway in self.server.sms_server.gateways:
-                    # check if gateway is available
-                    if not gateway.check():
-                        continue
-
-                    result = gateway.send_sms(number, message)
-
-                    if result:
-                        break
-
-                if not result:
-                    return self.handel_response(message=f"Error while sending SMS. Not gateways left.", error=True)
-
-                # send a success message
-                return self.handel_response(message=settings.sms_success_message, error=False)
-
-            def handel_response(self, message: str, error: bool = False):
-                logger.debug(f"Sending Response: message='{message}', error={error}, encoding='{settings.sms_out_encoding}'")
-                try:
-                    message_raw = message.encode(settings.sms_out_encoding)
-                    self.request.sendall(message_raw)
-                except Exception as e:
-                    logger.error(f"Error while sending response message.\n{e}")
-
-        def __init__(self, sms_server: "SMSServer"):
-            self.sms_server = sms_server
-
-            logger.debug("Initializing TCP-Server ...")
-
-            try:
-                # noinspection PyTypeChecker
-                socketserver.TCPServer.__init__(self, (settings.server_host, settings.server_port), self.TCPServerHandler)
-                threading.Thread.__init__(self, daemon=True)
-            except Exception as e:
-                logger.error(f"Error while starting SMSServer: {e}")
-                sys.exit(1)
-
-            logger.debug("Initializing TCP-Server ... done")
-
-        def run(self):
-            logger.info(f"TCP-Server started host='{settings.server_host}', port={settings.server_port}")
-            try:
-                self.serve_forever()
-            except KeyboardInterrupt:
-                logger.debug("Stopping TCP-Server ...")
-                self.shutdown()
-                self.server_close()
-                logger.info("TCP-Server stopped")
-
     def __init__(self):
         self.lock = threading.Lock()
-        logger.debug("Initializing SMS-Server ...")
+
+        logger.debug(f"Initializing {self} ...")
 
         # tcp server
-        self.tcp_server = self.TCPServer(sms_server=self)
+        self.tcp_server: TCPServer | None = None
+        if settings.tcp_server_enabled:
+            self.tcp_server = TCPServer(sms_server=self)
+
+        # api server
+        self.api_server: APIServer | None = None
+        if settings.api_server_enabled:
+            self.api_server = APIServer(sms_server=self)
 
         logger.debug("Initializing gateways ...")
         self._next_sms_gateway_index: int | None = None
@@ -135,10 +34,28 @@ class SMSServer:
             gateway = gateway_config.gateway_cls(server=self, name=gateway_config_name, config=gateway_config)
             self._gateways.append(gateway)
 
-        if len(self._gateways) == 0:
-            raise RuntimeError("No gateways configured.")
+        # starting servers
+        if self.tcp_server is not None:
+            self.tcp_server.start()
+        if self.api_server is not None:
+            self.api_server.start()
+        else:
+            self.done()
+            try:
+                while True:
+                    time.sleep(0.001)
+            except KeyboardInterrupt:
+                ...
 
-        logger.debug("Initializing SMS-Server ... done")
+    def __str__(self):
+        return (f"{self.__class__.__name__}("
+                f"tcp_server={getattr(self, "tcp_server", settings.tcp_server_enabled)}, "
+                f"api_server={getattr(self, "api_server", settings.api_server_enabled)})")
+
+    def done(self):
+        logger.debug(f"Initializing {self} ... done")
+        console.print(f"{self} is ready. Press CTRL+C to quit.")
+
 
     @property
     def gateways(self) -> tuple[BaseGateway, ...]:
@@ -158,5 +75,45 @@ class SMSServer:
                     gateways.append(gateway)
         return tuple(gateways)
 
-    def serve(self):
-        print()
+    def handle_sms(self, server: TCPServer | APIServer, number: str, message: str) -> tuple[bool, str]:
+        logger.debug(f"{server} - Processing SMS ...")
+
+        # check number
+        if len(number) > settings.sms_number_max_size:
+            return False, f"Received number is too long. Max size is '{settings.sms_number_max_size}'.\nnumber_size={len(number)}"
+        _number = ""
+        for char in number:
+            if char not in list(settings.sms_number_allowed_chars):
+                return False, f"Received number contains invalid characters. Allowed characters are '{settings.sms_number_allowed_chars}'.\nnumber='{number}'"
+            if char in list(settings.sms_number_replace_chars):
+                char = ""
+            _number += char
+        number = _number
+        del _number
+
+        # replace zoro number
+        if settings.sms_replace_zero_numbers is not None:
+            if number.startswith("0"):
+                number = settings.sms_replace_zero_numbers + number[1:]
+
+        # check a message
+        if len(message) > settings.sms_message_max_size:
+            return False, f"Received message is too long. Max size is '{settings.sms_message_max_size}'.\nmessage_size={len(message)}"
+
+        # log sms received successfully
+        if settings.sms_logging:
+            logger.debug(f"{server} - Processing SMS ... done\nnumber={number}\nmessage='{message}'")
+        else:
+            logger.debug(f"{server} - Processing SMS ... done\nnumber={number}")
+
+        # send sms to gateways
+        for gateway in self.gateways:
+            # check if gateway is available
+            if not gateway.check():
+                continue
+
+            # send it with gateway
+            result = gateway.send_sms(number, message)
+            if result:
+                return True, ""
+        return False, f"Error while sending SMS. Not gateways left."
