@@ -1,4 +1,5 @@
 import logging
+from contextlib import asynccontextmanager
 from ipaddress import IPv4Address
 from typing import TYPE_CHECKING, Annotated, Any
 
@@ -68,6 +69,7 @@ class APIServer(BaseServer, FastAPI):
                             error_handler=self._handle_error_response)
         FastAPI.__init__(
             self,
+            lifespan=self._done,
             debug=settings.debug,
             title=__title__,
             summary=f"{__title__} API",
@@ -123,18 +125,23 @@ class APIServer(BaseServer, FastAPI):
             async def post_sms(request: Request, number: str, message: str) -> ResponseApiModel:
                 return await self.post_sms(request=request, number=number, message=message)
 
-        self.done()
+    @staticmethod
+    @asynccontextmanager
+    async def _done(api_server: "APIServer"):
+        api_server.done()
+        api_server.sms_server.done()
+        yield
 
     def start(self):
-        try:
-            self.run()
-        except KeyboardInterrupt:
-            logger.info(f"Keyboard Interrupt {self}")
+        self.run()
 
-    def run(self):
+    def enter(self):
         uvicorn.run(self,
                     host=self.host,
                     port=self.port)
+
+    def exit(self):
+        ...
 
     @classmethod
     async def get_api_credentials_from_token(cls, token: str) -> tuple[str, str]:

@@ -52,15 +52,12 @@ class TCPServer(BaseServer, socketserver.TCPServer, threading.Thread):
     def start(self):
         threading.Thread.start(self)
 
-    def run(self):
-        logger.debug(f"{self} started.")
-        try:
-            self.serve_forever()
-        except KeyboardInterrupt:
-            logger.debug(f"Stopping {self} ...")
-            self.shutdown()
-            self.server_close()
-            logger.debug(f"Stopping {self} ... done")
+    def enter(self):
+        self.serve_forever()
+
+    def exit(self):
+        self.shutdown()
+        self.server_close()
 
     def _handle_sms_body(self, caller: TCPServerHandler, **kwargs) -> tuple[str, str] | None:
         # get data

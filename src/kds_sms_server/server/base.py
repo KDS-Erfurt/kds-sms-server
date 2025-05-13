@@ -46,8 +46,21 @@ class BaseServer(ABC):
     def start(self):
         ...
 
-    @abstractmethod
     def run(self):
+        logger.debug(f"{self} started.")
+        try:
+            self.enter()
+        except KeyboardInterrupt:
+            logger.debug(f"Stopping {self} ...")
+            self.exit()
+            logger.debug(f"Stopping {self} ... done")
+
+    @abstractmethod
+    def enter(self):
+        ...
+
+    @abstractmethod
+    def exit(self):
         ...
 
     def log_and_handle_response(self, caller: Any, message: str, level: Literal["debug", "info", "warning", "error"] = "debug", error: bool | Exception = False) -> None:
