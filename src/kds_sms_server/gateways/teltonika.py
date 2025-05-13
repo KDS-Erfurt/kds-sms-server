@@ -46,7 +46,7 @@ class TeltonikaConfig(BaseConfig):
     _gateway_cls = TeltonikaGateway
 
     class Type(str, Enum):
-        TELTONIKA = "teletonika"
+        TELTONIKA = "teltonika"
 
     type: Type
     ip: str
