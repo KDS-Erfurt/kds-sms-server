@@ -19,7 +19,7 @@ After=multi-user.target
 Type=simple
 Restart=always
 WorkingDirectory=/opt/kds-sms-server
-ExecStart=/opt/kds-sms-server/bin/kds-sms-server
+ExecStart=/opt/kds-sms-server/bin/kds-sms-server serve
 
 [Install]
 WantedBy=multi-user.target""" > /etc/systemd/system/kds_sms_server.service
@@ -40,7 +40,7 @@ deactivate
 ## Debug :gear:
 ```shell
 systemctl stop kds_sms_server.service
-kds-sms-server
+kds-sms-server serve
 systemctl start kds_sms_server.service
 ```
 
