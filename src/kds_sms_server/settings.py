@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from pydantic_settings import BaseSettings
-from sms_server.gateways import AVAILABLE_CONFIGS
+from kds_sms_server.gateways import AVAILABLE_CONFIGS
 from wiederverwendbar.logger import LoggerSettings
 from wiederverwendbar.pydantic import FileConfig
 

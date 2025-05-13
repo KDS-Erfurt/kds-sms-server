@@ -1,11 +1,11 @@
 import typer
 from wiederverwendbar.logger import LoggerSingleton
 
-from sms_server import __title__, __description__, __author__, __author_email__, __version__
-from sms_server.assets.ascii_logo import ascii_logo
-from sms_server.settings import settings
-from sms_server.console import console
-from sms_server.sms_server import SMSServer
+from kds_sms_server import __title__, __description__, __author__, __author_email__, __version__
+from kds_sms_server.assets.ascii_logo import ascii_logo
+from kds_sms_server.settings import settings
+from kds_sms_server.console import console
+from kds_sms_server.sms_server import SMSServer
 
 LoggerSingleton(name=__name__,
                 settings=settings,

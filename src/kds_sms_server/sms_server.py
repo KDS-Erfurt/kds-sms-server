@@ -5,8 +5,8 @@ from typing import Optional
 
 import chardet
 
-from sms_server.settings import settings
-from sms_server.gateways import BaseGateway
+from kds_sms_server.settings import settings
+from kds_sms_server.gateways import BaseGateway
 
 logger = logging.getLogger(__name__)
 

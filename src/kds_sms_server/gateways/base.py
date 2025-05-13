@@ -5,7 +5,7 @@ from typing import Any, TYPE_CHECKING
 from pydantic import BaseModel, PrivateAttr
 
 if TYPE_CHECKING:
-    from sms_server.sms_server import SMSServer
+    from kds_sms_server.sms_server import SMSServer
 
 logger = logging.getLogger(__name__)
 

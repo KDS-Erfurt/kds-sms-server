@@ -5,7 +5,7 @@ from pythonping import ping
 # from sms_server.settings import Settings
 from enum import Enum
 
-from sms_server.gateways.base import BaseConfig, BaseGateway
+from kds_sms_server.gateways.base import BaseConfig, BaseGateway
 
 logger = logging.getLogger(__name__)
 

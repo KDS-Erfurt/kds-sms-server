@@ -5,8 +5,8 @@ from typing import Literal
 from vonage import Vonage, Auth, HttpClientOptions
 from vonage_sms import SmsMessage, SmsResponse
 
-from sms_server import __title__
-from sms_server.gateways.base import BaseConfig, BaseGateway
+from kds_sms_server import __title__
+from kds_sms_server.gateways.base import BaseConfig, BaseGateway
 
 logger = logging.getLogger(__name__)
 

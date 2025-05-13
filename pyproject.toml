@@ -1,5 +1,5 @@
 [project]
-name = "sms-server"
+name = "kds-sms-server"
 dynamic = ["version"]
 description = "A broker server for sending SMS."
 authors = [
@@ -11,7 +11,7 @@ readme = "README.md"
 license = { file = "LICENSE" }
 
 [project.scripts]
-sms-server = "sms_server.cli:cli_app"
+kds-sms-server = "kds_sms_server.cli:cli_app"
 
 [build-system]
 requires = ["pdm-backend"]
@@ -22,7 +22,7 @@ distribution = true
 
 [tool.pdm.version]
 source = "file"
-path = "src/sms_server/__init__.py"
+path = "src/kds_sms_server/__init__.py"
 
 [tool.pdm.scripts]
 push-tags = { shell = "git push origin --tags" }
