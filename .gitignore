@@ -1,3 +1,5 @@
 /build/
 /dist/
 /installer/
+/dev.env
+/settings.json
