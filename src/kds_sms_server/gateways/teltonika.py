@@ -2,7 +2,6 @@ import logging
 
 import requests
 from pythonping import ping
-# from sms_server.settings import Settings
 from enum import Enum
 
 from kds_sms_server.gateways.base import BaseConfig, BaseGateway
