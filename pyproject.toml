@@ -23,3 +23,6 @@ distribution = true
 [tool.pdm.version]
 source = "file"
 path = "src/sms_server/__init__.py"
+
+[tool.pdm.scripts]
+push-tags = { shell = "git push origin --tags" }
