@@ -19,6 +19,11 @@ class Settings(FileConfig, BaseSettings, LoggerSettings, UvicornServerSettings):
     # debug
     debug: bool = Field(default=False, title="Debug", description="Enable Debug.")
 
+    # log
+    log_console_format: str = Field(default="%(message)s",
+                                    title="Console Log Format",
+                                    description="The log format for the console")
+
     # tcp server settings
     tcp_server_enabled: bool = Field(default=False, title="TCP Server Enabled", description="Enable TCP Server.")
     tcp_server_host: IPv4Address | str = Field(default=IPv4Address("127.0.0.1"), title="TCP Server Host", description="TCP Server Host to bind to.")

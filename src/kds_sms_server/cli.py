@@ -9,7 +9,7 @@ from kds_sms_server.sms_server import SMSServer
 
 LoggerSingleton(name=__name__,
                 settings=settings,
-                ignored_loggers_equal=["asyncio","python_multipart.multipart"],
+                ignored_loggers_equal=["asyncio", "python_multipart.multipart"],
                 init=True)
 
 cli_app = typer.Typer()
