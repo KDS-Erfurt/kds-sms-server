@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:522e7b8faec70000787520048bac7adb1d66c98a60bbbd1e05c75df675be579a"
+content_hash = "sha256:8eed21a71d1374980ee1fedd1e4267294fa37fe9e61ce41eb439cfd305bf1c28"
 
 [[metadata.targets]]
 requires_python = ">=3.13"
@@ -798,16 +798,16 @@ files = [
 
 [[package]]
 name = "wiederverwendbar"
-version = "0.8.1"
+version = "0.8.2"
 requires_python = ">=3.9"
 summary = "A collection of scripts, classes and tools they are \\\"wiederverwendbar\\\"."
 groups = ["default"]
 dependencies = [
     "devtools>=0.12.2",
-    "pydantic-settings>=2.8.1",
-    "pydantic>=2.10.6",
+    "pydantic-settings>=2.9.1",
+    "pydantic>=2.11.4",
 ]
 files = [
-    {file = "wiederverwendbar-0.8.1-py3-none-any.whl", hash = "sha256:3c93907485ba9bb3bf2a911f212fc30bb258862fbeb74c6f2e1dcd2011b25314"},
-    {file = "wiederverwendbar-0.8.1.tar.gz", hash = "sha256:11ef0b2036e3bae96d7efc79442809b881c8f41d42ac1b2c5b79ad285c8c6f57"},
+    {file = "wiederverwendbar-0.8.2-py3-none-any.whl", hash = "sha256:a6b5c0a27309418c650ebf1a03a77c30d65b850661e54caa47a963c90462dce4"},
+    {file = "wiederverwendbar-0.8.2.tar.gz", hash = "sha256:3623f9e5f28eb9a7d345fedff1f5da8e06f2d81b4d97b6b18f6a163e9933e6d5"},
 ]

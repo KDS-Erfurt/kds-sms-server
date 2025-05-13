@@ -5,7 +5,7 @@ description = "A broker server for sending SMS."
 authors = [
     { name = "Julius Koenig", email = "julius.koenig@kds-kg.de" },
 ]
-dependencies = ["typer>=0.15.3", "wiederverwendbar>=0.8.1", "chardet>=5.2.0", "requests>=2.32.3", "pythonping>=1.1.4", "vonage>=4.4.3"]
+dependencies = ["typer>=0.15.3", "wiederverwendbar>=0.8.2", "chardet>=5.2.0", "requests>=2.32.3", "pythonping>=1.1.4", "vonage>=4.4.3"]
 requires-python = ">=3.13"
 readme = "README.md"
 license = { file = "LICENSE" }
