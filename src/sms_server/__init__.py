@@ -1,0 +1,6 @@
+__title__ = "KDS SMS Server"
+__description__ = "A broker server for sending SMS."
+__version__ = "3.0.0"
+__author__ = "KDS - Julius Koenig"
+__author_email__ = "julius.koenig@kds-kg.de"
+__license__ = "GPL-3.0"

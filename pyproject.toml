@@ -1,0 +1,25 @@
+[project]
+name = "sms-server"
+dynamic = ["version"]
+description = "A broker server for sending SMS."
+authors = [
+    { name = "Julius Koenig", email = "julius.koenig@kds-kg.de" },
+]
+dependencies = ["typer>=0.15.3", "wiederverwendbar>=0.8.1", "chardet>=5.2.0", "requests>=2.32.3", "pythonping>=1.1.4", "vonage>=4.4.3"]
+requires-python = ">=3.13"
+readme = "README.md"
+license = { file = "LICENSE" }
+
+[project.scripts]
+sms-server = "sms_server.cli:cli_app"
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.version]
+source = "file"
+path = "src/sms_server/__init__.py"
