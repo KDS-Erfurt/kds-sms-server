@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, DateTime, Enum, VARCHAR
+from sqlalchemy import Column, Integer, DateTime, Enum, VARCHAR, String
 
 from wiederverwendbar.singleton import Singleton
 from wiederverwendbar.sqlalchemy import SqlalchemyDb, Base, EnumValueStr
@@ -36,3 +36,4 @@ class Sms(Base, db().Base):
     send_datetime: datetime = Column(DateTime(), nullable=True, name="sms_send_datetime")
     number: str = Column(VARCHAR(50), nullable=False, name="sms_number")
     message: str = Column(VARCHAR(1600), nullable=False, name="sms_message")
+    result: str = Column(String(), nullable=True, name="sms_result_msg")
