@@ -86,75 +86,83 @@ class SmsWorker(TaskManager):
             return sms
 
         while get_sms():
-            logger.debug(f"Processing SMS with id={sms.id} ...")
+            try:
+                logger.info(f"Processing SMS with id={sms.id} ...")
 
-            # calculate next_sms_gateway_index
-            if self._next_sms_gateway_index is None:
-                self._next_sms_gateway_index = 0
-            else:
-                self._next_sms_gateway_index += 1
-            if self._next_sms_gateway_index >= len(self._gateways):
-                self._next_sms_gateway_index = 0
+                # calculate next_sms_gateway_index
+                if self._next_sms_gateway_index is None:
+                    self._next_sms_gateway_index = 0
+                else:
+                    self._next_sms_gateway_index += 1
+                if self._next_sms_gateway_index >= len(self._gateways):
+                    self._next_sms_gateway_index = 0
 
-            # order gateways
-            gateways: list[BaseGateway] = []
-            for gateway in self._gateways[self._next_sms_gateway_index:]:
-                gateways.append(gateway)
-            if self._next_sms_gateway_index > 0:
-                for gateway in self._gateways[:self._next_sms_gateway_index]:
+                # order gateways
+                gateways: list[BaseGateway] = []
+                for gateway in self._gateways[self._next_sms_gateway_index:]:
                     gateways.append(gateway)
+                if self._next_sms_gateway_index > 0:
+                    for gateway in self._gateways[:self._next_sms_gateway_index]:
+                        gateways.append(gateway)
 
-            # create sms logger
-            sms_log = ""
+                # create sms logger
+                sms_log = ""
 
-            def add_sms_log(sms_log_msg: str):
-                nonlocal sms_log
-                if len(sms_log) > 0:
-                    sms_log += "\n"
-                sms_log += sms_log_msg
+                def add_sms_log(sms_log_msg: str):
+                    nonlocal sms_log
+                    if len(sms_log) > 0:
+                        sms_log += "\n"
+                    sms_log += sms_log_msg
 
-            sms_logger = logging.Logger(name=f"{logger.name}", )
-            sms_logger_handler = self.SmsLogHandler(buffer_target=add_sms_log)
-            sms_logger_handler.setLevel(settings.log_worker.log_level.logging_level)
-            sms_logger_handler.setFormatter(logging.Formatter("%(name)s - %(levelname)s - %(message)s"))
-            sms_logger.addHandler(sms_logger_handler)
-            sms_logger.setLevel(settings.log_worker.log_level.logging_level)
+                sms_logger = logging.Logger(name=f"{logger.name}", )
+                sms_logger_handler = self.SmsLogHandler(buffer_target=add_sms_log)
+                sms_logger_handler.setLevel(settings.log_worker.log_level.logging_level)
+                sms_logger_handler.setFormatter(logging.Formatter("%(name)s - %(levelname)s - %(message)s"))
+                sms_logger.addHandler(sms_logger_handler)
+                sms_logger.setLevel(settings.log_worker.log_level.logging_level)
 
-            # send sms with gateways
-            with LoggingContext(sms_logger, ignore_loggers_like=IGNORED_LOGGERS_LIKE):
-                log_level = logging.ERROR
-                result = "Error while sending SMS. Not gateways left."
-                status = SmsStatus.ERROR
-                send_by = None
-                for gateway in gateways:
-                    gateway.increase_sms_count()
-                    # check if gateway is available
-                    if not gateway.check():
+                # send sms with gateways
+                with LoggingContext(sms_logger, ignore_loggers_like=IGNORED_LOGGERS_LIKE):
+                    log_level = logging.ERROR
+                    result = "Error while sending SMS. Not gateways left."
+                    status = SmsStatus.ERROR
+                    send_by = None
+                    for gateway in gateways:
+                        gateway.increase_sms_count()
+                        # check if gateway is available
+                        if not gateway.check():
+                            gateway.increase_sms_error_count()
+                            continue
+
+                        # send it with gateway
+                        success, log_level, result = gateway.send_sms(sms.number, sms.message)
+                        if success:
+                            status = SmsStatus.SENT
+                            send_by = gateway.name
+                            break
                         gateway.increase_sms_error_count()
-                        continue
+                    sms_logger.log(log_level, result)
+                    logger.log(log_level, result)
 
-                    # send it with gateway
-                    success, log_level, result = gateway.send_sms(sms.number, sms.message)
-                    if success:
-                        status = SmsStatus.SENT
-                        send_by = gateway.name
-                        break
-                    gateway.increase_sms_error_count()
-                sms_logger.log(log_level, result)
-                logger.log(log_level, result)
+                # flush sms_logger_handler
+                sms_logger_handler.flush()
 
-            # flush sms_logger_handler
-            sms_logger_handler.flush()
+                # remove logger
+                remove_logger(sms_logger)
 
-            # remove logger
-            remove_logger(sms_logger)
+                # update sms
+                sms.update(status=status,
+                           processed_datetime=datetime.now(),
+                           sent_by=send_by,
+                           result=result,
+                           log=sms_log)
 
-            # update sms
-            sms.update(status=status,
-                       processed_datetime=datetime.now(),
-                       sent_by=send_by,
-                       result=result,
-                       log=sms_log)
+                logger.info(f"Processing SMS with id={sms.id} ... done")
+            except Exception as e:
+                logger.error(f"Error while processing SMS with id={sms.id}.\nException: {e}")
+                sms.update(status=SmsStatus.ERROR,
+                           processed_datetime=datetime.now(),
+                           result=f"Error while processing SMS. Exception: {e}")
 
     def cleanup_sms(self):
         ...
