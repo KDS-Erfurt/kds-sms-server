@@ -5,8 +5,8 @@ import time
 from kds_sms_server.console import console
 from kds_sms_server.settings import settings
 from kds_sms_server.gateways import BaseGateway
-from kds_sms_server.server.tcp_server import TcpServer
-from kds_sms_server.server.api_server import ApiServer
+from kds_sms_server.server.tcp import TcpServer
+from kds_sms_server.server.api import ApiServer
 
 logger = logging.getLogger(__name__)
 
