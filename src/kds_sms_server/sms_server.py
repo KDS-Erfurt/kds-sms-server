@@ -34,6 +34,8 @@ class SmsServer:
 
         logger.debug(f"Initializing SMS-Server ... done")
 
+        self.loop()
+
     @property
     def settings(self) -> "Settings":
         return self._settings
