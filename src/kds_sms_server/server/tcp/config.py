@@ -17,6 +17,7 @@ class TcpServerConfig(BaseServerConfig):
                                                 description="List of allowed client networks.")
     in_encoding: str = Field(default="auto", title="TCP Server input encoding", description="Encoding of incoming data.")
     out_encoding: str = Field(default="utf-8", title="TCP Server output encoding", description="Encoding of outgoing data.")
+    data_max_size: int = Field(default=2048, title="Max Data Size", description="Max Data Size for SMS.", ge=1024)
     success_result: str | None = Field(default=None, title="TCP Server success message",
                                        description="Message to send on success. If set to None, the original message will be sent back to the client.")
     error_result: str | None = Field(default=None, title="TCP Server error message",

@@ -69,7 +69,7 @@ class TcpServer(BaseServer, socketserver.TCPServer):
     def handle_sms_data(self, caller: TcpServerHandler, **kwargs) -> tuple[str, str] | None:
         # get data
         try:
-            data = caller.request.recv(settings.sms_data_max_size).strip()
+            data = caller.request.recv(self.config.data_max_size).strip()
             logger.debug(f"{self} - data={data}")
         except Exception as e:
             return self.handle_response(caller=self, log_level=logging.ERROR, success=e, sms_id=None, result=f"Error while receiving data.")
