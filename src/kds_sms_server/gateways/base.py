@@ -1,8 +1,10 @@
 import logging
 from abc import ABC, abstractmethod
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, PrivateAttr, Field
+from pydantic import Field
+
+from kds_sms_server.base_config import BaseConfig
 
 if TYPE_CHECKING:
     from kds_sms_server.sms_server import SmsServer
@@ -109,11 +111,7 @@ class BaseGateway(ABC):
         self.sms_send_error_count = 0
 
 
-class BaseGatewayConfig(BaseModel):
-    class Config:
-        use_enum_values = True
-
-    _gateway_cls: type[BaseGateway] | None = PrivateAttr(None)
+class BaseGatewayConfig(BaseConfig):
     dry_run: bool = Field(default=False, title="Dry run mode", description="If set to True, SMS will not be sent via this gateway."
                                                                            "This is useful for testing purposes.")
     timeout: int = Field(default=5, title="Timeout", description="Timeout for sending SMS via this gateway.")
@@ -121,14 +119,9 @@ class BaseGatewayConfig(BaseModel):
     check_timeout: int = Field(default=1, title="Check timeout", description="Timeout for checking gateway availability.")
     check_retries: int = Field(default=3, title="Check retries", description="Number of retries for checking gateway availability.")
 
-    def __init__(self, /, **data: Any):
-        super().__init__(**data)
-        _ = self.gateway_cls
-
     @property
-    def gateway_cls(self) -> type[BaseGateway]:
-        if self._gateway_cls is None:
-            raise ValueError("Gateway class is not set")
-        if not issubclass(self._gateway_cls, BaseGateway):
-            raise TypeError(f"Gateway class '{self._gateway_cls.__name__}' is not a subclass of '{BaseGateway.__name__}'")
-        return self._gateway_cls
+    def cls(self) -> type[BaseGateway]:
+        cls = super().cls
+        if not issubclass(cls, BaseGateway):
+            raise TypeError(f"Gateway class '{cls.__name__}' is not a subclass of '{BaseGateway.__name__}'")
+        return cls

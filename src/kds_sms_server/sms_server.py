@@ -31,7 +31,7 @@ class SmsServer:
         self._next_sms_gateway_index: int | None = None
         self._gateways: list[BaseGateway] = []
         for gateway_config_name, gateway_config in settings.gateways.items():
-            gateway = gateway_config.gateway_cls(server=self, name=gateway_config_name, config=gateway_config)
+            gateway = gateway_config.cls(server=self, name=gateway_config_name, config=gateway_config)
             self._gateways.append(gateway)
 
         # starting servers

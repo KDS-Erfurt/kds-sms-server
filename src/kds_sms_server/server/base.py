@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from ipaddress import IPv4Network, IPv4Address
 from typing import Any, TYPE_CHECKING, Literal
 
-from pydantic import BaseModel, PrivateAttr
+from kds_sms_server.base_config import BaseConfig
 
 if TYPE_CHECKING:
     from kds_sms_server.sms_server import SmsServer
@@ -130,20 +130,10 @@ class BaseServer(ABC):
         return False
 
 
-class BaseServerConfig(BaseModel):
-    class Config:
-        use_enum_values = True
-
-    _server_cls: type[BaseServer] | None = PrivateAttr(None)
-
-    def __init__(self, /, **data: Any):
-        super().__init__(**data)
-        _ = self.server_cls
-
+class BaseServerConfig(BaseConfig):
     @property
-    def server_cls(self) -> type[BaseServer]:
-        if self._server_cls is None:
-            raise ValueError("Server class is not set")
-        if not issubclass(self._server_cls, BaseServer):
-            raise TypeError(f"Server class '{self._server_cls.__name__}' is not a subclass of '{BaseServer.__name__}'")
-        return self._server_cls
+    def cls(self) -> type[BaseServer]:
+        cls = super().cls
+        if not issubclass(cls, BaseServer):
+            raise TypeError(f"Server class '{cls.__name__}' is not a subclass of '{BaseServer.__name__}'")
+        return cls
