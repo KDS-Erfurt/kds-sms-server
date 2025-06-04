@@ -55,7 +55,8 @@ class TcpServer(BaseServer, socketserver.TCPServer):
         self.shutdown()
         self.server_close()
 
-    def handle_request(self, caller: Any, client_ip: IPv4Address, client_port: int, **kwargs) -> Any:
+    # noinspection DuplicatedCode
+    def handle_request(self, caller: Any, client_ip: IPv4Address, client_port: int, **kwargs) -> Any | None:
         # check if client ip is allowed
         allowed = False
         for network in self.config.allowed_networks:
@@ -63,7 +64,7 @@ class TcpServer(BaseServer, socketserver.TCPServer):
                 allowed = True
                 break
         if not allowed:
-            return self.handle_response(caller=self, log_level=logging.WARNING, success=False, sms_id=None, result=f"Client IP address '{client_ip}' is not allowed.")
+            return self.handle_response(caller=self, log_level=logging.ERROR, success=False, sms_id=None, result=f"Client IP address '{client_ip}' is not allowed.")
         return super().handle_request(caller=caller, client_ip=client_ip, client_port=client_port, **kwargs)
 
     def handle_sms_data(self, caller: TcpServerHandler, **kwargs) -> tuple[str, str] | None:
@@ -90,7 +91,7 @@ class TcpServer(BaseServer, socketserver.TCPServer):
 
             # split message
             if "\r\n" not in data_str:
-                return self.handle_response(caller=self,log_level=logging.ERROR, success=False,  sms_id=None, result=f"Received data is not valid.")
+                return self.handle_response(caller=self, log_level=logging.ERROR, success=False, sms_id=None, result=f"Received data is not valid.")
             number, message = data_str.split("\r\n")
             return number, message
         except Exception as e:

@@ -144,7 +144,8 @@ class ApiServer(BaseServer, FastAPI):
             raise HTTPException(status_code=401, detail="API secret is incorrect.")
         return api_key, api_secret
 
-    def handle_request(self, caller: Any, client_ip: IPv4Address, client_port: int, **kwargs) -> Any:
+    # noinspection DuplicatedCode
+    def handle_request(self, caller: Any, client_ip: IPv4Address, client_port: int, **kwargs) -> Any | None:
         # check if client ip is allowed
         allowed = False
         for network in self.config.allowed_networks:
@@ -152,7 +153,7 @@ class ApiServer(BaseServer, FastAPI):
                 allowed = True
                 break
         if not allowed:
-            return self.handle_response(caller=self, log_level=logging.WARNING, success=False, sms_id=None, result=f"Client IP address '{client_ip}' is not allowed.")
+            return self.handle_response(caller=self, log_level=logging.ERROR, success=False, sms_id=None, result=f"Client IP address '{client_ip}' is not allowed.")
         return super().handle_request(caller=caller, client_ip=client_ip, client_port=client_port, **kwargs)
 
     def handle_sms_data(self, caller: None, **kwargs) -> tuple[str, str]:
