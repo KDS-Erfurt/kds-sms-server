@@ -41,8 +41,8 @@ class TeltonikaGateway(BaseGateway):
                                         "number": number,
                                         "text": message},
                                 timeout=self._config.timeout)
-        text = response.text.replace("\n", "")
+        gateway_result = response.text.replace("\n", "")
         if response.ok:
-            return True, text
+            return True, gateway_result
         else:
-            return False, text
+            return False, gateway_result

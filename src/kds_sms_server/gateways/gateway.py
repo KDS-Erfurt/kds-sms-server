@@ -69,29 +69,34 @@ class BaseGateway(Base):
     def _check(self) -> bool:
         ...
 
-    def send_sms(self, number: str, message: str) -> bool:
+    def send_sms(self, number: str, message: str) -> tuple[bool, str]:
         logger.debug(f"Sending SMS via {self} ...")
         self.sms_send_count += 1
+        log_level = logging.DEBUG
+        success = False
         try:
             if not self.state:
                 raise RuntimeError(f"SMS gateway {self} is not available!")
             if self._config.dry_run:
-                result = True
-                logger.warning(f"Dry run mode is enabled. SMS will not be sent via {self}.")
+                log_level = logging.WARNING
+                success = True
+                result = f"Dry run mode is enabled. SMS will not be sent via {self}."
             else:
-                result, msg = self._send_sms(number, message)
-                if result:
-                    logger.debug(f"SMS sent successfully via {self}. \nGateway result: {msg}")
+                success, gateway_result = self._send_sms(number, message)
+                if success:
+                    result = f"SMS sent successfully via {self}. \nGateway result: {gateway_result}"
                 else:
-                    logger.error(f"Error while sending SMS via {self}.\nGateway result: {msg}")
+                    result = f"Failed to send SMS via {self}. \nGateway result: {gateway_result}"
         except Exception as e:
-            result = False, f"Failed to send SMS via {self}.\nException: {e}"
-            logger.error(f"Failed to send SMS via {self}.\nException: {e}")
+            result = f"Failed to send SMS via {self}.\nException: {e}"
 
-        if not result:
+        if not success:
+            log_level = logging.ERROR
             self.sms_send_error_count += 1
 
-        return result
+        logger.log(log_level, result)
+
+        return success, result
 
     @abstractmethod
     def _send_sms(self, number: str, message: str) -> tuple[bool, str]:

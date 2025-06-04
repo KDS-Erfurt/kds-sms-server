@@ -53,5 +53,6 @@ class VonageGateway(BaseGateway):
         vonage = self.get_vonage_instance(mode="send")
         message = SmsMessage(to=number, from_=self._config.from_text, text=message, **{})
         response: SmsResponse = vonage.sms.send(message)
+        # ToDo: gateway_result
         logger.debug(f"response={response}")
         return True, "OK"
