@@ -1,9 +1,10 @@
 import logging
 import logging.handlers
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Callable
 
+from sqlalchemy import and_, or_
 from wiederverwendbar.logger import LoggerSingleton, LoggingContext, remove_logger
 from wiederverwendbar.task_manger import TaskManager, Task, EverySeconds
 
@@ -160,9 +161,23 @@ class SmsWorker(TaskManager):
                 logger.info(f"Processing SMS with id={sms.id} ... done")
             except Exception as e:
                 logger.error(f"Error while processing SMS with id={sms.id}.\nException: {e}")
-                sms.update(status=SmsStatus.ERROR,
-                           processed_datetime=datetime.now(),
-                           result=f"Error while processing SMS. Exception: {e}")
 
     def cleanup_sms(self):
-        ...
+        try:
+            cleanup_datetime = datetime.now() - timedelta(seconds=settings.sms_cleanup_max_age)
+            expression = and_(Sms.status != SmsStatus.QUEUED,
+                              or_(
+                                  and_(
+                                      Sms.received_datetime <= cleanup_datetime,
+                                      Sms.processed_datetime is None
+                                  ),
+                                  Sms.processed_datetime <= cleanup_datetime
+                              ))
+            cleanup_sms_count = Sms.length(expression)
+            if cleanup_sms_count == 0:
+                return
+            logger.info(f"Cleaning up {cleanup_sms_count} SMS ...")
+            Sms.delete_all(expression)
+            logger.debug(f"Cleaning up {cleanup_sms_count} SMS ... done")
+        except Exception as e:
+            logger.error(f"Error while getting SMS to cleanup.\nException: {e}")
