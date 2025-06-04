@@ -1,10 +1,10 @@
 import logging
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union, Any
 
 from pydantic import Field
 
-from kds_sms_server.base_config import BaseConfig
+from kds_sms_server.base import Base, BaseConfig
 
 if TYPE_CHECKING:
     from kds_sms_server.sms_server import SmsServer
@@ -12,26 +12,19 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class BaseGateway(ABC):
+class BaseGateway(Base):
     def __init__(self, server: "SmsServer", name: str, config: "BaseGatewayConfig"):
-        self._name = name
-        self._server = server
-        self._config = config
-
-        logger.debug(f"Initializing {self} ...")
+        Base.__init__(self, server=server, name=name, config=config)
 
         self._state = False
         self._sms_send_count = 0
         self._sms_send_error_count = 0
 
-        logger.debug(f"Initializing {self} done.")
-
-    def __str__(self):
-        return f"{self.__class__.__name__}(name='{self.name}')"
+        self.init_done()
 
     @property
-    def name(self) -> str:
-        return self._name
+    def config(self) -> Union["BaseGatewayConfig", Any]:
+        return super().config
 
     @property
     def state(self) -> bool:

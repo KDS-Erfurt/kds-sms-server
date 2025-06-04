@@ -11,6 +11,10 @@ logger = logging.getLogger(__name__)
 
 
 class TeltonikaGateway(BaseGateway):
+    @property
+    def config(self) -> "TeltonikaGatewayConfig":
+        return super().config
+
     def _check(self) -> bool:
         result = ping(self._config.ip, self._config.check_timeout, count=self._config.check_retries)
 
@@ -44,7 +48,7 @@ class TeltonikaGateway(BaseGateway):
 
 
 class TeltonikaGatewayConfig(BaseGatewayConfig):
-    _gateway_cls = TeltonikaGateway
+    _cls = TeltonikaGateway
 
     class Type(str, Enum):
         TELTONIKA = "teltonika"

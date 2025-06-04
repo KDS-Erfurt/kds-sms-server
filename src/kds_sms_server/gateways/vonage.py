@@ -12,6 +12,10 @@ logger = logging.getLogger(__name__)
 
 
 class VonageGateway(BaseGateway):
+    @property
+    def config(self) -> "VonageGatewayConfig":
+        return super().config
+
     def get_vonage_instance(self, mode: Literal["check", "send"]) -> Vonage:
         # Create an Auth instance
         auth = Auth(api_key=self._config.api_key, api_secret=self._config.api_secret)
@@ -53,7 +57,7 @@ class VonageGateway(BaseGateway):
 
 
 class VonageGatewayConfig(BaseGatewayConfig):
-    _gateway_cls = VonageGateway
+    _cls = VonageGateway
 
     class Type(str, Enum):
         VONAGE = "vonage"

@@ -1,6 +1,7 @@
 import logging
 from contextlib import asynccontextmanager
-from ipaddress import IPv4Address
+from enum import Enum
+from ipaddress import IPv4Address, IPv4Network
 from typing import TYPE_CHECKING, Annotated, Any
 
 import uvicorn
@@ -14,7 +15,6 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from kds_sms_server import __title__, __description__, __version__, __author__, __author_email__, __license__
 from kds_sms_server.assets import ASSETS_PATH
 from kds_sms_server.server.base import BaseServer, BaseServerConfig
-from kds_sms_server.settings import settings
 from starlette.requests import Request
 
 if TYPE_CHECKING:
@@ -47,31 +47,19 @@ class InfoApiModel(BaseModel):
 
 
 class ResponseApiModel(BaseModel):
+    error: bool = Field(default=False, title="Error", description="Indicates if the request resulted in an error.")
     message: str = Field(default=..., title="Message", description="The message of the response.")
 
 
 class ApiServer(BaseServer, FastAPI):
-    def __init__(self, sms_server: "SmsServer"):
-        self.sms_server = sms_server
-        self.host = str(settings.api_server_host)
-        self.port = settings.api_server_port
+    def __init__(self, server: "SmsServer", name: str, config: "BaseServerConfig"):
+        BaseServer.__init__(self, server=server, name=name, config=config)
 
-        logger.debug(f"Initializing {self} ...")
-
-        BaseServer.__init__(self,
-                            sms_server=sms_server,
-                            host=settings.api_server_host,
-                            port=settings.api_server_port,
-                            debug=settings.debug,
-                            allowed_networks=settings.api_server_allowed_networks,
-                            success_message=settings.api_server_success_message,
-                            success_handler=self._handle_response,
-                            error_handler=self._handle_error_response)
         FastAPI.__init__(
             self,
-            lifespan=self._done,
-            debug=settings.debug,
-            title=__title__,
+            lifespan=self._stated_done,
+            debug=self.config.debug,
+            title=f"{__title__} - {self.name}",
             summary=f"{__title__} API",
             description=__description__,
             version=__version__,
@@ -82,27 +70,25 @@ class ApiServer(BaseServer, FastAPI):
             license_info={"name": __license__, "url": "https://www.gnu.org/licenses/gpl-3.0.html"}
         )
 
-        self._info = InfoApiModel()
-
-        if settings.api_server_docs_web_path is not None or settings.api_server_redoc_web_path is not None:
+        if self.config.docs_web_path is not None or self.config.redoc_web_path is not None:
             @self.get('/favicon.ico', include_in_schema=False)
             async def favicon() -> FileResponse:
                 return FileResponse(ASSETS_PATH / "favicon.ico")
 
-        if settings.api_server_docs_web_path is not None:
-            @self.get(settings.api_server_docs_web_path, include_in_schema=False)
+        if self.config.docs_web_path is not None:
+            @self.get(self.config.docs_web_path, include_in_schema=False)
             async def swagger():
                 return get_swagger_ui_html(openapi_url="/openapi.json", title=f"{__title__} - API Docs", swagger_favicon_url="/favicon.ico")
 
-        if settings.api_server_redoc_web_path is not None:
-            @self.get(settings.api_server_redoc_web_path, include_in_schema=False)
+        if self.config.redoc_web_path is not None:
+            @self.get(self.config.redoc_web_path, include_in_schema=False)
             async def redoc():
                 return get_redoc_html(openapi_url="/openapi.json", title=f"{__title__} - API Docs", redoc_favicon_url="/favicon.ico")
 
         async def validate_token(token: Annotated[str, Depends(OAuth2PasswordBearer(tokenUrl="/auth"))]) -> tuple[str, str]:
             return await self.get_api_credentials_from_token(token=token)
 
-        if settings.api_server_authentication_enabled:
+        if self.config.authentication_enabled:
             @self.get(path="/info", summary="Get the application info.", tags=["API version 1"])
             async def get_info(_=Depends(validate_token)) -> InfoApiModel:
                 return await self.get_info()
@@ -111,12 +97,12 @@ class ApiServer(BaseServer, FastAPI):
             async def get_info() -> InfoApiModel:
                 return await self.get_info()
 
-        if settings.api_server_authentication_enabled:
+        if self.config.authentication_enabled:
             @self.post(path="/auth", summary="Authenticate against server.", tags=["API version 1"])
             async def post_auth(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
                 return await self.post_auth(form_data=form_data)
 
-        if settings.api_server_authentication_enabled:
+        if self.config.authentication_enabled:
             @self.post(path="/sms", summary="Sending an SMS.", tags=["API version 1"])
             async def post_sms(request: Request, number: str, message: str, _=Depends(validate_token)) -> ResponseApiModel:
                 return await self.post_sms(request=request, number=number, message=message)
@@ -125,27 +111,26 @@ class ApiServer(BaseServer, FastAPI):
             async def post_sms(request: Request, number: str, message: str) -> ResponseApiModel:
                 return await self.post_sms(request=request, number=number, message=message)
 
+        self.init_done()
+
+    @property
+    def config(self) -> "ApiServerConfig":
+        return super().config
+
     @staticmethod
     @asynccontextmanager
-    async def _done(api_server: "ApiServer"):
-        api_server.done()
-        api_server.sms_server.done()
+    async def _stated_done(api_server: "ApiServer"):
+        api_server.stated_done()
         yield
 
-    def start(self):
-        self.run()
-
     def enter(self):
-        uvicorn.run(self,
-                    host=self.host,
-                    port=self.port)
+        uvicorn.run(self, host=str(self.config.host), port=self.config.port)
 
     def exit(self):
         ...
 
-    @classmethod
-    async def get_api_credentials_from_token(cls, token: str) -> tuple[str, str]:
-        if not settings.api_server_authentication_enabled:
+    async def get_api_credentials_from_token(self, token: str) -> tuple[str, str]:
+        if not self.config.authentication_enabled:
             raise HTTPException(status_code=401, detail="Authentication is disabled.")
         if ":" not in token:
             raise HTTPException(status_code=401, detail="Invalid authentication credentials")
@@ -153,30 +138,45 @@ class ApiServer(BaseServer, FastAPI):
         if len(split_token) != 2:
             raise HTTPException(status_code=401, detail="Invalid authentication credentials")
         api_key, api_secret = split_token
-        if api_key not in settings.api_server_authentication_accounts:
+        if api_key not in self.config.authentication_accounts:
             raise HTTPException(status_code=401, detail="API key not found.")
-        if api_secret != settings.api_server_authentication_accounts[api_key]:
+        if api_secret != self.config.authentication_accounts[api_key]:
             raise HTTPException(status_code=401, detail="API secret is incorrect.")
         return api_key, api_secret
 
-    def _handle_sms_body(self, caller: None, **kwargs) -> tuple[str, str]:
+    def handle_request(self, caller: Any, client_ip: IPv4Address, client_port: int, **kwargs) -> Any:
+        # check if client ip is allowed
+        allowed = False
+        for network in self.config.allowed_networks:
+            if client_ip in network:
+                allowed = True
+                break
+        if not allowed:
+            return self.log_and_handle_response(caller=self, message=f"Client IP address '{client_ip}' is not allowed.", level="warning", error=True)
+        return super().handle_request(caller=caller, client_ip=client_ip, client_port=client_port, **kwargs)
+
+    def handle_sms_body(self, caller: None, **kwargs) -> tuple[str, str]:
         return kwargs["number"], kwargs["message"]
 
-    def _handle_response(self, caller: None, message: str) -> Any:
-        return ResponseApiModel(message=message)
+    def success_handler(self, caller: None, message: str) -> Any:
+        if self.config.success_message is not None:
+            message = self.config.success_message
+        return ResponseApiModel(error=False, message=message)
 
-    def _handle_error_response(self, caller: None, message: str) -> None:
-        print()
+    def error_handler(self, caller: None, message: str) -> Any:
+        if self.config.error_message is not None:
+            message = self.config.error_message
+        return ResponseApiModel(error=True, message=message)
 
     async def get_info(self) -> InfoApiModel:
-        return self._info
+        return InfoApiModel()
 
     async def post_auth(self, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
-        if not settings.api_server_authentication_enabled:
+        if not self.config.authentication_enabled:
             raise HTTPException(status_code=401, detail="Authentication is disabled.")
-        if form_data.username not in settings.api_server_authentication_accounts:
+        if form_data.username not in self.config.authentication_accounts:
             raise HTTPException(status_code=401, detail="API key not found.")
-        if form_data.password != settings.api_server_authentication_accounts[form_data.username]:
+        if form_data.password != self.config.authentication_accounts[form_data.username]:
             raise HTTPException(status_code=401, detail="API secret is incorrect.")
         return {"access_token": f"{form_data.username}:{form_data.password}", "token_type": "bearer"}
 
@@ -191,4 +191,21 @@ class ApiServer(BaseServer, FastAPI):
 
 
 class ApiServerConfig(BaseServerConfig):
-    _server_cls = ApiServer
+    _cls = ApiServer
+
+    class Type(str, Enum):
+        API = "api"
+
+    type: Type = Field(default=..., title="Type", description="Type of the server.")
+    host: IPv4Address = Field(default=..., title="API Server Host", description="API Server Host to bind to.")
+    port: int = Field(default=..., title="API Server Port", ge=0, le=65535, description="API Server Port to bind to.")
+    docs_web_path: str | None = Field(default=None, title="API Server Docs Web Path", description="API Server Docs Web Path.")
+    redoc_web_path: str | None = Field(default=None, title="API Server Redoc Web Path", description="API Server Redoc Web Path.")
+    allowed_networks: list[IPv4Network] = Field(default_factory=lambda: [IPv4Network("0.0.0.0/0")], title="API Server Allowed Clients Networks",
+                                                description="List of allowed client networks.")
+    authentication_enabled: bool = Field(default=False, title="API Server Authentication Enabled", description="Enable API Server Authentication.")
+    authentication_accounts: dict[str, str] = Field(default_factory=dict, title="API Server Authentication Accounts", description="API Server Authentication Accounts.")
+    success_message: str | None = Field(default="OK", title="API Server success message",
+                                        description="Message to send on success. If set to None, the original message will be sent back to the client.")
+    error_message: str | None = Field(default="ERROR", title="API Server error message",
+                                      description="Message to send on error. If set to None, the original message will be sent back to the client.")

@@ -2,13 +2,14 @@ import logging
 import socketserver
 import sys
 import threading
-from ipaddress import IPv4Address
+from enum import Enum
+from ipaddress import IPv4Address, IPv4Network
 from typing import TYPE_CHECKING, Any
 
 import chardet
+from pydantic import Field
 
 from kds_sms_server.server.base import BaseServer, BaseServerConfig
-from kds_sms_server.settings import settings
 
 if TYPE_CHECKING:
     from kds_sms_server.sms_server import SmsServer
@@ -27,49 +28,57 @@ class TcpServerHandler(socketserver.BaseRequestHandler):
         except Exception as e:
             return self.server.log_and_handle_response(caller=self, message=f"Error while parsing client IP address.", level="error", error=e)
 
-        _ = self.server.handle_request(caller=self, client_ip=client_ip, client_port=client_port)
+        self.server.handle_request(caller=self, client_ip=client_ip, client_port=client_port)
         return None
 
 
-class TcpServer(BaseServer, socketserver.TCPServer, threading.Thread):
-    def __init__(self, sms_server: "SmsServer"):
-        try:
-            BaseServer.__init__(self,
-                                sms_server=sms_server,
-                                host=settings.tcp_server_host,
-                                port=settings.tcp_server_port,
-                                debug=settings.debug,
-                                allowed_networks=settings.tcp_server_allowed_networks,
-                                success_message=settings.tcp_server_success_message)
-            # noinspection PyTypeChecker
-            socketserver.TCPServer.__init__(self, (self.host, self.port), TcpServerHandler)
-            threading.Thread.__init__(self, daemon=True)
-        except Exception as e:
-            logger.error(f"Error while starting {self}: {e}")
-            sys.exit(1)
-        self.done()
+class TcpServer(BaseServer, socketserver.TCPServer):
+    def __init__(self, server: "SmsServer", name: str, config: "BaseServerConfig"):
+        BaseServer.__init__(self, server=server, name=name, config=config)
 
-    def start(self):
-        threading.Thread.start(self)
+        try:
+            # noinspection PyTypeChecker
+            socketserver.TCPServer.__init__(self, (str(self.config.host), self.config.port), TcpServerHandler)
+        except Exception as e:
+            logger.error(f"Error while initializing {self}: {e}")
+            sys.exit(1)
+
+        self.init_done()
+
+    @property
+    def config(self) -> "TcpServerConfig":
+        return super().config
 
     def enter(self):
+        self.stated_done()
         self.serve_forever()
 
     def exit(self):
         self.shutdown()
         self.server_close()
 
-    def _handle_sms_body(self, caller: TcpServerHandler, **kwargs) -> tuple[str, str] | None:
+    def handle_request(self, caller: Any, client_ip: IPv4Address, client_port: int, **kwargs) -> Any:
+        # check if client ip is allowed
+        allowed = False
+        for network in self.config.allowed_networks:
+            if client_ip in network:
+                allowed = True
+                break
+        if not allowed:
+            return self.log_and_handle_response(caller=self, message=f"Client IP address '{client_ip}' is not allowed.", level="warning", error=True)
+        return super().handle_request(caller=caller, client_ip=client_ip, client_port=client_port, **kwargs)
+
+    def handle_sms_body(self, caller: TcpServerHandler, **kwargs) -> tuple[str, str] | None:
         # get data
         try:
-            data = caller.request.recv(settings.sms_data_max_size).strip()
+            data = caller.request.recv(self.server.settings.sms_data_max_size).strip()
             logger.debug(f"{self} - data={data}")
         except Exception as e:
             return self.log_and_handle_response(caller=self, message=f"Error while receiving data.", level="error", error=e)
 
         # detect encoding
         try:
-            encoding = settings.tcp_server_in_encoding
+            encoding = self.config.in_encoding
             if encoding == "auto":
                 encoding = chardet.detect(data)['encoding']
             logger.debug(f"{self} - encoding={encoding}")
@@ -89,10 +98,33 @@ class TcpServer(BaseServer, socketserver.TCPServer, threading.Thread):
         except Exception as e:
             return self.log_and_handle_response(caller=self, message=f"Error while decoding data.", level="error", error=e)
 
-    def _handle_response(self, caller: TcpServerHandler, message: str) -> Any:
-        message_raw = message.encode(settings.tcp_server_out_encoding)
+    def success_handler(self, caller: TcpServerHandler, message: str) -> Any:
+        if self.config.success_message is not None:
+            message = self.config.success_message
+        message_raw = message.encode(self.config.out_encoding)
+        caller.request.sendall(message_raw)
+
+    def error_handler(self, caller: TcpServerHandler, message: str) -> Any:
+        if self.config.error_message is not None:
+            message = self.config.error_message
+        message_raw = message.encode(self.config.out_encoding)
         caller.request.sendall(message_raw)
 
 
 class TcpServerConfig(BaseServerConfig):
-    _server_cls = TcpServer
+    _cls = TcpServer
+
+    class Type(str, Enum):
+        TCP = "tcp"
+
+    type: Type = Field(default=..., title="Type", description="Type of the server.")
+    host: IPv4Address = Field(default=..., title="TCP Server Host", description="TCP Server Host to bind to.")
+    port: int = Field(default=..., title="TCP Server Port", ge=0, le=65535, description="TCP Server Port to bind to.")
+    allowed_networks: list[IPv4Network] = Field(default_factory=lambda: [IPv4Network("0.0.0.0/0")], title="TCP Server Allowed Clients Networks",
+                                                description="List of allowed client networks.")
+    in_encoding: str = Field(default="auto", title="TCP Server input encoding", description="Encoding of incoming data.")
+    out_encoding: str = Field(default="utf-8", title="TCP Server output encoding", description="Encoding of outgoing data.")
+    success_message: str | None = Field(default="OK", title="TCP Server success message",
+                                        description="Message to send on success. If set to None, the original message will be sent back to the client.")
+    error_message: str | None = Field(default="ERROR", title="TCP Server error message",
+                                      description="Message to send on error. If set to None, the original message will be sent back to the client.")

@@ -32,4 +32,5 @@ def serve():
     console.print(f"version: {__version__}")
     console.print("_________________________________________________________________________________")
 
-    SmsServer()
+    sms_server = SmsServer()
+    sms_server.loop()

@@ -1,9 +1,12 @@
 import logging
-from abc import ABC, abstractmethod
-from ipaddress import IPv4Network, IPv4Address
-from typing import Any, TYPE_CHECKING, Literal
+from abc import abstractmethod
+from ipaddress import IPv4Address
+from threading import Thread
+from typing import Any, TYPE_CHECKING, Literal, Union
 
-from kds_sms_server.base_config import BaseConfig
+from pydantic import Field
+
+from kds_sms_server.base import Base, BaseConfig
 
 if TYPE_CHECKING:
     from kds_sms_server.sms_server import SmsServer
@@ -11,55 +14,36 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class BaseServer(ABC):
-    def __init__(self,
-                 sms_server: "SmsServer",
-                 host: str,
-                 port: int,
-                 debug: bool,
-                 allowed_networks: list[IPv4Network] | None = None,
-                 success_message: str = "OK",
-                 success_handler: callable = None,
-                 error_handler: callable = None):
-        self.sms_server = sms_server
-        self.host = host
-        self.port = port
-        self.debug = debug
-        if allowed_networks is None:
-            allowed_networks = []
-        self.allowed_networks = allowed_networks
-        self.success_message = success_message
-        self.success_handler = success_handler
-        if self.success_handler is None:
-            self.success_handler = self._handle_response
-        self.error_handler = error_handler
-        if self.error_handler is not None:
-            self.error_handler = self._handle_response
+class BaseServer(Base, Thread):
+    def __init__(self, server: "SmsServer", name: str, config: "BaseServerConfig"):
+        self._is_started = False
+        Base.__init__(self, server=server, name=name, config=config)
+        Thread.__init__(self, name=name, daemon=True)
 
-        logger.debug(f"Initializing {self} ...")
+    @property
+    def is_started(self) -> bool:
+        return self._is_started
 
-    def __str__(self):
-        return f"{self.__class__.__name__}(host='{self.host}', port={self.port})"
-
-    def done(self):
-        logger.debug(f"Initializing {self} ... done")
-
-    @abstractmethod
-    def start(self):
-        ...
+    @property
+    def config(self) -> Union["BaseServerConfig", Any]:
+        return super().config
 
     def run(self):
-        logger.debug(f"{self} started.")
+        logger.info(f"Starting {self} ...")
         try:
             self.enter()
         except KeyboardInterrupt:
-            logger.debug(f"Stopping {self} ...")
+            logger.info(f"Stopping {self} ...")
             self.exit()
             logger.debug(f"Stopping {self} ... done")
 
     @abstractmethod
     def enter(self):
         ...
+
+    def stated_done(self):
+        logger.debug(f"Starting {self} ... done.")
+        self._is_started = True
 
     @abstractmethod
     def exit(self):
@@ -71,7 +55,7 @@ class BaseServer(ABC):
         e = ""
         if error and isinstance(error, Exception):
             e = str(error)
-        if error and self.debug:
+        if error and self.config.debug:
             response_msg = f"{message}:\n{e}"
         else:
             response_msg = f"{message}."
@@ -83,15 +67,11 @@ class BaseServer(ABC):
         self.handle_response(caller=caller, message=response_msg, error=error)
 
     def handle_request(self, caller: Any, client_ip: IPv4Address, client_port: int, **kwargs) -> Any:
-        # check if client ip is allowed
-        if not self.check_is_allowed_network(client_ip=client_ip):
-            return self.log_and_handle_response(caller=self, message=f"Client IP address '{client_ip}' is not allowed.", level="warning", error=True)
-
         logger.debug(f"{self} - Accept message:\nclient='{client_ip}'\nport={client_port}")
 
         logger.debug(f"{self} - Progressing SMS body ...")
         try:
-            number, message = self._handle_sms_body(caller=caller, **kwargs)
+            number, message = self.handle_sms_body(caller=caller, **kwargs)
         except Exception as e:
             logger.error(f"{self} - Error while processing SMS body:\n{e}")
             return None
@@ -103,12 +83,10 @@ class BaseServer(ABC):
         return self.handle_response(caller=caller, message=message, error=not result)
 
     @abstractmethod
-    def _handle_sms_body(self, caller: Any, **kwargs) -> tuple[str, str]:
+    def handle_sms_body(self, caller: Any, **kwargs) -> tuple[str, str]:
         ...
 
     def handle_response(self, caller: Any, message: str, error: bool = False) -> Any:
-        if not error:
-            message = self.success_message
         logger.debug(f"{self} - Sending Response.\nmessage='{message}'\nerror={error}\n")
         try:
             if error:
@@ -119,18 +97,17 @@ class BaseServer(ABC):
         return None
 
     @abstractmethod
-    def _handle_response(self, caller: Any, message: str) -> Any:
+    def success_handler(self, caller: Any, message: str) -> Any:
         ...
 
-    def check_is_allowed_network(self, client_ip: IPv4Address) -> bool:
-        # check if client ip is allowed
-        for network in self.allowed_networks:
-            if client_ip in network:
-                return True
-        return False
+    @abstractmethod
+    def error_handler(self, caller: Any, message: str) -> Any:
+        ...
 
 
 class BaseServerConfig(BaseConfig):
+    debug: bool = Field(default=False, title="Debug", description="If set to True, server will be started in debug mode.")
+
     @property
     def cls(self) -> type[BaseServer]:
         cls = super().cls
