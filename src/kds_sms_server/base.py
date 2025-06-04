@@ -15,6 +15,8 @@ class Base(ABC):
     def __init__(self, name: str, config: "BaseConfig"):
         self._name = name
         self._config = config
+        self._sms_count = 0
+        self._sms_error_count = 0
 
         logger.info(f"Initializing {self} ...")
 
@@ -43,9 +45,26 @@ class Base(ABC):
     def config(self) -> Union["BaseConfig", Any]:
         return self._config
 
+    @property
+    def sms_count(self) -> int:
+        return self._sms_count
+
+    @property
+    def sms_error_count(self) -> int:
+        return self._sms_error_count
+
     def init_done(self):
         logger.debug(f"Initializing {self} ... done")
 
+    def increase_sms_count(self) -> None:
+        self._sms_count += 1
+
+    def increase_sms_error_count(self) -> None:
+        self._sms_error_count += 1
+
+    def reset_metrics(self):
+        self._sms_count = 0
+        self._sms_error_count = 0
 
 class BaseConfig(BaseModel):
     class Config:

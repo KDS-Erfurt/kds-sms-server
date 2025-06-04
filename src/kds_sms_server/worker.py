@@ -1,4 +1,6 @@
 import sys
+from datetime import datetime
+from logging import DEBUG, ERROR
 
 from wiederverwendbar.logger import LoggerSingleton
 from wiederverwendbar.task_manger import TaskManager, Task, EverySeconds
@@ -64,7 +66,7 @@ class SmsWorker(TaskManager):
 
     def handle_sms(self):
         # get all queued sms
-        queued_sms = Sms.get_all(status=SmsStatus.QUEUED, order_by=Sms.received_datetime)
+        queued_sms: list[Sms] = Sms.get_all(status=SmsStatus.QUEUED, order_by=Sms.received_datetime)
         if len(queued_sms) == 0:
             return
         queued_sms_count = len(queued_sms)
@@ -86,23 +88,30 @@ class SmsWorker(TaskManager):
             for gateway in self._gateways[:self._next_sms_gateway_index]:
                 gateways.append(gateway)
 
-        # send sms with gateways
-        logger.debug("------------------------------------------------------------------------------------------------------")
-        result = False
-        message = ""
-        for gateway in gateways:
-            # check if gateway is available
-            if not gateway.check():
-                continue
+        # send queued sms with gateways
+        for sms in queued_sms:
+            logger.debug("------------------------------------------------------------------------------------------------------")
+            log_level = ERROR
+            result = "Error while sending SMS. Not gateways left."
+            status = SmsStatus.ERROR
+            for gateway in gateways:
+                # check if gateway is available
+                if not gateway.check():
+                    continue
 
-            # send it with gateway
-            result = gateway.send_sms(number, message)
-            if result:
-                result = True
-                message = f"SMS sent successfully via {gateway}."
-                return True, ""
-        logger.debug("------------------------------------------------------------------------------------------------------")
-        return False, f"Error while sending SMS. Not gateways left."
+                # send it with gateway
+                success, log_level, result = gateway.send_sms(sms.number, sms.message)
+                if success:
+                    status = SmsStatus.SENT
+                    break
+            sms.status = status
+            sms.processed_datetime = datetime.now()
+            sms.result = result
+            sms.save()
+
+            logger.log(log_level, result)
+
+            logger.debug("------------------------------------------------------------------------------------------------------")
 
         print()
         ...

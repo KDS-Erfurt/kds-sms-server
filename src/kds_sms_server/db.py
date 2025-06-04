@@ -16,6 +16,7 @@ def db() -> Db:
     try:
         return Singleton.get_by_type(Db)
     except RuntimeError:
+        # noinspection PyArgumentList
         return Db(settings=settings, init=True)
 
 
@@ -30,10 +31,11 @@ class Sms(Base, db().Base):
     __str_columns__ = ["id", "status", "received_datetime", "send_datetime", "number"]
 
     id: int = Column(Integer(), primary_key=True, autoincrement=True, name="sms_id")
-    status: SmsStatus = Column(EnumValueStr(SmsStatus), nullable=False, name="sms_status")
+    status: SmsStatus | str = Column(EnumValueStr(SmsStatus), nullable=False, name="sms_status")
     received_by: str = Column(VARCHAR(20), nullable=True, name="sms_received_by")
     received_datetime: datetime = Column(DateTime(), nullable=False, name="sms_received_datetime")
-    send_datetime: datetime = Column(DateTime(), nullable=True, name="sms_send_datetime")
+    processed_datetime: datetime = Column(DateTime(), nullable=True, name="sms_processed_datetime")
+    sent_by: str = Column(VARCHAR(20), nullable=True, name="sms_sent_by")
     number: str = Column(VARCHAR(50), nullable=False, name="sms_number")
     message: str = Column(VARCHAR(1600), nullable=False, name="sms_message")
     result: str = Column(String(), nullable=True, name="sms_result_msg")

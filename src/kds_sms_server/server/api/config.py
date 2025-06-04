@@ -18,7 +18,7 @@ class ApiServerConfig(BaseServerConfig):
                                                 description="List of allowed client networks.")
     authentication_enabled: bool = Field(default=False, title="API Server Authentication Enabled", description="Enable API Server Authentication.")
     authentication_accounts: dict[str, str] = Field(default_factory=dict, title="API Server Authentication Accounts", description="API Server Authentication Accounts.")
-    success_message: str | None = Field(default="OK", title="API Server success message",
-                                        description="Message to send on success. If set to None, the original message will be sent back to the client.")
-    error_message: str | None = Field(default="ERROR", title="API Server error message",
-                                      description="Message to send on error. If set to None, the original message will be sent back to the client.")
+    success_result: str | None = Field(default=None, title="API Server success message",
+                                       description="Message to send on success. If set to None, the original message will be sent back to the client.")
+    error_result: str | None = Field(default=None, title="API Server error message",
+                                     description="Message to send on error. If set to None, the original message will be sent back to the client.")

@@ -15,8 +15,6 @@ class BaseGateway(Base):
         Base.__init__(self, name=name, config=config)
 
         self._state = False
-        self._sms_send_count = 0
-        self._sms_send_error_count = 0
 
         self.init_done()
 
@@ -31,22 +29,6 @@ class BaseGateway(Base):
     @state.setter
     def state(self, value: bool):
         self._state = value
-
-    @property
-    def sms_send_count(self) -> int:
-        return self._sms_send_count
-
-    @sms_send_count.setter
-    def sms_send_count(self, value: int):
-        self._sms_send_count = value
-
-    @property
-    def sms_send_error_count(self) -> int:
-        return self._sms_send_error_count
-
-    @sms_send_error_count.setter
-    def sms_send_error_count(self, value: int):
-        self._sms_send_error_count = value
 
     def check(self) -> bool:
         if not self._config.check:
@@ -69,9 +51,8 @@ class BaseGateway(Base):
     def _check(self) -> bool:
         ...
 
-    def send_sms(self, number: str, message: str) -> tuple[bool, str]:
+    def send_sms(self, number: str, message: str) -> tuple[bool, int, str]:
         logger.debug(f"Sending SMS via {self} ...")
-        self.sms_send_count += 1
         log_level = logging.DEBUG
         success = False
         try:
@@ -80,7 +61,7 @@ class BaseGateway(Base):
             if self._config.dry_run:
                 log_level = logging.WARNING
                 success = True
-                result = f"Dry run mode is enabled. SMS will not be sent via {self}."
+                result = f"Dry run mode is enabled. SMS will not sent via {self}."
             else:
                 success, gateway_result = self._send_sms(number, message)
                 if success:
@@ -92,16 +73,9 @@ class BaseGateway(Base):
 
         if not success:
             log_level = logging.ERROR
-            self.sms_send_error_count += 1
 
-        logger.log(log_level, result)
-
-        return success, result
+        return success, log_level, result
 
     @abstractmethod
     def _send_sms(self, number: str, message: str) -> tuple[bool, str]:
         ...
-
-    def reset_metrics(self):
-        self.sms_send_count = 0
-        self.sms_send_error_count = 0

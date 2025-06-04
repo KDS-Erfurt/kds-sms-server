@@ -48,7 +48,7 @@ class InfoApiModel(BaseModel):
 class ResponseApiModel(BaseModel):
     error: bool = Field(default=False, title="Error", description="Indicates if the request resulted in an error.")
     sms_id: int | None = Field(default=None, title="SMS ID", description="The ID of the queued SMS.")
-    message: str = Field(default=..., title="Message", description="The message of the response.")
+    result: str = Field(default=..., title="Message", description="The message of the response.")
 
 
 class ApiServer(BaseServer, FastAPI):
@@ -152,21 +152,21 @@ class ApiServer(BaseServer, FastAPI):
                 allowed = True
                 break
         if not allowed:
-            return self.log_and_handle_response(caller=self, message=f"Client IP address '{client_ip}' is not allowed.", level="warning", error=True)
+            return self.handle_response(caller=self, log_level=logging.WARNING, success=False, sms_id=None, result=f"Client IP address '{client_ip}' is not allowed.")
         return super().handle_request(caller=caller, client_ip=client_ip, client_port=client_port, **kwargs)
 
     def handle_sms_data(self, caller: None, **kwargs) -> tuple[str, str]:
         return kwargs["number"], kwargs["message"]
 
-    def success_handler(self, caller: None, sms_id: int, message: str) -> Any:
-        if self.config.success_message is not None:
-            message = self.config.success_message
-        return ResponseApiModel(error=False, sms_id=sms_id, message=message)
+    def success_handler(self, caller: None, sms_id: int, result: str) -> Any:
+        if self.config.success_result is not None:
+            result = self.config.success_result
+        return ResponseApiModel(error=False, sms_id=sms_id, result=result)
 
-    def error_handler(self, caller: None, sms_id: int | None, message: str) -> Any:
-        if self.config.error_message is not None:
-            message = self.config.error_message
-        return ResponseApiModel(error=True, sms_id=sms_id, message=message)
+    def error_handler(self, caller: None, sms_id: int | None, result: str) -> Any:
+        if self.config.error_result is not None:
+            result = self.config.error_result
+        return ResponseApiModel(error=True, sms_id=sms_id, result=result)
 
     async def get_info(self) -> InfoApiModel:
         return InfoApiModel()
@@ -185,6 +185,6 @@ class ApiServer(BaseServer, FastAPI):
             client_ip = IPv4Address(request.client.host)
             client_port = request.client.port
         except Exception as e:
-            self.log_and_handle_response(caller=self, message=f"Error while parsing client IP address.", level="error", error=e)
+            self.handle_response(caller=self, log_level=logging.ERROR, success=e, sms_id=None, result=f"Error while parsing client IP address.")
             raise RuntimeError("This should never happen.")
         return self.handle_request(caller=None, client_ip=client_ip, client_port=client_port, number=number, message=message)

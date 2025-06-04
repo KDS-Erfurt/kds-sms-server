@@ -24,7 +24,7 @@ class TcpServerHandler(socketserver.BaseRequestHandler):
         try:
             client_ip = IPv4Address(client_ip)
         except Exception as e:
-            return self.server.log_and_handle_response(caller=self, message=f"Error while parsing client IP address.", level="error", error=e)
+            return self.server.handle_response(caller=self, log_level=logging.ERROR, success=e, sms_id=None, result=f"Error while parsing client IP address.")
 
         self.server.handle_request(caller=self, client_ip=client_ip, client_port=client_port)
         return None
@@ -63,7 +63,7 @@ class TcpServer(BaseServer, socketserver.TCPServer):
                 allowed = True
                 break
         if not allowed:
-            return self.log_and_handle_response(caller=self, message=f"Client IP address '{client_ip}' is not allowed.", level="warning", error=True)
+            return self.handle_response(caller=self, log_level=logging.WARNING, success=False, sms_id=None, result=f"Client IP address '{client_ip}' is not allowed.")
         return super().handle_request(caller=caller, client_ip=client_ip, client_port=client_port, **kwargs)
 
     def handle_sms_data(self, caller: TcpServerHandler, **kwargs) -> tuple[str, str] | None:
@@ -72,7 +72,7 @@ class TcpServer(BaseServer, socketserver.TCPServer):
             data = caller.request.recv(settings.sms_data_max_size).strip()
             logger.debug(f"{self} - data={data}")
         except Exception as e:
-            return self.log_and_handle_response(caller=self, message=f"Error while receiving data.", level="error", error=e)
+            return self.handle_response(caller=self, log_level=logging.ERROR, success=e, sms_id=None, result=f"Error while receiving data.")
 
         # detect encoding
         try:
@@ -81,7 +81,7 @@ class TcpServer(BaseServer, socketserver.TCPServer):
                 encoding = chardet.detect(data)['encoding']
             logger.debug(f"{self} - encoding={encoding}")
         except Exception as e:
-            return self.log_and_handle_response(caller=self, message=f"Error while detecting encoding.", level="error", error=e)
+            return self.handle_response(caller=self, log_level=logging.ERROR, success=e, sms_id=None, result=f"Error while detecting encoding.")
 
         # decode message
         try:
@@ -90,20 +90,20 @@ class TcpServer(BaseServer, socketserver.TCPServer):
 
             # split message
             if "\r\n" not in data_str:
-                return self.log_and_handle_response(caller=self, message=f"Received data is not valid.", level="error", error=True)
+                return self.handle_response(caller=self,log_level=logging.ERROR, success=False,  sms_id=None, result=f"Received data is not valid.")
             number, message = data_str.split("\r\n")
             return number, message
         except Exception as e:
-            return self.log_and_handle_response(caller=self, message=f"Error while decoding data.", level="error", error=e)
+            return self.handle_response(caller=self, log_level=logging.ERROR, success=e, sms_id=None, result=f"Error while decoding data.")
 
-    def success_handler(self, caller: TcpServerHandler, sms_id: int, message: str) -> Any:
-        if self.config.success_message is not None:
-            message = self.config.success_message
-        message_raw = message.encode(self.config.out_encoding)
-        caller.request.sendall(message_raw)
+    def success_handler(self, caller: TcpServerHandler, sms_id: int, result: str) -> Any:
+        if self.config.success_result is not None:
+            result = self.config.success_result
+        result_raw = result.encode(self.config.out_encoding)
+        caller.request.sendall(result_raw)
 
-    def error_handler(self, caller: TcpServerHandler, sms_id: int | None, message: str) -> Any:
-        if self.config.error_message is not None:
-            message = self.config.error_message
-        message_raw = message.encode(self.config.out_encoding)
-        caller.request.sendall(message_raw)
+    def error_handler(self, caller: TcpServerHandler, sms_id: int | None, result: str) -> Any:
+        if self.config.error_result is not None:
+            result = self.config.error_result
+        result_raw = result.encode(self.config.out_encoding)
+        caller.request.sendall(result_raw)
