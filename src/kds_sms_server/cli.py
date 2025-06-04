@@ -32,7 +32,8 @@ def serve_command():
 
     from kds_sms_server import __title__, __description__, __author__, __author_email__, __version__
     from kds_sms_server.assets.ascii_logo import ascii_logo
-    from kds_sms_server.sms_server import SmsServer, logger
+    from kds_sms_server.logger import logger
+    from kds_sms_server.sms_server import SmsServer
 
     console.print(f"Starting {__title__} ...")
     console.print(ascii_logo)

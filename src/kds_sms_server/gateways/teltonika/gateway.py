@@ -1,11 +1,13 @@
 import logging
+from typing import TYPE_CHECKING
 
 import requests
-from pydantic import Field
 from pythonping import ping
-from enum import Enum
 
-from kds_sms_server.gateways.base import BaseGateway, BaseGatewayConfig
+from kds_sms_server.gateways.gateway import BaseGateway
+
+if TYPE_CHECKING:
+    from kds_sms_server.gateways.teltonika.config import TeltonikaGatewayConfig
 
 logger = logging.getLogger(__name__)
 
@@ -40,21 +42,7 @@ class TeltonikaGateway(BaseGateway):
                                         "text": message},
                                 timeout=self._config.timeout)
         text = response.text.replace("\n", "")
-        # log_msg = f"request='{response.url}'\n"
         if response.ok:
             return True, text
         else:
             return False, text
-
-
-class TeltonikaGatewayConfig(BaseGatewayConfig):
-    _cls = TeltonikaGateway
-
-    class Type(str, Enum):
-        TELTONIKA = "teltonika"
-
-    type: Type = Field(default=..., title="Type", description="Type of the gateway.")
-    ip: str = Field(default=..., title="IP address", description="IP address of the gateway.")
-    port: int = Field(default=80, title="Port", description="Port of the gateway.")
-    username: str = Field(default="", title="Username", description="Username for authentication.")
-    password: str = Field(default="", title="Password", description="Password for authentication.")

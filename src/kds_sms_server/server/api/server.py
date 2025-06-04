@@ -1,7 +1,6 @@
 import logging
 from contextlib import asynccontextmanager
-from enum import Enum
-from ipaddress import IPv4Address, IPv4Network
+from ipaddress import IPv4Address
 from typing import TYPE_CHECKING, Annotated, Any
 
 import uvicorn
@@ -14,11 +13,12 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from kds_sms_server import __title__, __description__, __version__, __author__, __author_email__, __license__
 from kds_sms_server.assets import ASSETS_PATH
-from kds_sms_server.server.base import BaseServer, BaseServerConfig
+from kds_sms_server.server.server import BaseServer
 from starlette.requests import Request
 
 if TYPE_CHECKING:
     from kds_sms_server.sms_server import SmsServer
+    from kds_sms_server.server.api.config import ApiServerConfig
 
 logger = logging.getLogger(__name__)
 
@@ -48,11 +48,12 @@ class InfoApiModel(BaseModel):
 
 class ResponseApiModel(BaseModel):
     error: bool = Field(default=False, title="Error", description="Indicates if the request resulted in an error.")
+    sms_id: int | None = Field(default=None, title="SMS ID", description="The ID of the queued SMS.")
     message: str = Field(default=..., title="Message", description="The message of the response.")
 
 
 class ApiServer(BaseServer, FastAPI):
-    def __init__(self, server: "SmsServer", name: str, config: "BaseServerConfig"):
+    def __init__(self, server: "SmsServer", name: str, config: "ApiServerConfig"):
         BaseServer.__init__(self, server=server, name=name, config=config)
 
         FastAPI.__init__(
@@ -155,18 +156,18 @@ class ApiServer(BaseServer, FastAPI):
             return self.log_and_handle_response(caller=self, message=f"Client IP address '{client_ip}' is not allowed.", level="warning", error=True)
         return super().handle_request(caller=caller, client_ip=client_ip, client_port=client_port, **kwargs)
 
-    def handle_sms_body(self, caller: None, **kwargs) -> tuple[str, str]:
+    def handle_sms_data(self, caller: None, **kwargs) -> tuple[str, str]:
         return kwargs["number"], kwargs["message"]
 
-    def success_handler(self, caller: None, message: str) -> Any:
+    def success_handler(self, caller: None, sms_id: int, message: str) -> Any:
         if self.config.success_message is not None:
             message = self.config.success_message
-        return ResponseApiModel(error=False, message=message)
+        return ResponseApiModel(error=False, sms_id=sms_id, message=message)
 
-    def error_handler(self, caller: None, message: str) -> Any:
+    def error_handler(self, caller: None, sms_id: int | None, message: str) -> Any:
         if self.config.error_message is not None:
             message = self.config.error_message
-        return ResponseApiModel(error=True, message=message)
+        return ResponseApiModel(error=True, sms_id=sms_id, message=message)
 
     async def get_info(self) -> InfoApiModel:
         return InfoApiModel()
@@ -188,24 +189,3 @@ class ApiServer(BaseServer, FastAPI):
             self.log_and_handle_response(caller=self, message=f"Error while parsing client IP address.", level="error", error=e)
             raise RuntimeError("This should never happen.")
         return self.handle_request(caller=None, client_ip=client_ip, client_port=client_port, number=number, message=message)
-
-
-class ApiServerConfig(BaseServerConfig):
-    _cls = ApiServer
-
-    class Type(str, Enum):
-        API = "api"
-
-    type: Type = Field(default=..., title="Type", description="Type of the server.")
-    host: IPv4Address = Field(default=..., title="API Server Host", description="API Server Host to bind to.")
-    port: int = Field(default=..., title="API Server Port", ge=0, le=65535, description="API Server Port to bind to.")
-    docs_web_path: str | None = Field(default=None, title="API Server Docs Web Path", description="API Server Docs Web Path.")
-    redoc_web_path: str | None = Field(default=None, title="API Server Redoc Web Path", description="API Server Redoc Web Path.")
-    allowed_networks: list[IPv4Network] = Field(default_factory=lambda: [IPv4Network("0.0.0.0/0")], title="API Server Allowed Clients Networks",
-                                                description="List of allowed client networks.")
-    authentication_enabled: bool = Field(default=False, title="API Server Authentication Enabled", description="Enable API Server Authentication.")
-    authentication_accounts: dict[str, str] = Field(default_factory=dict, title="API Server Authentication Accounts", description="API Server Authentication Accounts.")
-    success_message: str | None = Field(default="OK", title="API Server success message",
-                                        description="Message to send on success. If set to None, the original message will be sent back to the client.")
-    error_message: str | None = Field(default="ERROR", title="API Server error message",
-                                      description="Message to send on error. If set to None, the original message will be sent back to the client.")

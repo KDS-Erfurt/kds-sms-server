@@ -1,52 +1,113 @@
 import logging
 import sys
-import threading
 import time
 
+from wiederverwendbar.task_manger import TaskManager, Task, EverySeconds
+
 from kds_sms_server.console import console
+from kds_sms_server.gateways.gateway import BaseGateway
+from kds_sms_server.gateways.teltonika.gateway import TeltonikaGateway
+from kds_sms_server.gateways.vonage.gateway import VonageGateway
+from kds_sms_server.server.server import BaseServer
+from kds_sms_server.server.api.server import ApiServer
+from kds_sms_server.server.tcp.server import TcpServer
 from kds_sms_server.settings import Settings, settings
-from kds_sms_server.server import BaseServer
-from kds_sms_server.gateways import BaseGateway
 
 logger = logging.getLogger(__name__)
 
 
-class SmsServer:
+class SmsServer(TaskManager):
     def __init__(self):
         logger.info(f"Initializing SMS-Server ...")
-        self.lock = threading.Lock()
         self._settings = settings
+        super().__init__(worker_count=settings.sms_background_worker_count, daemon=True, logger=logger)
 
+        # initialize servers and gateways
         logger.info("Initializing servers ...")
         self._server: list[BaseServer] = []
         for server_config_name, server_config in self.settings.sms_server.items():
-            server = server_config.cls(server=self, name=server_config_name, config=server_config)
+            if len(server_config_name) > 20:
+                logger.error(f"Server name '{server_config_name}' is too long. Max size is 20 characters.")
+                sys.exit(1)
+
+            server_cls = None
+            if server_config.type == "tcp":
+                server_cls = TcpServer
+            elif server_config.type == "api":
+                server_cls = ApiServer
+
+            if server_cls is None:
+                logger.error(f"Unknown server type '{server_config.type}'.")
+                sys.exit(1)
+
+            server = server_cls(server=self, name=server_config_name, config=server_config)
             self._server.append(server)
+        if len(self._server) == 0:
+            logger.error(f"No servers are configured. Please check your settings.")
+            sys.exit(1)
         logger.debug("Initializing servers ... done")
 
         logger.info("Initializing gateways ...")
         # self._next_sms_gateway_index: int | None = None
         self._gateways: list[BaseGateway] = []
         for gateway_config_name, gateway_config in self.settings.sms_gateways.items():
-            gateway = gateway_config.cls(server=self, name=gateway_config_name, config=gateway_config)
+            if len(gateway_config_name) > 20:
+                logger.error(f"Gateway name '{gateway_config_name}' is too long. Max size is 20 characters.")
+                sys.exit(1)
+
+            gateway_cls = None
+            if gateway_config.type == "teltonika":
+                gateway_cls = TeltonikaGateway
+            elif gateway_config.type == "vonage":
+                gateway_cls = VonageGateway
+
+            if gateway_cls is None:
+                logger.error(f"Unknown gateway type '{gateway_config.type}'.")
+                sys.exit(1)
+
+            gateway = gateway_cls(server=self, name=gateway_config_name, config=gateway_config)
             self._gateways.append(gateway)
+        if len(self._gateways) == 0:
+            logger.error(f"No gateways are configured. Please check your settings.")
+            sys.exit(1)
         logger.debug("Initializing gateways ... done")
+
+        # create tasks
+        logger.info("Initializing tasks ...")
+        Task(name="Handle SMS", manager=self, trigger=EverySeconds(self.settings.sms_handle_interval), payload=self.handle_sms)
+        Task(name="Cleanup SMS", manager=self, trigger=EverySeconds(self.settings.sms_cleanup_interval), payload=self.cleanup_sms)
+        logger.debug("Initializing tasks ... done")
 
         logger.debug(f"Initializing SMS-Server ... done")
 
-        self.loop()
+        logger.info(f"Starting SMS-Server ...")
+        # starting servers
+        for server in self._server:
+            server.start()
+
+        # waiting for servers to start
+        while True:
+            if not any(not server.is_started for server in self._server):
+                break
+            logger.debug(f"Waiting for servers to start ...")
+            time.sleep(1.0)
+
+        # starting task manager workers
+        self.start()
+
+        logger.debug(f"Starting SMS-Server ... done")
+
+        # enter main loop
+        console.print(f"SMS-Server is ready. Press CTRL+C to quit.")
+        try:
+            while True:
+                time.sleep(0.001)
+        except KeyboardInterrupt:
+            logger.debug(f"KeyboardInterrupt received. Stopping SMS-Server ...")
 
     @property
     def settings(self) -> "Settings":
         return self._settings
-
-    @property
-    def server(self) -> tuple[BaseServer, ...]:
-        return tuple(self._server)
-
-    @property
-    def gateways(self) -> tuple[BaseGateway, ...]:
-        return tuple(self._gateways)
 
     # @property
     # def gateways(self) -> tuple[BaseGateway, ...]:
@@ -109,33 +170,8 @@ class SmsServer:
     #             return True, ""
     #     return False, f"Error while sending SMS. Not gateways left."
 
-    def loop(self):
-        if len(self.server) == 0:
-            logger.error(f"No servers are configured. Please check your settings.")
-            sys.exit(1)
-        if len(self.gateways) == 0:
-            logger.error(f"No gateways are configured. Please check your settings.")
-            sys.exit(1)
+    def handle_sms(self):
+        logger.debug("Handle SMS ...")
 
-        logger.info(f"Starting SMS-Server ...")
-
-        # starting servers
-        for server in self.server:
-            server.start()
-
-        # waiting for servers to start
-
-        while True:
-            if not any(not server.is_started for server in self.server):
-                break
-            logger.debug(f"Waiting for servers to start ...")
-            time.sleep(1.0)
-
-        logger.debug(f"Starting SMS-Server ... done")
-        console.print(f"SMS-Server is ready. Press CTRL+C to quit.")
-        try:
-            while True:
-                time.sleep(0.001)
-        except KeyboardInterrupt:
-            logger.debug(f"KeyboardInterrupt received. Stopping SMS-Server ...")
-        sys.exit(0)
+    def cleanup_sms(self):
+        logger.debug("Handle SMS ...")

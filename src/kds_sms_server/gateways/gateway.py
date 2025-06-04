@@ -1,13 +1,12 @@
 import logging
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from typing import TYPE_CHECKING, Union, Any
 
-from pydantic import Field
-
-from kds_sms_server.base import Base, BaseConfig
+from kds_sms_server.base import Base
 
 if TYPE_CHECKING:
     from kds_sms_server.sms_server import SmsServer
+    from kds_sms_server.gateways.config import BaseGatewayConfig
 
 logger = logging.getLogger(__name__)
 
@@ -102,19 +101,3 @@ class BaseGateway(Base):
     def reset_metrics(self):
         self.sms_send_count = 0
         self.sms_send_error_count = 0
-
-
-class BaseGatewayConfig(BaseConfig):
-    dry_run: bool = Field(default=False, title="Dry run mode", description="If set to True, SMS will not be sent via this gateway."
-                                                                           "This is useful for testing purposes.")
-    timeout: int = Field(default=5, title="Timeout", description="Timeout for sending SMS via this gateway.")
-    check: bool = Field(default=True, title="Check", description="If set to True, gateway will be checked before sending SMS.")
-    check_timeout: int = Field(default=1, title="Check timeout", description="Timeout for checking gateway availability.")
-    check_retries: int = Field(default=3, title="Check retries", description="Number of retries for checking gateway availability.")
-
-    @property
-    def cls(self) -> type[BaseGateway]:
-        cls = super().cls
-        if not issubclass(cls, BaseGateway):
-            raise TypeError(f"Gateway class '{cls.__name__}' is not a subclass of '{BaseGateway.__name__}'")
-        return cls
