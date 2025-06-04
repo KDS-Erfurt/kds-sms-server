@@ -17,7 +17,6 @@ from kds_sms_server.server.server import BaseServer
 from starlette.requests import Request
 
 if TYPE_CHECKING:
-    from kds_sms_server.sms_server import SmsServer
     from kds_sms_server.server.api.config import ApiServerConfig
 
 logger = logging.getLogger(__name__)
@@ -53,8 +52,8 @@ class ResponseApiModel(BaseModel):
 
 
 class ApiServer(BaseServer, FastAPI):
-    def __init__(self, server: "SmsServer", name: str, config: "ApiServerConfig"):
-        BaseServer.__init__(self, server=server, name=name, config=config)
+    def __init__(self, name: str, config: "ApiServerConfig"):
+        BaseServer.__init__(self, name=name, config=config)
 
         FastAPI.__init__(
             self,

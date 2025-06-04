@@ -5,15 +5,14 @@ from typing import TYPE_CHECKING, Union, Any
 from kds_sms_server.base import Base
 
 if TYPE_CHECKING:
-    from kds_sms_server.sms_server import SmsServer
     from kds_sms_server.gateways.config import BaseGatewayConfig
 
 logger = logging.getLogger(__name__)
 
 
 class BaseGateway(Base):
-    def __init__(self, server: "SmsServer", name: str, config: "BaseGatewayConfig"):
-        Base.__init__(self, server=server, name=name, config=config)
+    def __init__(self, name: str, config: "BaseGatewayConfig"):
+        Base.__init__(self, name=name, config=config)
 
         self._state = False
         self._sms_send_count = 0

@@ -7,9 +7,9 @@ from typing import TYPE_CHECKING, Any
 import chardet
 
 from kds_sms_server.server.server import BaseServer
+from kds_sms_server.settings import settings
 
 if TYPE_CHECKING:
-    from kds_sms_server.sms_server import SmsServer
     from kds_sms_server.server.tcp.config import TcpServerConfig
 
 logger = logging.getLogger(__name__)
@@ -31,8 +31,8 @@ class TcpServerHandler(socketserver.BaseRequestHandler):
 
 
 class TcpServer(BaseServer, socketserver.TCPServer):
-    def __init__(self, server: "SmsServer", name: str, config: "TcpServerConfig"):
-        BaseServer.__init__(self, server=server, name=name, config=config)
+    def __init__(self, name: str, config: "TcpServerConfig"):
+        BaseServer.__init__(self, name=name, config=config)
 
         try:
             # noinspection PyTypeChecker
@@ -69,7 +69,7 @@ class TcpServer(BaseServer, socketserver.TCPServer):
     def handle_sms_data(self, caller: TcpServerHandler, **kwargs) -> tuple[str, str] | None:
         # get data
         try:
-            data = caller.request.recv(self.server.settings.sms_data_max_size).strip()
+            data = caller.request.recv(settings.sms_data_max_size).strip()
             logger.debug(f"{self} - data={data}")
         except Exception as e:
             return self.log_and_handle_response(caller=self, message=f"Error while receiving data.", level="error", error=e)

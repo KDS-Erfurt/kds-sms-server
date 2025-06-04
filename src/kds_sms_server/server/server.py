@@ -7,18 +7,18 @@ from typing import Any, TYPE_CHECKING, Literal, Union
 
 from kds_sms_server.base import Base
 from kds_sms_server.db import Sms, SmsStatus
+from kds_sms_server.settings import settings
 
 if TYPE_CHECKING:
-    from kds_sms_server.sms_server import SmsServer
     from kds_sms_server.server.config import BaseServerConfig
 
 logger = logging.getLogger(__name__)
 
 
 class BaseServer(Base, Thread):
-    def __init__(self, server: "SmsServer", name: str, config: "BaseServerConfig"):
+    def __init__(self, name: str, config: "BaseServerConfig"):
         self._is_started = False
-        Base.__init__(self, server=server, name=name, config=config)
+        Base.__init__(self, name=name, config=config)
         Thread.__init__(self, name=name, daemon=True)
 
     @property
@@ -81,31 +81,31 @@ class BaseServer(Base, Thread):
         logger.debug(f"Validating SMS ...")
 
         # check number
-        if len(number) > self.server.settings.sms_number_max_size:
-            return False, f"Received number is too long. Max size is '{self.server.settings.sms_number_max_size}'.\nnumber_size={len(number)}"
+        if len(number) > settings.sms_number_max_size:
+            return False, f"Received number is too long. Max size is '{settings.sms_number_max_size}'.\nnumber_size={len(number)}"
         _number = ""
         for char in number:
-            if char not in list(self.server.settings.sms_number_allowed_chars):
-                return False, f"Received number contains invalid characters. Allowed characters are '{self.server.settings.sms_number_allowed_chars}'.\nnumber='{number}'"
-            if char in list(self.server.settings.sms_number_replace_chars):
+            if char not in list(settings.sms_number_allowed_chars):
+                return False, f"Received number contains invalid characters. Allowed characters are '{settings.sms_number_allowed_chars}'.\nnumber='{number}'"
+            if char in list(settings.sms_number_replace_chars):
                 char = ""
             _number += char
         number = _number
         del _number
 
         # replace zero number
-        if self.server.settings.sms_replace_zero_numbers is not None:
+        if settings.sms_replace_zero_numbers is not None:
             if number.startswith("0"):
-                number = self.server.settings.sms_replace_zero_numbers + number[1:]
+                number = settings.sms_replace_zero_numbers + number[1:]
 
         # check a message
-        if len(message) > self.server.settings.sms_message_max_size:
-            return False, f"Received message is too long. Max size is '{self.server.settings.sms_message_max_size}'.\nmessage_size={len(message)}"
+        if len(message) > settings.sms_message_max_size:
+            return False, f"Received message is too long. Max size is '{settings.sms_message_max_size}'.\nmessage_size={len(message)}"
 
         logger.debug(f"Validating SMS ... done")
 
         # log sms
-        if self.server.settings.sms_logging:
+        if settings.sms_logging:
             logger.debug(f"SMS:\nnumber={number}\nmessage='{message}'")
 
         # queue sms

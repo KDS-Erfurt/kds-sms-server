@@ -23,7 +23,7 @@ AVAILABLE_GATEWAY_CONFIGS = Union[
 ]
 
 
-class Settings(FileConfig, BaseSettings, LoggerSettings, SqlalchemySettings):
+class Settings(FileConfig, BaseSettings, SqlalchemySettings):
     model_config = {
         "env_prefix": "KDS_SMS_SERVER_",
         "case_sensitive": False
@@ -33,15 +33,8 @@ class Settings(FileConfig, BaseSettings, LoggerSettings, SqlalchemySettings):
     debug: bool = Field(default=False, title="Debug", description="Enable Debug.")
 
     # log
-    log_console_format: str = Field(default="%(message)s",
-                                    title="Console Log Format",
-                                    description="The log format for the console")
-    log_ignored_loggers_equal: list[str] = Field(default_factory=list,
-                                                 title="Ignored Loggers Equal",
-                                                 description="Loggers that are equal to these will be ignored.")
-    log_ignored_loggers_like: list[str] = Field(default_factory=lambda: ["sqlalchemy", "pymysql", "asyncio", "parso", "engineio", "socketio", "python_multipart.multipart"],
-                                                title="Ignored Loggers Like",
-                                                description="Loggers that contain these will be ignored.")
+    log_server: LoggerSettings = Field(default_factory=LoggerSettings, title="Server Log Settings", description="Logger settings for server.")
+    log_worker: LoggerSettings = Field(default_factory=LoggerSettings, title="Worker Log Settings", description="Logger settings for worker.")
 
     # sms settings
     sms_background_worker_count: int | None = Field(default=None, title="Background Worker Count",
