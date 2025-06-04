@@ -68,4 +68,4 @@ class Settings(FileConfig, BaseSettings, LoggerSettings, SqlalchemySettings):
 
 
 # noinspection PyArgumentList
-settings = Settings(file_path=Path("settings.json"))
+settings = Settings(file_path=Path("settings.json"), file_must_exist="yes_print")
