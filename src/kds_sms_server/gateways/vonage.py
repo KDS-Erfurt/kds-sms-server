@@ -2,10 +2,10 @@ import logging
 from enum import Enum
 from typing import Literal
 
+from pydantic import Field
 from vonage import Vonage, Auth, HttpClientOptions
 from vonage_sms import SmsMessage, SmsResponse
 
-from kds_sms_server import __title__
 from kds_sms_server.gateways.base import BaseGateway, BaseGatewayConfig
 
 logger = logging.getLogger(__name__)
@@ -58,9 +58,10 @@ class VonageGatewayConfig(BaseGatewayConfig):
     class Type(str, Enum):
         VONAGE = "vonage"
 
-    type: Type
-    api_key: str
-    api_secret: str
-    from_text: str = __title__
-    check_min_balance: float = 0.0
-    check_auto_balance: bool = True
+    type: Type = Field(default=..., title="Type", description="Type of the gateway.")
+    api_key: str = Field(default="", title="API key", description="API key for authentication.")
+    api_secret: str = Field(default="", title="API secret", description="API secret for authentication.")
+    from_text: str = Field(default="1234567890123", title="From Text", description="From Text visible for recipient.")
+    check_min_balance: float = Field(default=0.0, title="Check min balance", description="Minimum balance required for checking gateway availability.")
+    check_auto_balance: bool = Field(default=True, title="Check auto balance",
+                                     description="If set to True, min balance will be ignored if the vonage api returns an auto reload flag.")

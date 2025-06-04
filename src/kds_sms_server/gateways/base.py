@@ -2,7 +2,7 @@ import logging
 from abc import ABC, abstractmethod
 from typing import Any, TYPE_CHECKING
 
-from pydantic import BaseModel, PrivateAttr
+from pydantic import BaseModel, PrivateAttr, Field
 
 if TYPE_CHECKING:
     from kds_sms_server.sms_server import SmsServer
@@ -114,11 +114,12 @@ class BaseGatewayConfig(BaseModel):
         use_enum_values = True
 
     _gateway_cls: type[BaseGateway] | None = PrivateAttr(None)
-    dry_run: bool = False
-    timeout: int = 5
-    check: bool = True
-    check_timeout: int = 1
-    check_retries: int = 3
+    dry_run: bool = Field(default=False, title="Dry run mode", description="If set to True, SMS will not be sent via this gateway."
+                                                                           "This is useful for testing purposes.")
+    timeout: int = Field(default=5, title="Timeout", description="Timeout for sending SMS via this gateway.")
+    check: bool = Field(default=True, title="Check", description="If set to True, gateway will be checked before sending SMS.")
+    check_timeout: int = Field(default=1, title="Check timeout", description="Timeout for checking gateway availability.")
+    check_retries: int = Field(default=3, title="Check retries", description="Number of retries for checking gateway availability.")
 
     def __init__(self, /, **data: Any):
         super().__init__(**data)

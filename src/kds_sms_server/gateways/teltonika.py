@@ -1,6 +1,7 @@
 import logging
 
 import requests
+from pydantic import Field
 from pythonping import ping
 from enum import Enum
 
@@ -48,8 +49,8 @@ class TeltonikaGatewayConfig(BaseGatewayConfig):
     class Type(str, Enum):
         TELTONIKA = "teltonika"
 
-    type: Type
-    ip: str
-    port: int = 80
-    username: str = ""
-    password: str = ""
+    type: Type = Field(default=..., title="Type", description="Type of the gateway.")
+    ip: str = Field(default=..., title="IP address", description="IP address of the gateway.")
+    port: int = Field(default=80, title="Port", description="Port of the gateway.")
+    username: str = Field(default="", title="Username", description="Username for authentication.")
+    password: str = Field(default="", title="Password", description="Password for authentication.")
