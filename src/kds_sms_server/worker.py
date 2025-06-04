@@ -158,7 +158,7 @@ class SmsWorker(TaskManager):
                            result=result,
                            log=sms_log)
 
-                logger.info(f"Processing SMS with id={sms.id} ... done")
+                logger.debug(f"Processing SMS with id={sms.id} ... done")
             except Exception as e:
                 logger.error(f"Error while processing SMS with id={sms.id}.\nException: {e}")
 
