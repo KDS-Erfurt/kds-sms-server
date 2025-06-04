@@ -50,26 +50,30 @@ class BaseServer(Base, Thread):
     def exit(self):
         ...
 
-    def handle_request(self, caller: Any, client_ip: IPv4Address, client_port: int, **kwargs) -> Any:
+    def handle_request(self, caller: Any, client_ip: IPv4Address, client_port: int, **kwargs) -> Any | None:
+        self.increase_sms_count()
         logger.debug(f"{self} - Accept message:\nclient='{client_ip}'\nport={client_port}")
 
         logger.debug(f"{self} - Progressing SMS data ...")
         try:
             number, message = self.handle_sms_data(caller=caller, **kwargs)
         except Exception as e:
-            logger.error(f"{self} - Error while processing SMS body:\n{e}")
-            return None
+            return self.handle_response(caller=self, log_level=logging.ERROR, success=e, sms_id=None, result=f"Error while processing SMS body.")
         logger.debug(f"{self} - Progressing SMS data ... done")
 
         logger.debug(f"Validating SMS ...")
 
         # check number
         if len(number) > settings.sms_number_max_size:
-            return False, f"Received number is too long. Max size is '{settings.sms_number_max_size}'.\nnumber_size={len(number)}"
+            return self.handle_response(caller=self, log_level=logging.ERROR, success=False, sms_id=None, result=f"Received number is too long. "
+                                                                                                                 f"Max size is '{settings.sms_number_max_size}'.\n"
+                                                                                                                 f"number_size={len(number)}")
         _number = ""
         for char in number:
             if char not in list(settings.sms_number_allowed_chars):
-                return False, f"Received number contains invalid characters. Allowed characters are '{settings.sms_number_allowed_chars}'.\nnumber='{number}'"
+                return self.handle_response(caller=self, log_level=logging.ERROR, success=False, sms_id=None, result=f"Received number contains invalid characters. "
+                                                                                                                     f"Allowed characters are '{settings.sms_number_allowed_chars}'.\n"
+                                                                                                                     f"number='{number}'")
             if char in list(settings.sms_number_replace_chars):
                 char = ""
             _number += char
@@ -83,7 +87,9 @@ class BaseServer(Base, Thread):
 
         # check a message
         if len(message) > settings.sms_message_max_size:
-            return False, f"Received message is too long. Max size is '{settings.sms_message_max_size}'.\nmessage_size={len(message)}"
+            return self.handle_response(caller=self, log_level=logging.ERROR, success=False, sms_id=None, result=f"Received message is too long. "
+                                                                                                                 f"Max size is '{settings.sms_message_max_size}'.\n"
+                                                                                                                 f"message_size={len(message)}")
 
         logger.debug(f"Validating SMS ... done")
 
@@ -121,7 +127,7 @@ class BaseServer(Base, Thread):
             logger.error(f"{self} - Error while sending response message.\n{e}")
         return None
 
-    def handle_response(self, caller: Any, log_level: int, success: bool | Exception, sms_id: int | None, result: str) -> Any:
+    def handle_response(self, caller: Any, log_level: int, success: bool | Exception, sms_id: int | None, result: str) -> Any | None:
         if result.endswith(".") or result.endswith(":"):
             result = result[:-1]
         e = ""
