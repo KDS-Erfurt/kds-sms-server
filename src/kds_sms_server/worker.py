@@ -97,7 +97,7 @@ class SmsWorker(TaskManager):
                 self._next_sms_gateway_index = 0
 
             # order gateways
-            gateways = []
+            gateways: list[BaseGateway] = []
             for gateway in self._gateways[self._next_sms_gateway_index:]:
                 gateways.append(gateway)
             if self._next_sms_gateway_index > 0:
@@ -113,7 +113,7 @@ class SmsWorker(TaskManager):
                     sms_log += "\n"
                 sms_log += sms_log_msg
 
-            sms_logger = logging.Logger(name=f"{logger.name}",)
+            sms_logger = logging.Logger(name=f"{logger.name}", )
             sms_logger_handler = self.SmsLogHandler(buffer_target=add_sms_log)
             sms_logger_handler.setLevel(settings.log_worker.log_level.logging_level)
             sms_logger_handler.setFormatter(logging.Formatter("%(name)s - %(levelname)s - %(message)s"))
@@ -127,8 +127,10 @@ class SmsWorker(TaskManager):
                 status = SmsStatus.ERROR
                 send_by = None
                 for gateway in gateways:
+                    gateway.increase_sms_count()
                     # check if gateway is available
                     if not gateway.check():
+                        gateway.increase_sms_error_count()
                         continue
 
                     # send it with gateway
@@ -137,6 +139,7 @@ class SmsWorker(TaskManager):
                         status = SmsStatus.SENT
                         send_by = gateway.name
                         break
+                    gateway.increase_sms_error_count()
                 sms_logger.log(log_level, result)
                 logger.log(log_level, result)
 

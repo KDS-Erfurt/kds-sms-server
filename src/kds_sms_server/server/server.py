@@ -51,7 +51,6 @@ class BaseServer(Base, Thread):
         ...
 
     def handle_request(self, caller: Any, client_ip: IPv4Address, client_port: int, **kwargs) -> Any | None:
-        self.increase_sms_count()
         logger.debug(f"{self} - Accept message:\nclient='{client_ip}'\nport={client_port}")
 
         logger.debug(f"{self} - Progressing SMS data ...")
@@ -145,7 +144,9 @@ class BaseServer(Base, Thread):
 
         logger.debug(f"{self} - Sending Response.\nsuccess='{success}'\nsms_id={sms_id}\nresult={result}")
         try:
+            self.increase_sms_count()
             if not success:
+                self.increase_sms_error_count()
                 return self.error_handler(caller=caller, sms_id=sms_id, result=result)
             return self.success_handler(caller=caller, sms_id=sms_id, result=result)
         except Exception as e:
