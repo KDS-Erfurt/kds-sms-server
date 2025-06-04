@@ -105,4 +105,6 @@ def init_db_command():
     print_header(mode="server")
 
     # init db
+    console.print("Initializing database ...")
     db().create_all()
+    console.print("Initializing database ... done")
