@@ -1,4 +1,4 @@
-# sms-server
+# kds-sms-server
 A broker server for sending SMS.
 
 ---
