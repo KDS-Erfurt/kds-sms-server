@@ -5,7 +5,7 @@ from kds_sms_server import __title__, __description__, __author__, __author_emai
 from kds_sms_server.assets.ascii_logo import ascii_logo
 from kds_sms_server.settings import settings
 from kds_sms_server.console import console
-from kds_sms_server.sms_server import SMSServer
+from kds_sms_server.sms_server import SmsServer
 
 LoggerSingleton(name=__name__,
                 settings=settings,
@@ -32,4 +32,4 @@ def serve():
     console.print(f"version: {__version__}")
     console.print("_________________________________________________________________________________")
 
-    SMSServer()
+    SmsServer()

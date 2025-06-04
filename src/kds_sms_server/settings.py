@@ -5,7 +5,7 @@ from pydantic import Field
 from pydantic_settings import BaseSettings
 from wiederverwendbar.uvicorn import UvicornServerSettings
 
-from kds_sms_server.gateways import AVAILABLE_CONFIGS
+from kds_sms_server.gateways import AVAILABLE_GATEWAY_CONFIGS
 from wiederverwendbar.logger import LoggerSettings
 from wiederverwendbar.pydantic import FileConfig
 
@@ -46,7 +46,6 @@ class Settings(FileConfig, BaseSettings, LoggerSettings, UvicornServerSettings):
     api_server_authentication_accounts: dict[str, str] = Field(default={}, title="API Server Authentication Accounts", description="API Server Authentication Accounts.")
     api_server_success_message: str = Field(default="OK", title="API Server success message", description="Message to send on success.")
 
-
     # sms settings
     sms_number_allowed_chars: str = Field(default="+*#()0123456789 ", title="Allowed Number Characters", description="Allowed Number Characters.")
     sms_number_replace_chars: str = Field(default="() ", title="Replace Number Characters", description="Replace Number Characters.")
@@ -57,7 +56,7 @@ class Settings(FileConfig, BaseSettings, LoggerSettings, UvicornServerSettings):
     sms_logging: bool = Field(default=False, title="SMS Logging", description="Enable SMS Logging content logging.")
 
     # gateway settings
-    gateway_configs: dict[str, AVAILABLE_CONFIGS] = {}
+    gateways: dict[str, AVAILABLE_GATEWAY_CONFIGS] = Field(default_factory=dict, title="Gateways", description="Gateways configuration.")
 
 
 # noinspection PyArgumentList

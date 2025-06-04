@@ -7,17 +7,17 @@ from typing import TYPE_CHECKING, Any
 
 import chardet
 
-from kds_sms_server.server.base import BaseServer
+from kds_sms_server.server.base import BaseServer, BaseServerConfig
 from kds_sms_server.settings import settings
 
 if TYPE_CHECKING:
-    from kds_sms_server.sms_server import SMSServer
+    from kds_sms_server.sms_server import SmsServer
 
 logger = logging.getLogger(__name__)
 
 
-class TCPServerHandler(socketserver.BaseRequestHandler):
-    server: "TCPServer"
+class TcpServerHandler(socketserver.BaseRequestHandler):
+    server: "TcpServer"
 
     def handle(self) -> None:
         # get client ip and port
@@ -31,8 +31,8 @@ class TCPServerHandler(socketserver.BaseRequestHandler):
         return None
 
 
-class TCPServer(BaseServer, socketserver.TCPServer, threading.Thread):
-    def __init__(self, sms_server: "SMSServer"):
+class TcpServer(BaseServer, socketserver.TCPServer, threading.Thread):
+    def __init__(self, sms_server: "SmsServer"):
         try:
             BaseServer.__init__(self,
                                 sms_server=sms_server,
@@ -42,7 +42,7 @@ class TCPServer(BaseServer, socketserver.TCPServer, threading.Thread):
                                 allowed_networks=settings.tcp_server_allowed_networks,
                                 success_message=settings.tcp_server_success_message)
             # noinspection PyTypeChecker
-            socketserver.TCPServer.__init__(self, (self.host, self.port), TCPServerHandler)
+            socketserver.TCPServer.__init__(self, (self.host, self.port), TcpServerHandler)
             threading.Thread.__init__(self, daemon=True)
         except Exception as e:
             logger.error(f"Error while starting {self}: {e}")
@@ -59,7 +59,7 @@ class TCPServer(BaseServer, socketserver.TCPServer, threading.Thread):
         self.shutdown()
         self.server_close()
 
-    def _handle_sms_body(self, caller: TCPServerHandler, **kwargs) -> tuple[str, str] | None:
+    def _handle_sms_body(self, caller: TcpServerHandler, **kwargs) -> tuple[str, str] | None:
         # get data
         try:
             data = caller.request.recv(settings.sms_data_max_size).strip()
@@ -89,6 +89,10 @@ class TCPServer(BaseServer, socketserver.TCPServer, threading.Thread):
         except Exception as e:
             return self.log_and_handle_response(caller=self, message=f"Error while decoding data.", level="error", error=e)
 
-    def _handle_response(self, caller: TCPServerHandler, message: str) -> Any:
+    def _handle_response(self, caller: TcpServerHandler, message: str) -> Any:
         message_raw = message.encode(settings.tcp_server_out_encoding)
         caller.request.sendall(message_raw)
+
+
+class TcpServerConfig(BaseServerConfig):
+    _server_cls = TcpServer

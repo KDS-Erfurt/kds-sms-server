@@ -6,7 +6,7 @@ from vonage import Vonage, Auth, HttpClientOptions
 from vonage_sms import SmsMessage, SmsResponse
 
 from kds_sms_server import __title__
-from kds_sms_server.gateways.base import BaseConfig, BaseGateway
+from kds_sms_server.gateways.base import BaseGateway, BaseGatewayConfig
 
 logger = logging.getLogger(__name__)
 
@@ -51,7 +51,8 @@ class VonageGateway(BaseGateway):
         logger.debug(f"response={response}")
         return True, "OK"
 
-class VonageConfig(BaseConfig):
+
+class VonageGatewayConfig(BaseGatewayConfig):
     _gateway_cls = VonageGateway
 
     class Type(str, Enum):

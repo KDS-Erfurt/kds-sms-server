@@ -1,19 +1,17 @@
 import logging
-import threading
 from abc import ABC, abstractmethod
 from typing import Any, TYPE_CHECKING
 
 from pydantic import BaseModel, PrivateAttr
 
 if TYPE_CHECKING:
-    from kds_sms_server.sms_server import SMSServer
+    from kds_sms_server.sms_server import SmsServer
 
 logger = logging.getLogger(__name__)
 
 
 class BaseGateway(ABC):
-    def __init__(self, server: "SMSServer", name: str, config: "BaseConfig"):
-        self.lock = threading.Lock()
+    def __init__(self, server: "SmsServer", name: str, config: "BaseGatewayConfig"):
         self._name = name
         self._server = server
         self._config = config
@@ -31,38 +29,31 @@ class BaseGateway(ABC):
 
     @property
     def name(self) -> str:
-        with self.lock:
-            return self._name
+        return self._name
 
     @property
     def state(self) -> bool:
-        with self.lock:
-            return self._state
+        return self._state
 
     @state.setter
     def state(self, value: bool):
-        with self.lock:
-            self._state = value
+        self._state = value
 
     @property
     def sms_send_count(self) -> int:
-        with self.lock:
-            return self._sms_send_count
+        return self._sms_send_count
 
     @sms_send_count.setter
     def sms_send_count(self, value: int):
-        with self.lock:
-            self._sms_send_count = value
+        self._sms_send_count = value
 
     @property
     def sms_send_error_count(self) -> int:
-        with self.lock:
-            return self._sms_send_error_count
+        return self._sms_send_error_count
 
     @sms_send_error_count.setter
     def sms_send_error_count(self, value: int):
-        with self.lock:
-            self._sms_send_error_count = value
+        self._sms_send_error_count = value
 
     def check(self) -> bool:
         if not self._config.check:
@@ -118,7 +109,7 @@ class BaseGateway(ABC):
         self.sms_send_error_count = 0
 
 
-class BaseConfig(BaseModel):
+class BaseGatewayConfig(BaseModel):
     class Config:
         use_enum_values = True
 

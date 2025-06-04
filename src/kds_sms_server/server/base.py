@@ -1,17 +1,19 @@
 import logging
 from abc import ABC, abstractmethod
-from ipaddress import IPv4Address, IPv4Network
-from typing import TYPE_CHECKING, Literal, Any
+from ipaddress import IPv4Network, IPv4Address
+from typing import Any, TYPE_CHECKING, Literal
+
+from pydantic import BaseModel, PrivateAttr
 
 if TYPE_CHECKING:
-    from kds_sms_server.sms_server import SMSServer
+    from kds_sms_server.sms_server import SmsServer
 
 logger = logging.getLogger(__name__)
 
 
 class BaseServer(ABC):
     def __init__(self,
-                 sms_server: "SMSServer",
+                 sms_server: "SmsServer",
                  host: str,
                  port: int,
                  debug: bool,
@@ -126,3 +128,22 @@ class BaseServer(ABC):
             if client_ip in network:
                 return True
         return False
+
+
+class BaseServerConfig(BaseModel):
+    class Config:
+        use_enum_values = True
+
+    _server_cls: type[BaseServer] | None = PrivateAttr(None)
+
+    def __init__(self, /, **data: Any):
+        super().__init__(**data)
+        _ = self.server_cls
+
+    @property
+    def server_cls(self) -> type[BaseServer]:
+        if self._server_cls is None:
+            raise ValueError("Server class is not set")
+        if not issubclass(self._server_cls, BaseServer):
+            raise TypeError(f"Server class '{self._server_cls.__name__}' is not a subclass of '{BaseServer.__name__}'")
+        return self._server_cls

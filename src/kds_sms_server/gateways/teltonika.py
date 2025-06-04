@@ -4,7 +4,7 @@ import requests
 from pythonping import ping
 from enum import Enum
 
-from kds_sms_server.gateways.base import BaseConfig, BaseGateway
+from kds_sms_server.gateways.base import BaseGateway, BaseGatewayConfig
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +42,7 @@ class TeltonikaGateway(BaseGateway):
             return False, text
 
 
-class TeltonikaConfig(BaseConfig):
+class TeltonikaGatewayConfig(BaseGatewayConfig):
     _gateway_cls = TeltonikaGateway
 
     class Type(str, Enum):

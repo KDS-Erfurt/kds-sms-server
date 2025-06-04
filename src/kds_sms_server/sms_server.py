@@ -5,32 +5,32 @@ import time
 from kds_sms_server.console import console
 from kds_sms_server.settings import settings
 from kds_sms_server.gateways import BaseGateway
-from kds_sms_server.server.api_server import APIServer
-from kds_sms_server.server.tcp_server import TCPServer
+from kds_sms_server.server.tcp_server import TcpServer
+from kds_sms_server.server.api_server import ApiServer
 
 logger = logging.getLogger(__name__)
 
 
-class SMSServer:
+class SmsServer:
     def __init__(self):
         self.lock = threading.Lock()
 
         logger.debug(f"Initializing {self} ...")
 
         # tcp server
-        self.tcp_server: TCPServer | None = None
+        self.tcp_server: TcpServer | None = None
         if settings.tcp_server_enabled:
-            self.tcp_server = TCPServer(sms_server=self)
+            self.tcp_server = TcpServer(sms_server=self)
 
         # api server
-        self.api_server: APIServer | None = None
+        self.api_server: ApiServer | None = None
         if settings.api_server_enabled:
-            self.api_server = APIServer(sms_server=self)
+            self.api_server = ApiServer(sms_server=self)
 
         logger.debug("Initializing gateways ...")
         self._next_sms_gateway_index: int | None = None
         self._gateways: list[BaseGateway] = []
-        for gateway_config_name, gateway_config in settings.gateway_configs.items():
+        for gateway_config_name, gateway_config in settings.gateways.items():
             gateway = gateway_config.gateway_cls(server=self, name=gateway_config_name, config=gateway_config)
             self._gateways.append(gateway)
 
@@ -48,14 +48,15 @@ class SMSServer:
                 ...
 
     def __str__(self):
+        tcp_server = getattr(self, "tcp_server", settings.tcp_server_enabled)
+        api_server = getattr(self, "api_server", settings.api_server_enabled)
         return (f"{self.__class__.__name__}("
-                f"tcp_server={getattr(self, "tcp_server", settings.tcp_server_enabled)}, "
-                f"api_server={getattr(self, "api_server", settings.api_server_enabled)})")
+                f"tcp_server={tcp_server}, "
+                f"api_server={api_server})")
 
     def done(self):
         logger.debug(f"Initializing {self} ... done")
         console.print(f"{self} is ready. Press CTRL+C to quit.")
-
 
     @property
     def gateways(self) -> tuple[BaseGateway, ...]:
@@ -75,7 +76,7 @@ class SMSServer:
                     gateways.append(gateway)
         return tuple(gateways)
 
-    def handle_sms(self, server: TCPServer | APIServer, number: str, message: str) -> tuple[bool, str]:
+    def handle_sms(self, server: TcpServer | ApiServer, number: str, message: str) -> tuple[bool, str]:
         logger.debug(f"{server} - Processing SMS ...")
 
         # check number

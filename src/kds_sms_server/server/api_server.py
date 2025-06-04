@@ -13,12 +13,12 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from kds_sms_server import __title__, __description__, __version__, __author__, __author_email__, __license__
 from kds_sms_server.assets import ASSETS_PATH
-from kds_sms_server.server.base import BaseServer
+from kds_sms_server.server.base import BaseServer, BaseServerConfig
 from kds_sms_server.settings import settings
 from starlette.requests import Request
 
 if TYPE_CHECKING:
-    from kds_sms_server.sms_server import SMSServer
+    from kds_sms_server.sms_server import SmsServer
 
 logger = logging.getLogger(__name__)
 
@@ -50,8 +50,8 @@ class ResponseApiModel(BaseModel):
     message: str = Field(default=..., title="Message", description="The message of the response.")
 
 
-class APIServer(BaseServer, FastAPI):
-    def __init__(self, sms_server: "SMSServer"):
+class ApiServer(BaseServer, FastAPI):
+    def __init__(self, sms_server: "SmsServer"):
         self.sms_server = sms_server
         self.host = str(settings.api_server_host)
         self.port = settings.api_server_port
@@ -127,7 +127,7 @@ class APIServer(BaseServer, FastAPI):
 
     @staticmethod
     @asynccontextmanager
-    async def _done(api_server: "APIServer"):
+    async def _done(api_server: "ApiServer"):
         api_server.done()
         api_server.sms_server.done()
         yield
@@ -188,3 +188,7 @@ class APIServer(BaseServer, FastAPI):
             self.log_and_handle_response(caller=self, message=f"Error while parsing client IP address.", level="error", error=e)
             raise RuntimeError("This should never happen.")
         return self.handle_request(caller=None, client_ip=client_ip, client_port=client_port, number=number, message=message)
+
+
+class ApiServerConfig(BaseServerConfig):
+    _server_cls = ApiServer
