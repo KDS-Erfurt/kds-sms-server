@@ -3,3 +3,5 @@
 /installer/
 /dev.env
 /settings.json
+/.idea
+/kds-sms-server.iml
