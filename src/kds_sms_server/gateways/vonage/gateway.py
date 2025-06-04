@@ -1,3 +1,4 @@
+import json
 import logging
 from typing import Literal, TYPE_CHECKING
 
@@ -52,7 +53,19 @@ class VonageGateway(BaseGateway):
     def _send_sms(self, number: str, message: str) -> tuple[bool, str]:
         vonage = self.get_vonage_instance(mode="send")
         message = SmsMessage(to=number, from_=self._config.from_text, text=message, **{})
-        response: SmsResponse = vonage.sms.send(message)
-        # ToDo: gateway_result
-        logger.debug(f"response={response}")
-        return True, "OK"
+        sms_response: SmsResponse = vonage.sms.send(message)
+
+        # check status for all messages
+        success = True
+        for message in sms_response.messages:
+            if message.status != "0":
+                success = False
+                break
+
+        # convert sms_response to pretty json
+        sms_response_dict = []
+        for message in sms_response.messages:
+            sms_response_dict.append(message.model_dump(mode="json"))
+        sms_response_json = json.dumps(sms_response_dict, indent=4)
+
+        return success, sms_response_json

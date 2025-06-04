@@ -1,8 +1,10 @@
+import logging
+import logging.handlers
 import sys
 from datetime import datetime
-from logging import DEBUG, ERROR
+from typing import Callable
 
-from wiederverwendbar.logger import LoggerSingleton
+from wiederverwendbar.logger import LoggerSingleton, LoggingContext, remove_logger
 from wiederverwendbar.task_manger import TaskManager, Task, EverySeconds
 
 from kds_sms_server.db import Sms, SmsStatus
@@ -11,14 +13,25 @@ from kds_sms_server.gateways.gateway import BaseGateway
 from kds_sms_server.gateways.teltonika.gateway import TeltonikaGateway
 from kds_sms_server.gateways.vonage.gateway import VonageGateway
 
+IGNORED_LOGGERS_LIKE = ["sqlalchemy", "pymysql"]
 # noinspection PyArgumentList
 logger = LoggerSingleton(name=__name__,
                          settings=settings.log_server,
-                         ignored_loggers_like=["sqlalchemy", "pymysql"],
+                         ignored_loggers_like=IGNORED_LOGGERS_LIKE,
                          init=True)
 
 
 class SmsWorker(TaskManager):
+    class SmsLogHandler(logging.handlers.BufferingHandler):
+        def __init__(self, buffer_target: Callable):
+            super().__init__(capacity=10)
+            self.buffer_target = buffer_target
+
+        def flush(self):
+            for record in self.buffer:
+                self.buffer_target(self.format(record))
+            super().flush()
+
     def __init__(self):
         logger.info(f"Initializing SMS-Worker ...")
         super().__init__(name="SMS-Worker", worker_count=settings.sms_background_worker_count, daemon=True, logger=logger)
@@ -65,56 +78,80 @@ class SmsWorker(TaskManager):
         logger.debug(f"Starting SMS-Worker ... done")
 
     def handle_sms(self):
-        # get all queued sms
-        queued_sms: list[Sms] = Sms.get_all(status=SmsStatus.QUEUED, order_by=Sms.received_datetime)
-        if len(queued_sms) == 0:
-            return
-        queued_sms_count = len(queued_sms)
-        logger.debug(f"Processing {queued_sms_count} queued SMS ...")
+        sms: Sms | None = None
 
-        # calculate next_sms_gateway_index
-        if self._next_sms_gateway_index is None:
-            self._next_sms_gateway_index = 0
-        else:
-            self._next_sms_gateway_index += 1
-        if self._next_sms_gateway_index >= len(self._gateways):
-            self._next_sms_gateway_index = 0
+        def get_sms() -> Sms | None:
+            nonlocal sms
+            sms = Sms.get(status=SmsStatus.QUEUED)
+            return sms
 
-        # order gateways
-        gateways = []
-        for gateway in self._gateways[self._next_sms_gateway_index:]:
-            gateways.append(gateway)
-        if self._next_sms_gateway_index > 0:
-            for gateway in self._gateways[:self._next_sms_gateway_index]:
+        while get_sms():
+            logger.debug(f"Processing SMS with id={sms.id} ...")
+
+            # calculate next_sms_gateway_index
+            if self._next_sms_gateway_index is None:
+                self._next_sms_gateway_index = 0
+            else:
+                self._next_sms_gateway_index += 1
+            if self._next_sms_gateway_index >= len(self._gateways):
+                self._next_sms_gateway_index = 0
+
+            # order gateways
+            gateways = []
+            for gateway in self._gateways[self._next_sms_gateway_index:]:
                 gateways.append(gateway)
+            if self._next_sms_gateway_index > 0:
+                for gateway in self._gateways[:self._next_sms_gateway_index]:
+                    gateways.append(gateway)
 
-        # send queued sms with gateways
-        for sms in queued_sms:
-            logger.debug("------------------------------------------------------------------------------------------------------")
-            log_level = ERROR
-            result = "Error while sending SMS. Not gateways left."
-            status = SmsStatus.ERROR
-            for gateway in gateways:
-                # check if gateway is available
-                if not gateway.check():
-                    continue
+            # create sms logger
+            sms_log = ""
 
-                # send it with gateway
-                success, log_level, result = gateway.send_sms(sms.number, sms.message)
-                if success:
-                    status = SmsStatus.SENT
-                    break
-            sms.status = status
-            sms.processed_datetime = datetime.now()
-            sms.result = result
-            sms.save()
+            def add_sms_log(sms_log_msg: str):
+                nonlocal sms_log
+                if len(sms_log) > 0:
+                    sms_log += "\n"
+                sms_log += sms_log_msg
 
-            logger.log(log_level, result)
+            sms_logger = logging.Logger(name=f"{logger.name}",)
+            sms_logger_handler = self.SmsLogHandler(buffer_target=add_sms_log)
+            sms_logger_handler.setLevel(settings.log_worker.log_level.logging_level)
+            sms_logger_handler.setFormatter(logging.Formatter("%(name)s - %(levelname)s - %(message)s"))
+            sms_logger.addHandler(sms_logger_handler)
+            sms_logger.setLevel(settings.log_worker.log_level.logging_level)
 
-            logger.debug("------------------------------------------------------------------------------------------------------")
+            # send sms with gateways
+            with LoggingContext(sms_logger, ignore_loggers_like=IGNORED_LOGGERS_LIKE):
+                log_level = logging.ERROR
+                result = "Error while sending SMS. Not gateways left."
+                status = SmsStatus.ERROR
+                send_by = None
+                for gateway in gateways:
+                    # check if gateway is available
+                    if not gateway.check():
+                        continue
 
-        print()
-        ...
+                    # send it with gateway
+                    success, log_level, result = gateway.send_sms(sms.number, sms.message)
+                    if success:
+                        status = SmsStatus.SENT
+                        send_by = gateway.name
+                        break
+                sms_logger.log(log_level, result)
+                logger.log(log_level, result)
+
+            # flush sms_logger_handler
+            sms_logger_handler.flush()
+
+            # remove logger
+            remove_logger(sms_logger)
+
+            # update sms
+            sms.update(status=status,
+                       processed_datetime=datetime.now(),
+                       sent_by=send_by,
+                       result=result,
+                       log=sms_log)
 
     def cleanup_sms(self):
         ...

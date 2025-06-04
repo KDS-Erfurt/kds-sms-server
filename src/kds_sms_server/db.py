@@ -38,4 +38,5 @@ class Sms(Base, db().Base):
     sent_by: str = Column(VARCHAR(20), nullable=True, name="sms_sent_by")
     number: str = Column(VARCHAR(50), nullable=False, name="sms_number")
     message: str = Column(VARCHAR(1600), nullable=False, name="sms_message")
-    result: str = Column(String(), nullable=True, name="sms_result_msg")
+    result: str = Column(String(), nullable=True, name="sms_result")
+    log: str = Column(String(), nullable=True, name="sms_log")

@@ -8,10 +8,11 @@ from kds_sms_server.server.server import BaseServer
 from kds_sms_server.server.api.server import ApiServer
 from kds_sms_server.server.tcp.server import TcpServer
 
+IGNORED_LOGGERS_LIKE = ["sqlalchemy", "pymysql", "asyncio", "parso", "engineio", "socketio", "python_multipart.multipart"]
 # noinspection PyArgumentList
 logger = LoggerSingleton(name=__name__,
                          settings=settings.log_server,
-                         ignored_loggers_like=["sqlalchemy", "pymysql", "asyncio", "parso", "engineio", "socketio", "python_multipart.multipart"],
+                         ignored_loggers_like=IGNORED_LOGGERS_LIKE,
                          init=True)
 
 
