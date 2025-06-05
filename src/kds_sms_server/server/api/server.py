@@ -57,12 +57,6 @@ class SmsSendApiModel(BaseModel):
 
 
 class SmsStatusApiModel(BaseModel):
-    class SmsStatus(str, Enum):
-        QUEUED = "queued"
-        SENT = "sent"
-        ABORTED = "aborted"
-        ERROR = "error"
-
     id: int = Field(default=..., title="ID", description="The ID of the SMS.")
     status: SmsStatus = Field(default=..., title="Status", description="The status of the SMS.")
     received_by: str = Field(default=..., title="Received by", description="The IP address of the server that received the SMS.")

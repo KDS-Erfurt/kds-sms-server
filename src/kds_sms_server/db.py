@@ -1,6 +1,7 @@
+from enum import Enum
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, DateTime, Enum, VARCHAR, String
+from sqlalchemy import Column, Integer, DateTime, VARCHAR
 
 from wiederverwendbar.singleton import Singleton
 from wiederverwendbar.sqlalchemy import SqlalchemyDb, Base, EnumValueStr
@@ -32,12 +33,12 @@ class Sms(Base, db().Base):
     __str_columns__ = ["id", "status", "received_datetime", "send_datetime", "number"]
 
     id: int = Column(Integer(), primary_key=True, autoincrement=True, name="sms_id")
-    status: SmsStatus | str = Column(EnumValueStr(SmsStatus), nullable=False, name="sms_status")
+    status: SmsStatus = Column(EnumValueStr(SmsStatus), nullable=False, name="sms_status")
     received_by: str = Column(VARCHAR(20), nullable=False, name="sms_received_by")
     received_datetime: datetime = Column(DateTime(), nullable=False, name="sms_received_datetime")
     processed_datetime: datetime = Column(DateTime(), nullable=True, name="sms_processed_datetime")
     sent_by: str = Column(VARCHAR(20), nullable=True, name="sms_sent_by")
     number: str = Column(VARCHAR(50), nullable=False, name="sms_number")
     message: str = Column(VARCHAR(1600), nullable=False, name="sms_message")
-    result: str = Column(String(), nullable=True, name="sms_result")
-    log: str = Column(String(), nullable=True, name="sms_log")
+    result: str = Column(VARCHAR(1000), nullable=True, name="sms_result")
+    log: str = Column(VARCHAR(10000), nullable=True, name="sms_log")
