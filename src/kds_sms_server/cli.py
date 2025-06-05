@@ -5,7 +5,7 @@ import typer
 
 from kds_sms_server import __title__, __description__, __author__, __author_email__, __version__, __license__
 
-from kds_sms_server.assets.ascii_logo import ascii_logo
+from kds_sms_server.assets.ascii_logo import ASCII_LOGO
 from kds_sms_server.console import console
 
 cli_app = typer.Typer()
@@ -22,7 +22,7 @@ def print_header(mode: Literal["info", "server", "worker", "cli"]):
     elif mode == "cli":
         first_line += " - CLI ..."
     console.print(first_line)
-    console.print(ascii_logo)
+    console.print(ASCII_LOGO)
     console.print("_________________________________________________________________________________\n")
     console.print(f"{__description__}")
     console.print(f"by {__author__}({__author_email__})")

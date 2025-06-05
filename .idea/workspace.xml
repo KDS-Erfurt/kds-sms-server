@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fbbb106e-c2b2-423e-b63f-12025486cf3a" name="Changes" comment="Add `docker-compose.yml` with MySQL service configuration for backend network setup.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="fbbb106e-c2b2-423e-b63f-12025486cf3a" name="Changes" comment="Initialize database in CLI server and worker startup routines.">
+      <change beforePath="$PROJECT_DIR$/src/kds_sms_server/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/kds_sms_server/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -290,7 +290,7 @@
       <workItem from="1749098040806" duration="20000" />
       <workItem from="1749098275327" duration="28000" />
       <workItem from="1749098315636" duration="14000" />
-      <workItem from="1749098567089" duration="16978000" />
+      <workItem from="1749098567089" duration="17889000" />
     </task>
     <task id="LOCAL-00001" summary="Add new dependencies: email-validator and python-multipart&#10;&#10;Updated `pyproject.toml` to include `email-validator` and `python-multipart` as dependencies. Corresponding packages and metadata have also been added to `pdm.lock`. These changes ensure support for email validation and multipart parsing.">
       <option name="closed" value="true" />
@@ -612,7 +612,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749115424772</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="Initialize database in CLI server and worker startup routines.">
+      <option name="closed" value="true" />
+      <created>1749116065735</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1749116065735</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -631,7 +639,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Add `db.py` with database models and utility functions&#10;&#10;Introduced a new `db.py` module, including the `Db` singleton-based database utility and `Messages` SQLAlchemy model. Added `MessageStatus` enum for message lifecycle states (`queued`, `sent`, `error`). This sets up foundational database support for message management in the KDS SMS server." />
     <MESSAGE value="Add `logger.py` for centralized logging with `LoggerSingleton`&#10;&#10;Introduced a `logger.py` module for reusable and centralized logging. Utilizes `LoggerSingleton` from `wiederverwendbar` to manage logger instances, integrating configuration from `settings`. This enhances logging consistency and simplifies logger initialization across the application." />
     <MESSAGE value="Update `settings.py` to integrate `SqlalchemySettings` and enhance field validation&#10;&#10;Replaced `UvicornServerSettings` with `SqlalchemySettings` in the `Settings` class for database integration. Added constraints to SMS-related fields (`sms_data_max_size`, `sms_number_max_size`, `sms_message_max_size`) for improved validation. Introduced new logging settings to ignore specific loggers by exact matches or patterns." />
     <MESSAGE value="Add `logger.py` to initialize and manage logger instances&#10;&#10;Introduced a `logger.py` module for centralized logging functionality. Utilized `LoggerSingleton` to handle logger initialization based on module name and settings. This ensures consistent logging configuration across the KDS SMS server." />
@@ -656,7 +663,8 @@
     <MESSAGE value="Replace `schema_extra` with `json_schema_extra` in API model configurations for enhanced validation support." />
     <MESSAGE value="Update `.gitignore`, adjust IDEA workspace settings and executor configurations, and add environment variable setup for Docker deployment." />
     <MESSAGE value="Add `docker-compose.yml` with MySQL service configuration for backend network setup." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add `docker-compose.yml` with MySQL service configuration for backend network setup." />
+    <MESSAGE value="Initialize database in CLI server and worker startup routines." />
+    <option name="LAST_COMMIT_MESSAGE" value="Initialize database in CLI server and worker startup routines." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -691,7 +699,7 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/kds_sms_server$init_db.coverage" NAME="init-db Coverage Results" MODIFIED="1749115066478" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/kds_sms_server$listener.coverage" NAME="listener Coverage Results" MODIFIED="1749115217967" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/kds_sms_server$listener.coverage" NAME="listener Coverage Results" MODIFIED="1749116262868" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$admin.coverage" NAME="admin Coverage Results" MODIFIED="1749100378783" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$worker.coverage" NAME="worker Coverage Results" MODIFIED="1749113709216" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$serve.coverage" NAME="serve Coverage Results" MODIFIED="1749050994537" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

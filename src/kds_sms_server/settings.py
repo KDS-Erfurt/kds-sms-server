@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Union
 
-from pydantic import Field
+from pydantic import Field, BaseModel
 from pydantic_settings import BaseSettings
 from wiederverwendbar.sqlalchemy import SqlalchemySettings
 
@@ -21,6 +21,7 @@ AVAILABLE_SERVER_CONFIGS = Union[
     ApiServerConfig,
     UiServerConfig
 ]
+
 AVAILABLE_GATEWAY_CONFIGS = Union[
     TeltonikaGatewayConfig,
     VonageGatewayConfig
@@ -33,6 +34,13 @@ class Settings(FileConfig, BaseSettings, SqlalchemySettings):
         "case_sensitive": False
     }
 
+    # branding
+    class BrandingSettings(BaseModel):
+        ...
+
+    branding: BrandingSettings = Field(default_factory=BrandingSettings, title="Branding Settings", description="Branding settings.")
+
+    # listener
     class ListenerSettings(LoggerSettings):
         # sms
         sms_number_allowed_chars: str = Field(default="+*#()0123456789 ", title="Allowed Number Characters", description="Allowed Number Characters.")
@@ -47,9 +55,9 @@ class Settings(FileConfig, BaseSettings, SqlalchemySettings):
         server: dict[str, AVAILABLE_SERVER_CONFIGS] = Field(default_factory=dict, title="Server",
                                                             description="Server configuration.")
 
-    # listener
     listener: ListenerSettings = Field(default_factory=ListenerSettings, title="Listener Settings", description="Listener settings.")
 
+    # worker
     class WorkerSettings(LoggerSettings):
         # worker
         count: int | None = Field(default=None, title="Background Worker Count",
@@ -65,7 +73,6 @@ class Settings(FileConfig, BaseSettings, SqlalchemySettings):
         gateways: dict[str, AVAILABLE_GATEWAY_CONFIGS] = Field(default_factory=dict, title="Gateways",
                                                                description="Gateways configuration.")
 
-    # worker
     worker: WorkerSettings = Field(default_factory=WorkerSettings, title="Worker Settings", description="Worker settings.")
 
 
