@@ -14,7 +14,6 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from fastapi.responses import FileResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from starlette.types import ASGIApp
 
 from kds_sms_server import __title__, __description__, __version__, __author__, __author_email__, __license__
 from kds_sms_server.assets import ASSETS_PATH
@@ -122,7 +121,7 @@ class SmsAbortError(BaseModel):
 
 class ApiServer(BaseServer, FastAPI):
     __str_columns__ = ["name",
-                       ("debug", "config_host"),
+                       ("debug", "config_debug"),
                        ("host", "config_host"),
                        ("port", "config_port"),
                        ("allowed_networks", "config_allowed_networks"),

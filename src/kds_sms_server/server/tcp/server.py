@@ -31,7 +31,7 @@ class TcpServerHandler(socketserver.BaseRequestHandler):
 
 class TcpServer(BaseServer, socketserver.TCPServer):
     __str_columns__ = ["name",
-                       ("debug", "config_host"),
+                       ("debug", "config_debug"),
                        ("host", "config_host"),
                        ("port", "config_port"),
                        ("allowed_networks", "config_allowed_networks")]
