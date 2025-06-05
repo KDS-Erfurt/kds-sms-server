@@ -5,8 +5,10 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import uvicorn
-from starlette.applications import Starlette
-from starlette_admin.views import CustomView
+from fastapi import FastAPI, Request
+from starlette.routing import Route
+from fastapi.responses import RedirectResponse
+from starlette_admin import fields as sa_fields
 from starlette_admin.actions import row_action, action
 from starlette_admin.contrib.sqla import Admin, ModelView
 from starlette_admin.exceptions import StarletteAdminException, ActionFailed
@@ -15,7 +17,9 @@ from kds_sms_server import __title__, __description__, __version__, __author__, 
 from kds_sms_server.assets import ASSETS_PATH
 from kds_sms_server.db import Sms, SmsStatus, db
 from kds_sms_server.server.server import BaseServer
-from starlette.requests import Request
+from kds_sms_server.settings import settings
+
+# from starlette.requests import Request
 
 if TYPE_CHECKING:
     from kds_sms_server.server.ui.config import UiServerConfig
@@ -23,13 +27,19 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class HomeView(CustomView):
-    def __init__(self, ui: "Ui"):
-        super().__init__(label="Home", icon="fa fa-house")
-        self.ui = ui
-
-
 class SmsView(ModelView):
+    page_size = 100
+    page_size_options = [5, 10, 25, 50, 75, 100, -1]
+    fields = [sa_fields.IntegerField("id"),
+              sa_fields.EnumField("status", choices=[status.value for status in SmsStatus]),
+              sa_fields.StringField("received_by"),
+              sa_fields.DateTimeField("received_datetime"),
+              sa_fields.DateTimeField("processed_datetime"),
+              sa_fields.StringField("sent_by"),
+              sa_fields.PhoneField("number"),
+              sa_fields.TextAreaField("message"),
+              sa_fields.TextAreaField("result"),
+              sa_fields.TextAreaField("log")]
     exclude_fields_from_list = [Sms.message,
                                 Sms.result,
                                 Sms.log]
@@ -45,7 +55,10 @@ class SmsView(ModelView):
     actions = ["reset", "abort"]
 
     def __init__(self, ui: "Ui"):
-        super().__init__(Sms, label="SMS", icon="fa fa-message")
+        if not settings.listener.sms_logging:
+            # noinspection PyUnresolvedReferences
+            self.exclude_fields_from_detail.append(Sms.message)
+        super().__init__(Sms, label=f"{__title__} - UI", icon="fa fa-message")
         self.ui = ui
 
     def can_edit(self, request: Request) -> bool:
@@ -157,14 +170,38 @@ class Ui(Admin):
                          debug=ui_server.config.debug)
         self.ui_server = ui_server
 
-        # add views
-        self.add_view(HomeView(self))
-        self.add_view(SmsView(self))
+        self.qwe = "123"
 
+        # add views
+        self.sms_view = SmsView(self)
+        self.add_view(self.sms_view)
+
+        # replace the root route
+        root_route_index = None
+        for i, route in enumerate(self.routes):
+            if not isinstance(route, Route):
+                continue
+            if route.path != "/":
+                continue
+            root_route_index = i
+            break
+        if root_route_index is None:
+            raise RuntimeError("Root route not found.")
+        self.routes[root_route_index] = Route(
+            path="/",
+            endpoint=self.root,
+            methods=None,
+            name="index",
+        )
+
+        # mount to ui_server
         self.mount_to(self.ui_server)
 
+    async def root(self, request: Request):
+        return RedirectResponse(url=f"/{self.sms_view.identity}/list")
 
-class UiServer(BaseServer, Starlette):
+
+class UiServer(BaseServer, FastAPI):
     __str_columns__ = ["name",
                        ("debug", "config_debug"),
                        ("host", "config_host"),
@@ -176,14 +213,19 @@ class UiServer(BaseServer, Starlette):
         BaseServer.__init__(self,
                             name=name,
                             config=config)
-        Starlette.__init__(self,
-                           lifespan=self._stated_done,
-                           debug=self.config.debug)
+        FastAPI.__init__(self,
+                         openapi_url=None,
+                         docs_url=None,
+                         redoc_url=None,
+                         lifespan=self._stated_done,
+                         debug=self.config.debug)
 
-        # create ui and mount admin to server
+        # create ui
         logger.info(f"Create ui for {self} ...")
         self._ui = Ui(self)
         logger.debug(f"Create ui for {self} ... done")
+
+        # self.get("/", name="admin:index")(self.root)
 
         self.init_done()
 
