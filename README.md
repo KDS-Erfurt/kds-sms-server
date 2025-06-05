@@ -11,21 +11,37 @@ source /opt/kds-sms-server/bin/activate
 pip install kds-sms-server
 ln /opt/kds-sms-server/bin/kds-sms-server /usr/bin/kds-sms-server
 deactivate
+# setup settings.json in /opt/kds-sms-server
+kds-sms-server init-db
 echo """[Unit]
-Description=A broker server for sending SMS.
+Description=KDS SMS Server - Listener - Responsible for receiving SMS as well as for the general API and UI.
 After=multi-user.target
 
 [Service]
 Type=simple
 Restart=always
 WorkingDirectory=/opt/kds-sms-server
-ExecStart=/opt/kds-sms-server/bin/kds-sms-server serve
+ExecStart=/opt/kds-sms-server/bin/kds-sms-server listener
 
 [Install]
-WantedBy=multi-user.target""" > /etc/systemd/system/kds_sms_server.service
+WantedBy=multi-user.target""" > /etc/systemd/system/kds-sms-server-listener.service
+echo """[Unit]
+Description=KDS SMS Server - Worker - Responsible for processing SMS and database cleanup processes.
+After=multi-user.target
+
+[Service]
+Type=simple
+Restart=always
+WorkingDirectory=/opt/kds-sms-server
+ExecStart=/opt/kds-sms-server/bin/kds-sms-server worker
+
+[Install]
+WantedBy=multi-user.target""" > /etc/systemd/system/kds-sms-server-worker.service
 systemctl daemon-reload
-systemctl enable kds_sms_server.service
-systemctl start kds_sms_server.service
+systemctl enable kds-sms-server-listener.service
+systemctl enable kds-sms-server-worker.service
+systemctl start kds-sms-server-listener.service
+systemctl start kds-sms-server-worker.service
 ```
 
 ---
@@ -40,7 +56,7 @@ deactivate
 ## Debug :gear:
 ```shell
 systemctl stop kds_sms_server.service
-kds-sms-server serve
+kds-sms-server listener # Or kds-sms-server worker 
 systemctl start kds_sms_server.service
 ```
 
