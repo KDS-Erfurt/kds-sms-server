@@ -1,0 +1,26 @@
+services:
+  # ToDo: implement kds-sms-server
+  db:
+    image: "mariadb:${DB_VERSION:-latest}"
+    restart: 'always'
+    ports:
+      - "3306:3306"
+    networks:
+      - "backend"
+    volumes:
+      - "${DATA_DIR:-.}/db:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-xxx}"
+      MYSQL_DATABASE: "${DB_DATABASE:-kds-sms-server}"
+      MYSQL_USER: "${DB_USER:-kds-sms-server}"
+      MYSQL_PASSWORD: "${DB_PASSWORD:-xxx}"
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+networks:
+  backend:
+
