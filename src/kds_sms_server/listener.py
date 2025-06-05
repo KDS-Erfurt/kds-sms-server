@@ -5,8 +5,9 @@ from wiederverwendbar.logger import LoggerSingleton
 
 from kds_sms_server.settings import settings
 from kds_sms_server.server.server import BaseServer
-from kds_sms_server.server.api.server import ApiServer
+from kds_sms_server.server.file.server import FileServer
 from kds_sms_server.server.tcp.server import TcpServer
+from kds_sms_server.server.api.server import ApiServer
 
 IGNORED_LOGGERS_LIKE = ["sqlalchemy", "pymysql", "asyncio", "parso", "engineio", "socketio", "python_multipart.multipart"]
 # noinspection PyArgumentList
@@ -29,7 +30,9 @@ class SmsListener:
                 sys.exit(1)
 
             server_cls = None
-            if server_config.type == "tcp":
+            if server_config.type == "file":
+                server_cls = FileServer
+            elif server_config.type == "tcp":
                 server_cls = TcpServer
             elif server_config.type == "api":
                 server_cls = ApiServer

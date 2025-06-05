@@ -8,14 +8,16 @@ from wiederverwendbar.sqlalchemy import SqlalchemySettings
 from wiederverwendbar.logger import LoggerSettings
 from wiederverwendbar.pydantic import FileConfig
 
+from kds_sms_server.server.file.config import FileServerConfig
 from kds_sms_server.server.tcp.config import TcpServerConfig
 from kds_sms_server.server.api.config import ApiServerConfig
 from kds_sms_server.gateways.teltonika.config import TeltonikaGatewayConfig
 from kds_sms_server.gateways.vonage.config import VonageGatewayConfig
 
 AVAILABLE_SERVER_CONFIGS = Union[
+    FileServerConfig,
     TcpServerConfig,
-    ApiServerConfig
+    ApiServerConfig,
 ]
 AVAILABLE_GATEWAY_CONFIGS = Union[
     TeltonikaGatewayConfig,
