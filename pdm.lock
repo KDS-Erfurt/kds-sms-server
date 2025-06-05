@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:ca91fcf0c6795ebc10e2f3963f1f703e5e720af2edfd995503bdf0fa76f0aaba"
+content_hash = "sha256:184c43774ef2bf63f7d1549044f7154eebd74044ef171f31d4b69f41afeaeac3"
 
 [[metadata.targets]]
 requires_python = ">=3.13"
@@ -1030,7 +1030,7 @@ files = [
 
 [[package]]
 name = "wiederverwendbar"
-version = "0.8.5"
+version = "0.8.6"
 requires_python = ">=3.9"
 summary = "A collection of scripts, classes and tools they are \\\"wiederverwendbar\\\"."
 groups = ["default"]
@@ -1041,13 +1041,13 @@ dependencies = [
     "pydantic>=2.11.5",
 ]
 files = [
-    {file = "wiederverwendbar-0.8.5-py3-none-any.whl", hash = "sha256:732be096c0eaff2cbcefc6ad532d60f487d24e0d3dc21e91a9981217955b2bd4"},
-    {file = "wiederverwendbar-0.8.5.tar.gz", hash = "sha256:6d7b805f2a2b54350e86922d8581d55ff90a120b00b17ab7f46477a9619e4bcd"},
+    {file = "wiederverwendbar-0.8.6-py3-none-any.whl", hash = "sha256:33e842331c357a5f4cc44c80ba339b1b19a56d371868e4900cadf799ba884643"},
+    {file = "wiederverwendbar-0.8.6.tar.gz", hash = "sha256:d87637aa78908e056724dc1cce264b9c531fb74d98b877f0a4efe05a112f2ed1"},
 ]
 
 [[package]]
 name = "wiederverwendbar"
-version = "0.8.5"
+version = "0.8.6"
 extras = ["rich", "sqlalchemy"]
 requires_python = ">=3.9"
 summary = "A collection of scripts, classes and tools they are \\\"wiederverwendbar\\\"."
@@ -1056,9 +1056,9 @@ marker = "python_version >= \"3.13\""
 dependencies = [
     "rich>=14.0.0",
     "sqlalchemy>=2.0.41",
-    "wiederverwendbar==0.8.5",
+    "wiederverwendbar==0.8.6",
 ]
 files = [
-    {file = "wiederverwendbar-0.8.5-py3-none-any.whl", hash = "sha256:732be096c0eaff2cbcefc6ad532d60f487d24e0d3dc21e91a9981217955b2bd4"},
-    {file = "wiederverwendbar-0.8.5.tar.gz", hash = "sha256:6d7b805f2a2b54350e86922d8581d55ff90a120b00b17ab7f46477a9619e4bcd"},
+    {file = "wiederverwendbar-0.8.6-py3-none-any.whl", hash = "sha256:33e842331c357a5f4cc44c80ba339b1b19a56d371868e4900cadf799ba884643"},
+    {file = "wiederverwendbar-0.8.6.tar.gz", hash = "sha256:d87637aa78908e056724dc1cce264b9c531fb74d98b877f0a4efe05a112f2ed1"},
 ]
