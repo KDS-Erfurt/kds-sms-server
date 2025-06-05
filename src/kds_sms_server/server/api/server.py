@@ -182,8 +182,8 @@ class ApiServer(BaseServer, FastAPI):
             @self.post(path="/auth",
                        summary="Authenticate against server.",
                        tags=["API version 1"])
-            async def post_auth(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
-                return await self.post_auth(form_data=form_data)
+            async def auth(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+                return await self.auth(form_data=form_data)
 
             @self.get(path="/sms",
                       summary="List SMS.",
@@ -379,7 +379,7 @@ class ApiServer(BaseServer, FastAPI):
     async def get_info(self) -> InfoApiModel:
         return InfoApiModel()
 
-    async def post_auth(self, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+    async def auth(self, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
         if not self.config.authentication_enabled:
             raise HTTPException(status_code=401, detail="Authentication is disabled.")
         if form_data.username not in self.config.authentication_accounts:
