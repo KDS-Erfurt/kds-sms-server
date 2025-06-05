@@ -1,5 +1,23 @@
 services:
-  # ToDo: implement kds-sms-server
+  server:
+    build:
+      context: "."
+      dockerfile: Dockerfile
+    command:
+      - top
+#    ports:
+#      - "8000:8000"
+#      - "8001:8001"
+#      - "8002:8002"
+#      - "8003:8003"
+#      - "3456:3456"
+#      - "3457:3457"
+    networks:
+      - "backend"
+    volumes:
+      - "${DATA_DIR:-./opt}/server:/opt/kds-sms-server"
+    environment:
+      KDS_SMS_SERVER_SETTINGS_FILE: "/opt/kds-sms-server/settings.json"
   db:
     image: "mariadb:${DB_VERSION:-latest}"
     restart: 'always'
@@ -8,7 +26,7 @@ services:
     networks:
       - "backend"
     volumes:
-      - "${DATA_DIR:-.}/db:/var/lib/mysql"
+      - "${DATA_DIR:-./opt}/db:/var/lib/mysql"
     environment:
       MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-xxx}"
       MYSQL_DATABASE: "${DB_DATABASE:-kds-sms-server}"
