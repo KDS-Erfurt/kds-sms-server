@@ -129,21 +129,18 @@ class ApiServer(BaseServer, FastAPI):
 
     def __init__(self, name: str, config: "ApiServerConfig"):
         BaseServer.__init__(self, name=name, config=config)
-
-        FastAPI.__init__(
-            self,
-            lifespan=self._stated_done,
-            debug=self.config.debug,
-            title=f"{__title__} - {self.name}",
-            summary=f"{__title__} API",
-            description=__description__,
-            version=__version__,
-            terms_of_service="https://www.kds-kg.de/impressum",
-            docs_url=None,
-            redoc_url=None,
-            contact={"name": __author__, "email": __author_email__},
-            license_info={"name": __license__, "url": "https://www.gnu.org/licenses/gpl-3.0.html"}
-        )
+        FastAPI.__init__(self,
+                         lifespan=self._stated_done,
+                         debug=self.config.debug,
+                         title=f"{__title__} - {self.name}",
+                         summary=f"{__title__} API",
+                         description=__description__,
+                         version=__version__,
+                         terms_of_service="https://www.kds-kg.de/impressum",
+                         docs_url=None,
+                         redoc_url=None,
+                         contact={"name": __author__, "email": __author_email__},
+                         license_info={"name": __license__, "url": "https://www.gnu.org/licenses/gpl-3.0.html"})
 
         if self.config.docs_web_path is not None or self.config.redoc_web_path is not None:
             @self.get('/favicon.ico',
