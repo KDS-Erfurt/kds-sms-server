@@ -8,6 +8,7 @@ from kds_sms_server.server.server import BaseServer
 from kds_sms_server.server.file.server import FileServer
 from kds_sms_server.server.tcp.server import TcpServer
 from kds_sms_server.server.api.server import ApiServer
+from kds_sms_server.server.ui.server import UiServer
 
 IGNORED_LOGGERS_LIKE = ["sqlalchemy", "pymysql", "asyncio", "parso", "engineio", "socketio", "python_multipart.multipart"]
 # noinspection PyArgumentList
@@ -36,6 +37,8 @@ class SmsListener:
                 server_cls = TcpServer
             elif server_config.type == "api":
                 server_cls = ApiServer
+            elif server_config.type == "ui":
+                server_cls = UiServer
 
             if server_cls is None:
                 logger.error(f"Unknown server type '{server_config.type}'.")
