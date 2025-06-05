@@ -3,8 +3,6 @@
 /installer/
 /dev.env
 /settings.json
-/.idea
-/kds-sms-server.iml
 /sqlite.db
 /file1/
 /file2/

@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="fbbb106e-c2b2-423e-b63f-12025486cf3a" name="Changes" comment="Remove legacy server and gateway implementations&#10;&#10;Deleted outdated `api.py`, `tcp.py`, `teltonika.py`, and `vonage.py` files to clean up deprecated code. Migrated relevant logic to the new modular structure with updated configurations and gateway/server implementations." />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;JuliusKoenig&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/KDS-Erfurt/kds-sms-server.git&quot;,
+    &quot;accountId&quot;: &quot;81a84640-0442-484f-a9c8-81437682a711&quot;
+  }
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/.venv/lib/python3.13/site-packages/fastapi/dependencies/utils.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/.venv/lib/python3.13/site-packages/fastapi/openapi/docs.py" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2x2h5aJx1RcLSDX5kEKCtGs3u3y" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.__main__.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.serve.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.test_api_thread.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/julius/CurrentWork/kds-sms-server/src/kds_sms_server/server&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;stardust.markdown.MarkdownSplitEditorSuppressor:keyList&quot;: []
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/kds_sms_server/server" />
+      <recent name="$PROJECT_DIR$/src/kds_sms_server/gateways" />
+      <recent name="$PROJECT_DIR$/src/kds_sms_server/gateways/vonage" />
+      <recent name="$PROJECT_DIR$/src/kds_sms_server" />
+      <recent name="$PROJECT_DIR$/.venv/lib/python3.13/site-packages/wiederverwendbar/functions" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/kds_sms_server/server" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.serve">
+    <configuration name="serve" type="PythonConfigurationType" factoryName="Python">
+      <module name="kds-sms-server" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <EXTENSION ID="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </EXTENSION>
+      <option name="SCRIPT_NAME" value="kds_sms_server" />
+      <option name="PARAMETERS" value="serve" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="true" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_api_thread" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="kds-sms-server" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_api_thread.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.test_api_thread" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.26094.121" />
+        <option value="bundled-js-predefined-d6986cc7102b-b26f3e71634d-JavaScript-IU-251.26094.121" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fbbb106e-c2b2-423e-b63f-12025486cf3a" name="Changes" comment="" />
+      <created>1747141892642</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1747141892642</updated>
+      <workItem from="1747141893670" duration="416000" />
+      <workItem from="1747142311612" duration="23511000" />
+      <workItem from="1749018465357" duration="2850000" />
+      <workItem from="1749027440195" duration="24557000" />
+      <workItem from="1749097897286" duration="85000" />
+      <workItem from="1749097988312" duration="36000" />
+      <workItem from="1749098040806" duration="20000" />
+      <workItem from="1749098275327" duration="28000" />
+      <workItem from="1749098315636" duration="14000" />
+    </task>
+    <task id="LOCAL-00001" summary="Add new dependencies: email-validator and python-multipart&#10;&#10;Updated `pyproject.toml` to include `email-validator` and `python-multipart` as dependencies. Corresponding packages and metadata have also been added to `pdm.lock`. These changes ensure support for email validation and multipart parsing.">
+      <option name="closed" value="true" />
+      <created>1747162982641</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1747162982641</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Add assets initialization and favicon to the project&#10;&#10;Introduced an `ASSETS_PATH` constant for asset management. Added a `favicon.ico` file to the assets directory to standardize branding and support UI-related features. These changes improve asset organization and enhance project structure.">
+      <option name="closed" value="true" />
+      <created>1747163004042</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1747163004042</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Fix logger configuration and update SMS server initialization&#10;&#10;Added ignored loggers for &quot;asyncio&quot; and &quot;python_multipart.multipart&quot; to the logger configuration to reduce unnecessary log noise. Also adjusted the SMS server initialization by removing the redundant `.serve()` method call.">
+      <option name="closed" value="true" />
+      <created>1747163050917</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1747163050917</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Update author metadata in package init file&#10;&#10;Expanded the author field to include the full company name. This ensures accurate representation of the organization in metadata. No functional changes were introduced.">
+      <option name="closed" value="true" />
+      <created>1747163072544</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1747163072544</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Refactor SMS sending logic for improved logging clarity.&#10;&#10;Simplified the logging flow and adjusted the error handling to separate concerns more cleanly. Warnings and errors are now logged directly within their respective code paths. This change ensures better debugging and maintains consistent logging behavior.">
+      <option name="closed" value="true" />
+      <created>1747163092728</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1747163092728</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Add API and TCP servers to handle SMS processing&#10;&#10;Introduced separate API and TCP servers to manage SMS handling, with shared logic encapsulated in a `BaseServer` class. Updated settings for enhanced configurability, including authentication, allowed networks, and encoding options. Refactored `SMSServer` to integrate the new server implementations and optimize SMS processing.">
+      <option name="closed" value="true" />
+      <created>1747163111154</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1747163111154</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Update version to 3.1.0 in __init__.py&#10;&#10;This change updates the version string to 3.1.0, reflecting new features or updates in the KDS SMS Server. Ensure compatibility and version tracking align with the latest changes.">
+      <option name="closed" value="true" />
+      <created>1747163122781</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1747163122781</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Refactor server lifecycle methods with `enter` and `exit`&#10;&#10;Reorganized server lifecycle management by introducing `enter` and `exit` methods, improving consistency across classes. Replaced server-specific `run` logic with these methods, centralizing setup and teardown behaviors. Updated the API server to use an async lifespan handler for better resource cleanup.">
+      <option name="closed" value="true" />
+      <created>1747164213993</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1747164213993</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Add log_console_format setting to configure console log format&#10;&#10;Introduced a new setting, `log_console_format`, in `settings.py` to allow customization of console log output. This enhances flexibility when defining logging formats for different environments. Minor formatting adjustment in `cli.py` was also made for consistency.">
+      <option name="closed" value="true" />
+      <created>1747164221126</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1747164221126</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Refactor naming and configuration structure for servers and gateways&#10;&#10;Renamed core server and gateway classes for consistency (`SMSServer` → `SmsServer`, `TCPServer` → `TcpServer`, `APIServer` → `ApiServer`, etc.). Updated related configuration class names and settings, introducing better structure (`BaseConfig` → `BaseGatewayConfig`, `AVAILABLE_CONFIGS` → `AVAILABLE_GATEWAY_CONFIGS`, etc.). Adjusted imports and usage throughout the project accordingly. Also added a base server configuration validation class for improved initialization handling.">
+      <option name="closed" value="true" />
+      <created>1749028686726</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1749028686726</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Rename `tcp_server.py` → `tcp.py` and `api_server.py` → `api.py` with updated imports">
+      <option name="closed" value="true" />
+      <created>1749029390889</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1749029390889</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Add Field annotations for gateway configuration validation&#10;&#10;Enhanced gateway configuration classes (`teltonika.py`, `base.py`, and `vonage.py`) with `pydantic.Field` annotations to provide default values, titles, and descriptions. This improves schema validation, documentation, and usability.">
+      <option name="closed" value="true" />
+      <created>1749029772337</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1749029772337</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Extract `BaseConfig` for shared configuration logic in servers and gateways&#10;&#10;Refactored the configuration structure by extracting a new `BaseConfig` class to centralize shared logic across server and gateway configuration classes. Updated `BaseServerConfig` and `BaseGatewayConfig` to inherit from `BaseConfig`, simplifying code and improving reusability. Adjusted relevant imports and property methods accordingly.">
+      <option name="closed" value="true" />
+      <created>1749031766608</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1749031766608</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Update dependencies and lockfile for latest versions&#10;&#10;Upgraded multiple dependencies, including `typer` (0.16.0), `uvicorn` (0.34.3), and `wiederverwendbar` (0.8.4) with `rich` and `sqlalchemy` extras. Added `greenlet` and `sqlalchemy` packages to support compatibility with updated requirements. Updated `pdm.lock` and `pyproject.toml` accordingly to reflect these changes.">
+      <option name="closed" value="true" />
+      <created>1749041418550</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1749041418550</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Refactor server and gateway initialization for improved modularity&#10;&#10;Streamlined the initialization process for servers and gateways by introducing reusable base classes. Enhanced `SmsServer` to dynamically load configurations and initialize components from `settings`. Adjusted server lifecycle methods to better handle startup and runtime behaviors, improving overall modularity and maintainability. Updated associated imports and configuration structures throughout the project.">
+      <option name="closed" value="true" />
+      <created>1749041457229</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1749041457229</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Add `db.py` with database models and utility functions&#10;&#10;Introduced a new `db.py` module, including the `Db` singleton-based database utility and `Messages` SQLAlchemy model. Added `MessageStatus` enum for message lifecycle states (`queued`, `sent`, `error`). This sets up foundational database support for message management in the KDS SMS server.">
+      <option name="closed" value="true" />
+      <created>1749043122742</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1749043122742</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Update `settings.py` to integrate `SqlalchemySettings` and enhance field validation&#10;&#10;Replaced `UvicornServerSettings` with `SqlalchemySettings` in the `Settings` class for database integration. Added constraints to SMS-related fields (`sms_data_max_size`, `sms_number_max_size`, `sms_message_max_size`) for improved validation. Introduced new logging settings to ignore specific loggers by exact matches or patterns.">
+      <option name="closed" value="true" />
+      <created>1749043164967</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1749043164967</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Add `logger.py` to initialize and manage logger instances&#10;&#10;Introduced a `logger.py` module for centralized logging functionality. Utilized `LoggerSingleton` to handle logger initialization based on module name and settings. This ensures consistent logging configuration across the KDS SMS server.">
+      <option name="closed" value="true" />
+      <created>1749043183605</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1749043183605</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Refactor `cli.py` to improve command structure and enhance functionality&#10;&#10;Revised `cli.py` with clearer command definitions and improved help information. Added new commands: `init-db` for database initialization and updated `serve` and `version` commands for enhanced clarity. Moved logging initialization and server start logic to better align with modularity principles. Adjusted imports and added necessary dependencies for streamlined execution.">
+      <option name="closed" value="true" />
+      <created>1749043197370</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1749043197370</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Remove legacy server and gateway implementations&#10;&#10;Deleted outdated `api.py`, `tcp.py`, `teltonika.py`, and `vonage.py` files to clean up deprecated code. Migrated relevant logic to the new modular structure with updated configurations and gateway/server implementations.">
+      <option name="closed" value="true" />
+      <created>1749051117110</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1749051117110</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <MESSAGE value="Add new dependencies: email-validator and python-multipart&#10;&#10;Updated `pyproject.toml` to include `email-validator` and `python-multipart` as dependencies. Corresponding packages and metadata have also been added to `pdm.lock`. These changes ensure support for email validation and multipart parsing." />
+    <MESSAGE value="Add assets initialization and favicon to the project&#10;&#10;Introduced an `ASSETS_PATH` constant for asset management. Added a `favicon.ico` file to the assets directory to standardize branding and support UI-related features. These changes improve asset organization and enhance project structure." />
+    <MESSAGE value="Add detailed server and SMS settings to configuration&#10;&#10;Expanded server and SMS configuration with additional fields, including debug, TCP server, API server, and SMS validation settings. Integrated `UvicornServerSettings` to unify server settings and enhance flexibility for TCP and API server management. Improved maintainability and clarity with typed fields and descriptions." />
+    <MESSAGE value="Fix logger configuration and update SMS server initialization&#10;&#10;Added ignored loggers for &quot;asyncio&quot; and &quot;python_multipart.multipart&quot; to the logger configuration to reduce unnecessary log noise. Also adjusted the SMS server initialization by removing the redundant `.serve()` method call." />
+    <MESSAGE value="Update author metadata in package init file&#10;&#10;Expanded the author field to include the full company name. This ensures accurate representation of the organization in metadata. No functional changes were introduced." />
+    <MESSAGE value="Refactor SMS sending logic for improved logging clarity.&#10;&#10;Simplified the logging flow and adjusted the error handling to separate concerns more cleanly. Warnings and errors are now logged directly within their respective code paths. This change ensures better debugging and maintains consistent logging behavior." />
+    <MESSAGE value="Add API and TCP servers to handle SMS processing&#10;&#10;Introduced separate API and TCP servers to manage SMS handling, with shared logic encapsulated in a `BaseServer` class. Updated settings for enhanced configurability, including authentication, allowed networks, and encoding options. Refactored `SMSServer` to integrate the new server implementations and optimize SMS processing." />
+    <MESSAGE value="Update version to 3.1.0 in __init__.py&#10;&#10;This change updates the version string to 3.1.0, reflecting new features or updates in the KDS SMS Server. Ensure compatibility and version tracking align with the latest changes." />
+    <MESSAGE value="Refactor server lifecycle methods with `enter` and `exit`&#10;&#10;Reorganized server lifecycle management by introducing `enter` and `exit` methods, improving consistency across classes. Replaced server-specific `run` logic with these methods, centralizing setup and teardown behaviors. Updated the API server to use an async lifespan handler for better resource cleanup." />
+    <MESSAGE value="Add log_console_format setting to configure console log format&#10;&#10;Introduced a new setting, `log_console_format`, in `settings.py` to allow customization of console log output. This enhances flexibility when defining logging formats for different environments. Minor formatting adjustment in `cli.py` was also made for consistency." />
+    <MESSAGE value="Refactor naming and configuration structure for servers and gateways&#10;&#10;Renamed core server and gateway classes for consistency (`SMSServer` → `SmsServer`, `TCPServer` → `TcpServer`, `APIServer` → `ApiServer`, etc.). Updated related configuration class names and settings, introducing better structure (`BaseConfig` → `BaseGatewayConfig`, `AVAILABLE_CONFIGS` → `AVAILABLE_GATEWAY_CONFIGS`, etc.). Adjusted imports and usage throughout the project accordingly. Also added a base server configuration validation class for improved initialization handling." />
+    <MESSAGE value="Rename `tcp_server.py` → `tcp.py` and `api_server.py` → `api.py` with updated imports" />
+    <MESSAGE value="Add Field annotations for gateway configuration validation&#10;&#10;Enhanced gateway configuration classes (`teltonika.py`, `base.py`, and `vonage.py`) with `pydantic.Field` annotations to provide default values, titles, and descriptions. This improves schema validation, documentation, and usability." />
+    <MESSAGE value="Extract `BaseConfig` for shared configuration logic in servers and gateways&#10;&#10;Refactored the configuration structure by extracting a new `BaseConfig` class to centralize shared logic across server and gateway configuration classes. Updated `BaseServerConfig` and `BaseGatewayConfig` to inherit from `BaseConfig`, simplifying code and improving reusability. Adjusted relevant imports and property methods accordingly." />
+    <MESSAGE value="Update dependencies and lockfile for latest versions&#10;&#10;Upgraded multiple dependencies, including `typer` (0.16.0), `uvicorn` (0.34.3), and `wiederverwendbar` (0.8.4) with `rich` and `sqlalchemy` extras. Added `greenlet` and `sqlalchemy` packages to support compatibility with updated requirements. Updated `pdm.lock` and `pyproject.toml` accordingly to reflect these changes." />
+    <MESSAGE value="Refactor server and gateway initialization for improved modularity&#10;&#10;Streamlined the initialization process for servers and gateways by introducing reusable base classes. Enhanced `SmsServer` to dynamically load configurations and initialize components from `settings`. Adjusted server lifecycle methods to better handle startup and runtime behaviors, improving overall modularity and maintainability. Updated associated imports and configuration structures throughout the project." />
+    <MESSAGE value="Add `db.py` with database models and utility functions&#10;&#10;Introduced a new `db.py` module, including the `Db` singleton-based database utility and `Messages` SQLAlchemy model. Added `MessageStatus` enum for message lifecycle states (`queued`, `sent`, `error`). This sets up foundational database support for message management in the KDS SMS server." />
+    <MESSAGE value="Add `logger.py` for centralized logging with `LoggerSingleton`&#10;&#10;Introduced a `logger.py` module for reusable and centralized logging. Utilizes `LoggerSingleton` from `wiederverwendbar` to manage logger instances, integrating configuration from `settings`. This enhances logging consistency and simplifies logger initialization across the application." />
+    <MESSAGE value="Update `settings.py` to integrate `SqlalchemySettings` and enhance field validation&#10;&#10;Replaced `UvicornServerSettings` with `SqlalchemySettings` in the `Settings` class for database integration. Added constraints to SMS-related fields (`sms_data_max_size`, `sms_number_max_size`, `sms_message_max_size`) for improved validation. Introduced new logging settings to ignore specific loggers by exact matches or patterns." />
+    <MESSAGE value="Add `logger.py` to initialize and manage logger instances&#10;&#10;Introduced a `logger.py` module for centralized logging functionality. Utilized `LoggerSingleton` to handle logger initialization based on module name and settings. This ensures consistent logging configuration across the KDS SMS server." />
+    <MESSAGE value="Refactor `cli.py` to improve command structure and enhance functionality&#10;&#10;Revised `cli.py` with clearer command definitions and improved help information. Added new commands: `init-db` for database initialization and updated `serve` and `version` commands for enhanced clarity. Moved logging initialization and server start logic to better align with modularity principles. Adjusted imports and added necessary dependencies for streamlined execution." />
+    <MESSAGE value="Remove legacy server and gateway implementations&#10;&#10;Deleted outdated `api.py`, `tcp.py`, `teltonika.py`, and `vonage.py` files to clean up deprecated code. Migrated relevant logic to the new modular structure with updated configurations and gateway/server implementations." />
+    <option name="LAST_COMMIT_MESSAGE" value="Remove legacy server and gateway implementations&#10;&#10;Deleted outdated `api.py`, `tcp.py`, `teltonika.py`, and `vonage.py` files to clean up deprecated code. Migrated relevant logic to the new modular structure with updated configurations and gateway/server implementations." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/kds_sms_server/server/tcp.py</url>
+          <line>64</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/kds_sms_server/server/tcp.py</url>
+          <line>71</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/kds_sms_server/server/tcp.py</url>
+          <line>86</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/kds_sms_server/server/config.py</url>
+          <line>115</line>
+          <option name="timeStamp" value="48" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/kds_sms_server/server/config.py</url>
+          <line>148</line>
+          <option name="timeStamp" value="50" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/kds_sms_server$serve.coverage" NAME="serve Coverage Results" MODIFIED="1749050994537" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/kds_sms_server$test_api_thread.coverage" NAME="test_api_thread Coverage Results" MODIFIED="1749019490091" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/kds_sms_server$__main__.coverage" NAME="serve Coverage Results" MODIFIED="1747164167285" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
