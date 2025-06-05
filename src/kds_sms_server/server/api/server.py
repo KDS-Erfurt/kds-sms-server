@@ -90,7 +90,7 @@ class Unauthorized(BaseModel):
     detail: str
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {"detail": "Not authenticated"}
         }
 
@@ -99,7 +99,7 @@ class SmsNotFoundError(BaseModel):
     detail: str
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {"detail": "SMS with id=1 not found!"},
         }
 
@@ -108,7 +108,7 @@ class SmsAbortError(BaseModel):
     detail: str
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {"detail": "Cannot abort SMS with id=1!"},
         }
 

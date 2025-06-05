@@ -4,23 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fbbb106e-c2b2-423e-b63f-12025486cf3a" name="Changes" comment="Add HTML templates for `UiServer` and integrate template directory validation.">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/7470662d-9735-4002-8e9c-4bfca76b26ba.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/7470662d-9735-4002-8e9c-4bfca76b26ba.xml" afterDir="false" />
+    <list default="true" id="fbbb106e-c2b2-423e-b63f-12025486cf3a" name="Changes" comment="Refactor settings architecture: encapsulate Listener and Worker settings as nested classes, simplify environment prefix configuration, and adjust worker initialization references.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kds-sms-server.iml" beforeDir="false" afterPath="$PROJECT_DIR$/kds-sms-server.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pdm.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pdm.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings_example.json" beforeDir="false" afterPath="$PROJECT_DIR$/settings_example.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/kds_sms_server/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/kds_sms_server/db.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/kds_sms_server/listener.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/kds_sms_server/listener.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/kds_sms_server/server/api/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/kds_sms_server/server/api/server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/kds_sms_server/server/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/kds_sms_server/server/server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/kds_sms_server/server/ui/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/kds_sms_server/server/ui/server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/kds_sms_server/server/ui/templates/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/kds_sms_server/server/ui/templates/create.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/kds_sms_server/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/kds_sms_server/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/kds_sms_server/worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/kds_sms_server/worker.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +99,7 @@
       <recent name="$PROJECT_DIR$/src/kds_sms_server/server" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.listener">
+  <component name="RunManager" selected="Docker.docker-compose.yml: Compose Deployment">
     <configuration name="init-db" type="PythonConfigurationType" factoryName="Python">
       <module name="kds-sms-server" />
       <option name="ENV_FILES" value="" />
@@ -296,7 +281,7 @@
       <workItem from="1749098040806" duration="20000" />
       <workItem from="1749098275327" duration="28000" />
       <workItem from="1749098315636" duration="14000" />
-      <workItem from="1749098567089" duration="15126000" />
+      <workItem from="1749098567089" duration="15934000" />
     </task>
     <task id="LOCAL-00001" summary="Add new dependencies: email-validator and python-multipart&#10;&#10;Updated `pyproject.toml` to include `email-validator` and `python-multipart` as dependencies. Corresponding packages and metadata have also been added to `pdm.lock`. These changes ensure support for email validation and multipart parsing.">
       <option name="closed" value="true" />
@@ -530,7 +515,71 @@
       <option name="project" value="LOCAL" />
       <updated>1749104263204</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Refactor `SmsStatusApiModel` and database schema: remove `SmsStatus` enum from API model, adjust column length for `result` and `log`.">
+      <option name="closed" value="true" />
+      <created>1749113900228</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1749113900228</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Add `PyMySQL` dependency to enable MySQL support.">
+      <option name="closed" value="true" />
+      <created>1749113925208</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1749113925208</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Add IntelliJ IDEA data source configuration for MySQL">
+      <option name="closed" value="true" />
+      <created>1749113958636</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1749113958636</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Exclude `.venv` directory from IntelliJ IDEA project structure.">
+      <option name="closed" value="true" />
+      <created>1749113971453</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1749113971453</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Add detailed and list HTML templates for `UiServer` views.">
+      <option name="closed" value="true" />
+      <created>1749113998748</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1749113998748</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Refactor settings architecture: separate Listener and Worker-specific configurations, adjust initialization logic, and update references accordingly.">
+      <option name="closed" value="true" />
+      <created>1749114076137</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1749114076137</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Refactor `UiServer` to replace Starlette with FastAPI, enhance SMS view configuration, and revise route handling.">
+      <option name="closed" value="true" />
+      <created>1749114092816</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1749114092816</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Refactor settings architecture: encapsulate Listener and Worker settings as nested classes, simplify environment prefix configuration, and adjust worker initialization references.">
+      <option name="closed" value="true" />
+      <created>1749114241097</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1749114241097</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -549,14 +598,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Refactor SMS sending logic for improved logging clarity.&#10;&#10;Simplified the logging flow and adjusted the error handling to separate concerns more cleanly. Warnings and errors are now logged directly within their respective code paths. This change ensures better debugging and maintains consistent logging behavior." />
-    <MESSAGE value="Add API and TCP servers to handle SMS processing&#10;&#10;Introduced separate API and TCP servers to manage SMS handling, with shared logic encapsulated in a `BaseServer` class. Updated settings for enhanced configurability, including authentication, allowed networks, and encoding options. Refactored `SMSServer` to integrate the new server implementations and optimize SMS processing." />
-    <MESSAGE value="Update version to 3.1.0 in __init__.py&#10;&#10;This change updates the version string to 3.1.0, reflecting new features or updates in the KDS SMS Server. Ensure compatibility and version tracking align with the latest changes." />
-    <MESSAGE value="Refactor server lifecycle methods with `enter` and `exit`&#10;&#10;Reorganized server lifecycle management by introducing `enter` and `exit` methods, improving consistency across classes. Replaced server-specific `run` logic with these methods, centralizing setup and teardown behaviors. Updated the API server to use an async lifespan handler for better resource cleanup." />
-    <MESSAGE value="Add log_console_format setting to configure console log format&#10;&#10;Introduced a new setting, `log_console_format`, in `settings.py` to allow customization of console log output. This enhances flexibility when defining logging formats for different environments. Minor formatting adjustment in `cli.py` was also made for consistency." />
-    <MESSAGE value="Refactor naming and configuration structure for servers and gateways&#10;&#10;Renamed core server and gateway classes for consistency (`SMSServer` → `SmsServer`, `TCPServer` → `TcpServer`, `APIServer` → `ApiServer`, etc.). Updated related configuration class names and settings, introducing better structure (`BaseConfig` → `BaseGatewayConfig`, `AVAILABLE_CONFIGS` → `AVAILABLE_GATEWAY_CONFIGS`, etc.). Adjusted imports and usage throughout the project accordingly. Also added a base server configuration validation class for improved initialization handling." />
-    <MESSAGE value="Rename `tcp_server.py` → `tcp.py` and `api_server.py` → `api.py` with updated imports" />
-    <MESSAGE value="Add Field annotations for gateway configuration validation&#10;&#10;Enhanced gateway configuration classes (`teltonika.py`, `base.py`, and `vonage.py`) with `pydantic.Field` annotations to provide default values, titles, and descriptions. This improves schema validation, documentation, and usability." />
     <MESSAGE value="Extract `BaseConfig` for shared configuration logic in servers and gateways&#10;&#10;Refactored the configuration structure by extracting a new `BaseConfig` class to centralize shared logic across server and gateway configuration classes. Updated `BaseServerConfig` and `BaseGatewayConfig` to inherit from `BaseConfig`, simplifying code and improving reusability. Adjusted relevant imports and property methods accordingly." />
     <MESSAGE value="Update dependencies and lockfile for latest versions&#10;&#10;Upgraded multiple dependencies, including `typer` (0.16.0), `uvicorn` (0.34.3), and `wiederverwendbar` (0.8.4) with `rich` and `sqlalchemy` extras. Added `greenlet` and `sqlalchemy` packages to support compatibility with updated requirements. Updated `pdm.lock` and `pyproject.toml` accordingly to reflect these changes." />
     <MESSAGE value="Refactor server and gateway initialization for improved modularity&#10;&#10;Streamlined the initialization process for servers and gateways by introducing reusable base classes. Enhanced `SmsServer` to dynamically load configurations and initialize components from `settings`. Adjusted server lifecycle methods to better handle startup and runtime behaviors, improving overall modularity and maintainability. Updated associated imports and configuration structures throughout the project." />
@@ -574,7 +615,15 @@
     <MESSAGE value="Introduce `UiServer`: add a UI server implementation with configuration, views, and admin interface." />
     <MESSAGE value="Extend functionality of `UiServer`: implement SMS views and actions, add IP handling, and enhance exception management." />
     <MESSAGE value="Add HTML templates for `UiServer` and integrate template directory validation." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add HTML templates for `UiServer` and integrate template directory validation." />
+    <MESSAGE value="Refactor `SmsStatusApiModel` and database schema: remove `SmsStatus` enum from API model, adjust column length for `result` and `log`." />
+    <MESSAGE value="Add `PyMySQL` dependency to enable MySQL support." />
+    <MESSAGE value="Add IntelliJ IDEA data source configuration for MySQL" />
+    <MESSAGE value="Exclude `.venv` directory from IntelliJ IDEA project structure." />
+    <MESSAGE value="Add detailed and list HTML templates for `UiServer` views." />
+    <MESSAGE value="Refactor settings architecture: separate Listener and Worker-specific configurations, adjust initialization logic, and update references accordingly." />
+    <MESSAGE value="Refactor `UiServer` to replace Starlette with FastAPI, enhance SMS view configuration, and revise route handling." />
+    <MESSAGE value="Refactor settings architecture: encapsulate Listener and Worker settings as nested classes, simplify environment prefix configuration, and adjust worker initialization references." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor settings architecture: encapsulate Listener and Worker settings as nested classes, simplify environment prefix configuration, and adjust worker initialization references." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -609,7 +658,7 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/kds_sms_server$init_db.coverage" NAME="init-db Coverage Results" MODIFIED="1749098909071" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/kds_sms_server$listener.coverage" NAME="listener Coverage Results" MODIFIED="1749113832096" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/kds_sms_server$listener.coverage" NAME="listener Coverage Results" MODIFIED="1749114416720" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$admin.coverage" NAME="admin Coverage Results" MODIFIED="1749100378783" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$worker.coverage" NAME="worker Coverage Results" MODIFIED="1749113709216" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$serve.coverage" NAME="serve Coverage Results" MODIFIED="1749050994537" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
