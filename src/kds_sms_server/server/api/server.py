@@ -351,7 +351,7 @@ class ApiServer(BaseServer, FastAPI):
         return api_key, api_secret
 
     # noinspection DuplicatedCode
-    def handle_request(self, caller: Any, **kwargs) -> Any | None:
+    def handle_request(self, caller: None, **kwargs) -> Any | None:
         # check if client ip is allowed
         allowed = False
         for network in self.config.allowed_networks:
