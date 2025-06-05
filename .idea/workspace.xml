@@ -4,8 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fbbb106e-c2b2-423e-b63f-12025486cf3a" name="Changes" comment="Extend functionality of `UiServer`: implement SMS views and actions, add IP handling, and enhance exception management.">
+    <list default="true" id="fbbb106e-c2b2-423e-b63f-12025486cf3a" name="Changes" comment="Add HTML templates for `UiServer` and integrate template directory validation.">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/7470662d-9735-4002-8e9c-4bfca76b26ba.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/7470662d-9735-4002-8e9c-4bfca76b26ba.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kds-sms-server.iml" beforeDir="false" afterPath="$PROJECT_DIR$/kds-sms-server.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pdm.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pdm.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings_example.json" beforeDir="false" afterPath="$PROJECT_DIR$/settings_example.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/kds_sms_server/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/kds_sms_server/db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/kds_sms_server/listener.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/kds_sms_server/listener.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/kds_sms_server/server/api/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/kds_sms_server/server/api/server.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/kds_sms_server/server/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/kds_sms_server/server/server.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/kds_sms_server/server/ui/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/kds_sms_server/server/ui/server.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/kds_sms_server/server/ui/templates/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/kds_sms_server/server/ui/templates/create.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/kds_sms_server/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/kds_sms_server/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/kds_sms_server/worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/kds_sms_server/worker.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +71,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Python.__main__.executor": "Debug",
     "Python.admin.executor": "Debug",
@@ -63,6 +79,7 @@
     "Python.listener.executor": "Debug",
     "Python.serve.executor": "Debug",
     "Python.test_api_thread.executor": "Debug",
+    "Python.worker.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
@@ -79,6 +96,9 @@
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mariadb"
+    ],
     "stardust.markdown.MarkdownSplitEditorSuppressor:keyList": []
   }
 }]]></component>
@@ -227,12 +247,30 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml" />
+      <method v="2" />
+    </configuration>
+    <configuration name="docker-compose.yml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker - localhost">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="sourceFilePath" value="docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
     <list>
+      <item itemvalue="Docker.docker-compose.yml: Compose Deployment" />
       <item itemvalue="Python.version" />
       <item itemvalue="Python.listener" />
       <item itemvalue="Python.worker" />
       <item itemvalue="Python.init-db" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Docker.docker-compose.yml: Compose Deployment" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -258,7 +296,7 @@
       <workItem from="1749098040806" duration="20000" />
       <workItem from="1749098275327" duration="28000" />
       <workItem from="1749098315636" duration="14000" />
-      <workItem from="1749098567089" duration="5577000" />
+      <workItem from="1749098567089" duration="15126000" />
     </task>
     <task id="LOCAL-00001" summary="Add new dependencies: email-validator and python-multipart&#10;&#10;Updated `pyproject.toml` to include `email-validator` and `python-multipart` as dependencies. Corresponding packages and metadata have also been added to `pdm.lock`. These changes ensure support for email validation and multipart parsing.">
       <option name="closed" value="true" />
@@ -484,7 +522,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749103884662</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="Add HTML templates for `UiServer` and integrate template directory validation.">
+      <option name="closed" value="true" />
+      <created>1749104263204</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1749104263204</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -503,7 +549,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Update author metadata in package init file&#10;&#10;Expanded the author field to include the full company name. This ensures accurate representation of the organization in metadata. No functional changes were introduced." />
     <MESSAGE value="Refactor SMS sending logic for improved logging clarity.&#10;&#10;Simplified the logging flow and adjusted the error handling to separate concerns more cleanly. Warnings and errors are now logged directly within their respective code paths. This change ensures better debugging and maintains consistent logging behavior." />
     <MESSAGE value="Add API and TCP servers to handle SMS processing&#10;&#10;Introduced separate API and TCP servers to manage SMS handling, with shared logic encapsulated in a `BaseServer` class. Updated settings for enhanced configurability, including authentication, allowed networks, and encoding options. Refactored `SMSServer` to integrate the new server implementations and optimize SMS processing." />
     <MESSAGE value="Update version to 3.1.0 in __init__.py&#10;&#10;This change updates the version string to 3.1.0, reflecting new features or updates in the KDS SMS Server. Ensure compatibility and version tracking align with the latest changes." />
@@ -528,7 +573,8 @@
     <MESSAGE value="Refactor `ApiServer` initialization to improve code readability." />
     <MESSAGE value="Introduce `UiServer`: add a UI server implementation with configuration, views, and admin interface." />
     <MESSAGE value="Extend functionality of `UiServer`: implement SMS views and actions, add IP handling, and enhance exception management." />
-    <option name="LAST_COMMIT_MESSAGE" value="Extend functionality of `UiServer`: implement SMS views and actions, add IP handling, and enhance exception management." />
+    <MESSAGE value="Add HTML templates for `UiServer` and integrate template directory validation." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add HTML templates for `UiServer` and integrate template directory validation." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -563,8 +609,9 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/kds_sms_server$init_db.coverage" NAME="init-db Coverage Results" MODIFIED="1749098909071" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/kds_sms_server$listener.coverage" NAME="listener Coverage Results" MODIFIED="1749104139712" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/kds_sms_server$listener.coverage" NAME="listener Coverage Results" MODIFIED="1749113832096" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$admin.coverage" NAME="admin Coverage Results" MODIFIED="1749100378783" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/kds_sms_server$worker.coverage" NAME="worker Coverage Results" MODIFIED="1749113709216" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$serve.coverage" NAME="serve Coverage Results" MODIFIED="1749050994537" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$test_api_thread.coverage" NAME="test_api_thread Coverage Results" MODIFIED="1749019490091" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/kds_sms_server$__main__.coverage" NAME="serve Coverage Results" MODIFIED="1747164167285" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
