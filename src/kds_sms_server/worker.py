@@ -35,7 +35,7 @@ class SmsWorker(TaskManager):
 
     def __init__(self):
         logger.info(f"Initializing SMS-Worker ...")
-        super().__init__(name="SMS-Worker", worker_count=settings.worker.worker_count, daemon=True, logger=logger)
+        super().__init__(name="SMS-Worker", worker_count=settings.worker.count, daemon=True, logger=logger)
 
         # initialize gateway
         logger.info("Initializing gateways ...")
