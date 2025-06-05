@@ -23,6 +23,7 @@ def db() -> Db:
 class SmsStatus(str, Enum):
     QUEUED = "queued"
     SENT = "sent"
+    ABORTED = "aborted"
     ERROR = "error"
 
 
@@ -32,7 +33,7 @@ class Sms(Base, db().Base):
 
     id: int = Column(Integer(), primary_key=True, autoincrement=True, name="sms_id")
     status: SmsStatus | str = Column(EnumValueStr(SmsStatus), nullable=False, name="sms_status")
-    received_by: str = Column(VARCHAR(20), nullable=True, name="sms_received_by")
+    received_by: str = Column(VARCHAR(20), nullable=False, name="sms_received_by")
     received_datetime: datetime = Column(DateTime(), nullable=False, name="sms_received_datetime")
     processed_datetime: datetime = Column(DateTime(), nullable=True, name="sms_processed_datetime")
     sent_by: str = Column(VARCHAR(20), nullable=True, name="sms_sent_by")
