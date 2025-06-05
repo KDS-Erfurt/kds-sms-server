@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Union
 
@@ -16,6 +17,8 @@ from kds_sms_server.server.ui.config import UiServerConfig
 from kds_sms_server.gateways.teltonika.config import TeltonikaGatewayConfig
 from kds_sms_server.gateways.vonage.config import VonageGatewayConfig
 
+ENV_PREFIX = "KDS_SMS_SERVER_"
+
 AVAILABLE_SERVER_CONFIGS = Union[
     FileServerConfig,
     TcpServerConfig,
@@ -31,7 +34,7 @@ AVAILABLE_GATEWAY_CONFIGS = Union[
 
 class Settings(FileConfig, BaseSettings, SqlalchemySettings):
     model_config = {
-        "env_prefix": "KDS_SMS_SERVER_",
+        "env_prefix": ENV_PREFIX,
         "case_sensitive": False
     }
 
@@ -85,4 +88,4 @@ class Settings(FileConfig, BaseSettings, SqlalchemySettings):
 
 
 # noinspection PyArgumentList
-settings = Settings(file_path=Path("settings.json"), file_must_exist="yes_print")
+settings = Settings(file_path=Path(os.environ.get(f"{ENV_PREFIX}SETTINGS_FILE", "settings.json")), file_must_exist="yes_print")
