@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fbbb106e-c2b2-423e-b63f-12025486cf3a" name="Changes" comment="Remove legacy server and gateway implementations&#10;&#10;Deleted outdated `api.py`, `tcp.py`, `teltonika.py`, and `vonage.py` files to clean up deprecated code. Migrated relevant logic to the new modular structure with updated configurations and gateway/server implementations." />
+    <list default="true" id="fbbb106e-c2b2-423e-b63f-12025486cf3a" name="Changes" comment="Add IntelliJ IDEA project configuration files for `kds-sms-server`">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -52,31 +54,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.__main__.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.serve.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.test_api_thread.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/julius/CurrentWork/kds-sms-server/src/kds_sms_server/server&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.__main__.executor": "Debug",
+    "Python.init-db.executor": "Debug",
+    "Python.serve.executor": "Debug",
+    "Python.test_api_thread.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "/home/julius/CurrentWork/kds-sms-server",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "SDKs",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;stardust.markdown.MarkdownSplitEditorSuppressor:keyList&quot;: []
+  "keyToStringList": {
+    "stardust.markdown.MarkdownSplitEditorSuppressor:keyList": []
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/kds_sms_server/server" />
@@ -89,8 +92,8 @@
       <recent name="$PROJECT_DIR$/src/kds_sms_server/server" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.serve">
-    <configuration name="serve" type="PythonConfigurationType" factoryName="Python">
+  <component name="RunManager" selected="Python.init-db">
+    <configuration name="init-db" type="PythonConfigurationType" factoryName="Python">
       <module name="kds-sms-server" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -115,7 +118,7 @@
         </ENTRIES>
       </EXTENSION>
       <option name="SCRIPT_NAME" value="kds_sms_server" />
-      <option name="PARAMETERS" value="serve" />
+      <option name="PARAMETERS" value="init-db" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="true" />
@@ -123,7 +126,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="test_api_thread" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="listener" type="PythonConfigurationType" factoryName="Python">
       <module name="kds-sms-server" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -132,25 +135,102 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tests/test_api_thread.py" />
-      <option name="PARAMETERS" value="" />
+      <EXTENSION ID="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </EXTENSION>
+      <option name="SCRIPT_NAME" value="kds_sms_server" />
+      <option name="PARAMETERS" value="listener" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
+      <option name="MODULE_MODE" value="true" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Python.test_api_thread" />
-      </list>
-    </recent_temporary>
+    <configuration name="version" type="PythonConfigurationType" factoryName="Python">
+      <module name="kds-sms-server" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <EXTENSION ID="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </EXTENSION>
+      <option name="SCRIPT_NAME" value="kds_sms_server" />
+      <option name="PARAMETERS" value="version" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="true" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="worker" type="PythonConfigurationType" factoryName="Python">
+      <module name="kds-sms-server" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <EXTENSION ID="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </EXTENSION>
+      <option name="SCRIPT_NAME" value="kds_sms_server" />
+      <option name="PARAMETERS" value="worker" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="true" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.version" />
+      <item itemvalue="Python.listener" />
+      <item itemvalue="Python.worker" />
+      <item itemvalue="Python.init-db" />
+    </list>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -176,6 +256,7 @@
       <workItem from="1749098040806" duration="20000" />
       <workItem from="1749098275327" duration="28000" />
       <workItem from="1749098315636" duration="14000" />
+      <workItem from="1749098567089" duration="357000" />
     </task>
     <task id="LOCAL-00001" summary="Add new dependencies: email-validator and python-multipart&#10;&#10;Updated `pyproject.toml` to include `email-validator` and `python-multipart` as dependencies. Corresponding packages and metadata have also been added to `pdm.lock`. These changes ensure support for email validation and multipart parsing.">
       <option name="closed" value="true" />
@@ -337,7 +418,23 @@
       <option name="project" value="LOCAL" />
       <updated>1749051117110</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Add IntelliJ IDEA project configuration files for `kds-sms-server`">
+      <option name="closed" value="true" />
+      <created>1749098777948</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1749098777948</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Add IntelliJ IDEA project configuration files for `kds-sms-server`">
+      <option name="closed" value="true" />
+      <created>1749098788375</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1749098788375</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -378,7 +475,10 @@
     <MESSAGE value="Add `logger.py` to initialize and manage logger instances&#10;&#10;Introduced a `logger.py` module for centralized logging functionality. Utilized `LoggerSingleton` to handle logger initialization based on module name and settings. This ensures consistent logging configuration across the KDS SMS server." />
     <MESSAGE value="Refactor `cli.py` to improve command structure and enhance functionality&#10;&#10;Revised `cli.py` with clearer command definitions and improved help information. Added new commands: `init-db` for database initialization and updated `serve` and `version` commands for enhanced clarity. Moved logging initialization and server start logic to better align with modularity principles. Adjusted imports and added necessary dependencies for streamlined execution." />
     <MESSAGE value="Remove legacy server and gateway implementations&#10;&#10;Deleted outdated `api.py`, `tcp.py`, `teltonika.py`, and `vonage.py` files to clean up deprecated code. Migrated relevant logic to the new modular structure with updated configurations and gateway/server implementations." />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove legacy server and gateway implementations&#10;&#10;Deleted outdated `api.py`, `tcp.py`, `teltonika.py`, and `vonage.py` files to clean up deprecated code. Migrated relevant logic to the new modular structure with updated configurations and gateway/server implementations." />
+    <MESSAGE value="Introduce admin interface: add `starlette-admin` with SMS management views and actions." />
+    <MESSAGE value="Add IntelliJ IDEA configuration files to project&#10;&#10;Introduced `.idea` folder and associated configuration files (`*.iml`, `modules.xml`, `workspace.xml`, etc.) to support IntelliJ-based project setup and management." />
+    <MESSAGE value="Add IntelliJ IDEA project configuration files for `kds-sms-server`" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add IntelliJ IDEA project configuration files for `kds-sms-server`" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
