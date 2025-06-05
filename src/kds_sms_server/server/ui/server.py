@@ -1,5 +1,6 @@
 import logging
 from contextlib import asynccontextmanager
+from ipaddress import IPv4Address
 from typing import TYPE_CHECKING, Any
 
 import uvicorn
@@ -7,6 +8,7 @@ from starlette.applications import Starlette
 from starlette_admin.views import CustomView
 from starlette_admin.actions import row_action, action
 from starlette_admin.contrib.sqla import Admin, ModelView
+from starlette_admin.exceptions import StarletteAdminException, ActionFailed
 
 from kds_sms_server import __title__, __description__, __version__, __author__, __author_email__, __license__
 from kds_sms_server.assets import ASSETS_PATH
@@ -21,8 +23,9 @@ logger = logging.getLogger(__name__)
 
 
 class HomeView(CustomView):
-    def __init__(self):
+    def __init__(self, ui: "Ui"):
         super().__init__(label="Home", icon="fa fa-house")
+        self.ui = ui
 
 
 class SmsView(ModelView):
@@ -40,8 +43,9 @@ class SmsView(ModelView):
     row_actions = ["view", "row_reset", "row_abort"]
     actions = ["reset", "abort"]
 
-    def __init__(self):
+    def __init__(self, ui: "Ui"):
         super().__init__(Sms, label="SMS", icon="fa fa-message")
+        self.ui = ui
 
     def can_edit(self, request: Request) -> bool:
         return False
@@ -49,10 +53,27 @@ class SmsView(ModelView):
     def can_delete(self, request: Request) -> bool:
         return False
 
-    async def before_create(
-            self, request: Request, data: dict[str, Any], obj: Any
-    ) -> None:
-        print()
+    async def create(self, request: Request, data: dict[str, Any]) -> Any:
+        try:
+            data = await self._arrange_data(request, data)
+            await self.validate(request, data)
+
+            # get number and message
+            number = data["number"]
+            message = data["message"]
+
+            client_ip = IPv4Address(request.client.host)
+            client_port = request.client.port
+
+            result = self.ui.ui_server.handle_request(caller=None, number=number, message=message, client_ip=client_ip, client_port=client_port)
+            if isinstance(result, Exception):
+                raise result
+            sms = Sms.get(id=result)
+            if sms is None:
+                raise FileNotFoundError(f"SMS with id={result} not found!")
+            return sms
+        except Exception as e:
+            return self.handle_exception(e)
 
     @row_action(
         name="row_reset",
@@ -63,7 +84,15 @@ class SmsView(ModelView):
         submit_btn_class="btn-success",
     )
     async def row_reset_action(self, request: Request, pk: str) -> str:
-        return "Aktion erfolgreich."
+        sms = Sms.get(Sms.id == pk)
+        if sms is None:
+            raise ActionFailed(f"SMS with id={pk} not found.")
+        sms.update(status=SmsStatus.QUEUED,
+                   processed_datetime=None,
+                   sent_by=None,
+                   result=None,
+                   log=None)
+        return f"SMS with id={pk} reset successfully."
 
     @action(
         name="reset",
@@ -74,7 +103,10 @@ class SmsView(ModelView):
         submit_btn_class="btn-success",
     )
     async def reset_action(self, request: Request, pks: list[str]) -> str:
-        return "Aktion erfolgreich."
+        successes = []
+        for pk in pks:
+            successes.append(await self.row_reset_action(request=request, pk=pk))
+        return "\n".join(successes)
 
     @row_action(
         name="row_abort",
@@ -85,7 +117,17 @@ class SmsView(ModelView):
         submit_btn_class="btn-success",
     )
     async def row_abort_action(self, request: Request, pk: str) -> str:
-        return "Aktion erfolgreich."
+        sms = Sms.get(Sms.id == pk)
+        if sms is None:
+            raise ActionFailed(f"SMS with id={pk} not found.")
+        if sms.status != SmsStatus.QUEUED:
+            raise ActionFailed(f"Cannot abort SMS with id={pk}! SMS is not in queued state.")
+        sms.update(status=SmsStatus.ABORTED,
+                   processed_datetime=None,
+                   sent_by=None,
+                   result=None,
+                   log=None)
+        return f"SMS with id={pk} aborted successfully."
 
     @action(
         name="abort",
@@ -96,18 +138,25 @@ class SmsView(ModelView):
         submit_btn_class="btn-success",
     )
     async def abort_action(self, request: Request, pks: list[str]) -> str:
-        return "Aktion erfolgreich."
+        successes = []
+        for pk in pks:
+            successes.append(await self.row_abort_action(request=request, pk=pk))
+        return "\n".join(successes)
 
 
-class SmsUi(Admin):
-    def __init__(self):
+class Ui(Admin):
+    def __init__(self, ui_server: "UiServer"):
         super().__init__(engine=db().engine,
                          title="Test",
-                         base_url="/")
+                         base_url="/",
+                         debug=ui_server.config.debug)
+        self.ui_server = ui_server
 
         # add views
-        self.add_view(HomeView())
-        self.add_view(SmsView())
+        self.add_view(HomeView(self))
+        self.add_view(SmsView(self))
+
+        self.mount_to(self.ui_server)
 
 
 class UiServer(BaseServer, Starlette):
@@ -119,13 +168,16 @@ class UiServer(BaseServer, Starlette):
                        ("authentication_enabled", "config_authentication_enabled")]
 
     def __init__(self, name: str, config: "UiServerConfig"):
-        BaseServer.__init__(self, name=name, config=config)
-        Starlette.__init__(self, lifespan=self._stated_done, debug=self.config.debug)
+        BaseServer.__init__(self,
+                            name=name,
+                            config=config)
+        Starlette.__init__(self,
+                           lifespan=self._stated_done,
+                           debug=self.config.debug)
 
         # create ui and mount admin to server
         logger.info(f"Create ui for {self} ...")
-        self._ui = SmsUi()
-        self._ui.mount_to(self)
+        self._ui = Ui(self)
         logger.debug(f"Create ui for {self} ... done")
 
         self.init_done()
@@ -196,11 +248,7 @@ class UiServer(BaseServer, Starlette):
         return kwargs["number"], kwargs["message"]
 
     def success_handler(self, caller: None, sms_id: int, result: str, **kwargs) -> Any:
-        if self.config.success_result is not None:
-            result = self.config.success_result
-        return SmsSendApiModel(error=False, sms_id=sms_id, result=result)
+        return sms_id
 
     def error_handler(self, caller: None, sms_id: int | None, result: str, **kwargs) -> Any:
-        if self.config.error_result is not None:
-            result = self.config.error_result
-        return SmsSendApiModel(error=True, sms_id=sms_id, result=result)
+        return RuntimeError(result)

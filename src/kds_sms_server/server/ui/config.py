@@ -16,7 +16,3 @@ class UiServerConfig(BaseServerConfig):
                                                 description="List of allowed client networks.")
     authentication_enabled: bool = Field(default=False, title="UI Server Authentication Enabled", description="Enable UI Server Authentication.")
     authentication_accounts: dict[str, str] = Field(default_factory=dict, title="UI Server Authentication Accounts", description="UI Server Authentication Accounts.")
-    success_result: str | None = Field(default=None, title="UI Server success message",
-                                       description="Message to send on success. If set to None, the original message will be sent back to the client.")
-    error_result: str | None = Field(default=None, title="UI Server error message",
-                                     description="Message to send on error. If set to None, the original message will be sent back to the client.")

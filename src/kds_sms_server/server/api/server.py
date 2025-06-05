@@ -422,6 +422,7 @@ class ApiServer(BaseServer, FastAPI):
                        request: Request,
                        number: str,
                        message: str) -> SmsSendApiModel:
+        # get client_ip and client_port
         try:
             client_ip = IPv4Address(request.client.host)
             client_port = request.client.port
