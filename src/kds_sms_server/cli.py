@@ -60,10 +60,14 @@ def listener_command():
     :return: None
     """
 
+    from kds_sms_server.db import db
     from kds_sms_server.listener import SmsListener
 
     # print header
     print_header(mode="server")
+
+    # init db
+    db().create_all()
 
     # start listener
     SmsListener()
@@ -80,10 +84,14 @@ def worker_command():
     :return: None
     """
 
+    from kds_sms_server.db import db
     from kds_sms_server.worker import SmsWorker
 
     # print header
     print_header(mode="server")
+
+    # init db
+    db().create_all()
 
     # start worker
     SmsWorker()

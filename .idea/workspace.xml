@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fbbb106e-c2b2-423e-b63f-12025486cf3a" name="Changes" comment="Replace `schema_extra` with `json_schema_extra` in API model configurations for enhanced validation support." />
+    <list default="true" id="fbbb106e-c2b2-423e-b63f-12025486cf3a" name="Changes" comment="Add `docker-compose.yml` with MySQL service configuration for backend network setup.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -97,7 +99,7 @@
       <recent name="$PROJECT_DIR$/src/kds_sms_server/server" />
     </key>
   </component>
-  <component name="RunManager" selected="Docker.docker-compose.yml: Compose Deployment">
+  <component name="RunManager" selected="Python.listener">
     <configuration name="init-db" type="PythonConfigurationType" factoryName="Python">
       <module name="kds-sms-server" />
       <option name="ENV_FILES" value="" />
@@ -288,7 +290,7 @@
       <workItem from="1749098040806" duration="20000" />
       <workItem from="1749098275327" duration="28000" />
       <workItem from="1749098315636" duration="14000" />
-      <workItem from="1749098567089" duration="16659000" />
+      <workItem from="1749098567089" duration="16978000" />
     </task>
     <task id="LOCAL-00001" summary="Add new dependencies: email-validator and python-multipart&#10;&#10;Updated `pyproject.toml` to include `email-validator` and `python-multipart` as dependencies. Corresponding packages and metadata have also been added to `pdm.lock`. These changes ensure support for email validation and multipart parsing.">
       <option name="closed" value="true" />
@@ -594,7 +596,23 @@
       <option name="project" value="LOCAL" />
       <updated>1749115240207</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="Update `.gitignore`, adjust IDEA workspace settings and executor configurations, and add environment variable setup for Docker deployment.">
+      <option name="closed" value="true" />
+      <created>1749115411262</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1749115411262</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Add `docker-compose.yml` with MySQL service configuration for backend network setup.">
+      <option name="closed" value="true" />
+      <created>1749115424772</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1749115424772</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -613,8 +631,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Update dependencies and lockfile for latest versions&#10;&#10;Upgraded multiple dependencies, including `typer` (0.16.0), `uvicorn` (0.34.3), and `wiederverwendbar` (0.8.4) with `rich` and `sqlalchemy` extras. Added `greenlet` and `sqlalchemy` packages to support compatibility with updated requirements. Updated `pdm.lock` and `pyproject.toml` accordingly to reflect these changes." />
-    <MESSAGE value="Refactor server and gateway initialization for improved modularity&#10;&#10;Streamlined the initialization process for servers and gateways by introducing reusable base classes. Enhanced `SmsServer` to dynamically load configurations and initialize components from `settings`. Adjusted server lifecycle methods to better handle startup and runtime behaviors, improving overall modularity and maintainability. Updated associated imports and configuration structures throughout the project." />
     <MESSAGE value="Add `db.py` with database models and utility functions&#10;&#10;Introduced a new `db.py` module, including the `Db` singleton-based database utility and `Messages` SQLAlchemy model. Added `MessageStatus` enum for message lifecycle states (`queued`, `sent`, `error`). This sets up foundational database support for message management in the KDS SMS server." />
     <MESSAGE value="Add `logger.py` for centralized logging with `LoggerSingleton`&#10;&#10;Introduced a `logger.py` module for reusable and centralized logging. Utilizes `LoggerSingleton` from `wiederverwendbar` to manage logger instances, integrating configuration from `settings`. This enhances logging consistency and simplifies logger initialization across the application." />
     <MESSAGE value="Update `settings.py` to integrate `SqlalchemySettings` and enhance field validation&#10;&#10;Replaced `UvicornServerSettings` with `SqlalchemySettings` in the `Settings` class for database integration. Added constraints to SMS-related fields (`sms_data_max_size`, `sms_number_max_size`, `sms_message_max_size`) for improved validation. Introduced new logging settings to ignore specific loggers by exact matches or patterns." />
@@ -638,7 +654,9 @@
     <MESSAGE value="Refactor `UiServer` to replace Starlette with FastAPI, enhance SMS view configuration, and revise route handling." />
     <MESSAGE value="Refactor settings architecture: encapsulate Listener and Worker settings as nested classes, simplify environment prefix configuration, and adjust worker initialization references." />
     <MESSAGE value="Replace `schema_extra` with `json_schema_extra` in API model configurations for enhanced validation support." />
-    <option name="LAST_COMMIT_MESSAGE" value="Replace `schema_extra` with `json_schema_extra` in API model configurations for enhanced validation support." />
+    <MESSAGE value="Update `.gitignore`, adjust IDEA workspace settings and executor configurations, and add environment variable setup for Docker deployment." />
+    <MESSAGE value="Add `docker-compose.yml` with MySQL service configuration for backend network setup." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add `docker-compose.yml` with MySQL service configuration for backend network setup." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
