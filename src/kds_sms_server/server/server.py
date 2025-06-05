@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 class BaseServer(Base, Thread):
     __str_columns__ = ["name",
                        ("debug", "config_host")]
+
     def __init__(self, name: str, config: "BaseServerConfig"):
         self._is_started = False
         Base.__init__(self, name=name, config=config)
@@ -101,7 +102,6 @@ class BaseServer(Base, Thread):
 
         # queue sms
         logger.info(f"Queuing SMS ...")
-
         try:
             sms = Sms(status=SmsStatus.QUEUED,
                       received_by=self.name,
@@ -118,18 +118,16 @@ class BaseServer(Base, Thread):
             result = f"Error while queuing SMS."
             if self.config.debug:
                 result += f"\nException: {e}"
-
         logger.log(logging.DEBUG if success else logging.ERROR, f"Queuing SMS ... {'done' if success else 'failed'} --> {result}")
 
-        try:
-            if not success:
-                return self.error_handler(caller=caller, sms_id=sms_id, result=result)
-            return self.success_handler(caller=caller, sms_id=sms_id, result=result)
-        except Exception as e:
-            logger.error(f"{self} - Error while sending response message.\n{e}")
-        return None
+        # send response
+        if success:
+            log_level = logging.DEBUG
+        else:
+            log_level = logging.ERROR
+        return self.handle_response(caller=caller, log_level=log_level, success=success, sms_id=sms_id, result=result, **kwargs)
 
-    def handle_response(self, caller: Any, log_level: int, success: bool | Exception, sms_id: int | None, result: str) -> Any | None:
+    def handle_response(self, caller: Any, log_level: int, success: bool | Exception, sms_id: int | None, result: str, **kwargs) -> Any | None:
         if result.endswith(".") or result.endswith(":"):
             result = result[:-1]
         e = ""
@@ -151,8 +149,8 @@ class BaseServer(Base, Thread):
             self.increase_sms_count()
             if not success:
                 self.increase_sms_error_count()
-                return self.error_handler(caller=caller, sms_id=sms_id, result=result)
-            return self.success_handler(caller=caller, sms_id=sms_id, result=result)
+                return self.error_handler(caller=caller, sms_id=sms_id, result=result, **kwargs)
+            return self.success_handler(caller=caller, sms_id=sms_id, result=result, **kwargs)
         except Exception as e:
             logger.error(f"{self} - Error while sending response message.\n{e}")
         return None
@@ -162,9 +160,9 @@ class BaseServer(Base, Thread):
         ...
 
     @abstractmethod
-    def success_handler(self, caller: Any, sms_id: int, result: str) -> Any:
+    def success_handler(self, caller: Any, sms_id: int, result: str, **kwargs) -> Any:
         ...
 
     @abstractmethod
-    def error_handler(self, caller: Any, sms_id: int | None, result: str) -> Any:
+    def error_handler(self, caller: Any, sms_id: int | None, result: str, **kwargs) -> Any:
         ...

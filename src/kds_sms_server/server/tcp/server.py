@@ -117,13 +117,13 @@ class TcpServer(BaseServer, socketserver.TCPServer):
         except Exception as e:
             return self.handle_response(caller=self, log_level=logging.ERROR, success=e, sms_id=None, result=f"Error while decoding data.")
 
-    def success_handler(self, caller: TcpServerHandler, sms_id: int, result: str) -> Any:
+    def success_handler(self, caller: TcpServerHandler, sms_id: int, result: str, **kwargs) -> Any:
         if self.config.success_result is not None:
             result = self.config.success_result
         result_raw = result.encode(self.config.out_encoding)
         caller.request.sendall(result_raw)
 
-    def error_handler(self, caller: TcpServerHandler, sms_id: int | None, result: str) -> Any:
+    def error_handler(self, caller: TcpServerHandler, sms_id: int | None, result: str, **kwargs) -> Any:
         if self.config.error_result is not None:
             result = self.config.error_result
         result_raw = result.encode(self.config.out_encoding)

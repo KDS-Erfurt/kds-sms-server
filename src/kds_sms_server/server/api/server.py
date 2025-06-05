@@ -368,12 +368,12 @@ class ApiServer(BaseServer, FastAPI):
     def handle_sms_data(self, caller: None, **kwargs) -> tuple[str, str]:
         return kwargs["number"], kwargs["message"]
 
-    def success_handler(self, caller: None, sms_id: int, result: str) -> Any:
+    def success_handler(self, caller: None, sms_id: int, result: str, **kwargs) -> Any:
         if self.config.success_result is not None:
             result = self.config.success_result
         return SmsSendApiModel(error=False, sms_id=sms_id, result=result)
 
-    def error_handler(self, caller: None, sms_id: int | None, result: str) -> Any:
+    def error_handler(self, caller: None, sms_id: int | None, result: str, **kwargs) -> Any:
         if self.config.error_result is not None:
             result = self.config.error_result
         return SmsSendApiModel(error=True, sms_id=sms_id, result=result)
