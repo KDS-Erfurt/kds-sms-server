@@ -139,7 +139,7 @@ class ApiServer(BaseServer, FastAPI):
                       include_in_schema=False)
             async def swagger():
                 return get_swagger_ui_html(openapi_url="/openapi.json",
-                                           title=f"{settings.branding.title} - API Docs",
+                                           title=f"{settings.branding.title} - {self.name}",
                                            swagger_favicon_url="/favicon.ico")
 
         if self.config.redoc_web_path is not None:
@@ -147,7 +147,7 @@ class ApiServer(BaseServer, FastAPI):
                       include_in_schema=False)
             async def redoc():
                 return get_redoc_html(openapi_url="/openapi.json",
-                                      title=f"{settings.branding.title} - API Docs",
+                                      title=f"{settings.branding.title} - {self.name}",
                                       redoc_favicon_url="/favicon.ico")
 
         async def validate_token(token: Annotated[str, Depends(OAuth2PasswordBearer(tokenUrl="/auth"))]) -> tuple[str, str]:

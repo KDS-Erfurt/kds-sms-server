@@ -16,3 +16,6 @@ class UiServerConfig(BaseServerConfig):
                                                 description="List of allowed client networks.")
     authentication_enabled: bool = Field(default=False, title="UI Server Authentication Enabled", description="Enable UI Server Authentication.")
     authentication_accounts: dict[str, str] = Field(default_factory=dict, title="UI Server Authentication Accounts", description="UI Server Authentication Accounts.")
+    session_secret_key: str = Field(default=..., title="UI Server Session Secret Key", description="UI Server Session Secret Key.", min_length=64)
+    session_cookie: str = Field(default="session", title="UI Server Session Cookie", description="UI Server Session Cookie.")
+    session_max_age: int = Field(default=60 * 60 * 24 * 14, title="UI Server Session Max Age", description="UI Server Session Max Age.")

@@ -208,7 +208,7 @@ class Ui(Admin):
         auth_provider = UiAuthProvider(allow_paths=["/statics/logo.png"])
         auth_provider.ui = self
         super().__init__(engine=db().engine,
-                         title="Test",
+                         title=ui_server.title,
                          base_url="/",
                          templates_dir=str(templates_dir),
                          statics_dir=ASSETS_PATH,
@@ -216,7 +216,10 @@ class Ui(Admin):
                          login_logo_url="/statics/logo.png",
                          favicon_url="/statics/favicon.ico",
                          auth_provider=auth_provider,
-                         middlewares=[Middleware(SessionMiddleware, secret_key="qwe")],
+                         middlewares=[Middleware(SessionMiddleware,
+                                                 secret_key=ui_server.config.session_secret_key,
+                                                 session_cookie=ui_server.config.session_cookie,
+                                                 max_age=ui_server.config.session_max_age)],
                          debug=ui_server.config.debug)
         self.ui_server = ui_server
 
