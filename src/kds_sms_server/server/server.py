@@ -67,37 +67,37 @@ class BaseServer(Base, Thread):
         logger.debug(f"Validating SMS ...")
 
         # check number
-        if len(number) > settings.sms_number_max_size:
+        if len(number) > settings.listener.sms_number_max_size:
             return self.handle_response(caller=self, log_level=logging.ERROR, success=False, sms_id=None, result=f"Received number is too long. "
-                                                                                                                 f"Max size is '{settings.sms_number_max_size}'.\n"
+                                                                                                                 f"Max size is '{settings.listener.sms_number_max_size}'.\n"
                                                                                                                  f"number_size={len(number)}")
         _number = ""
         for char in number:
-            if char not in list(settings.sms_number_allowed_chars):
+            if char not in list(settings.listener.sms_number_allowed_chars):
                 return self.handle_response(caller=self, log_level=logging.ERROR, success=False, sms_id=None, result=f"Received number contains invalid characters. "
-                                                                                                                     f"Allowed characters are '{settings.sms_number_allowed_chars}'.\n"
+                                                                                                                     f"Allowed characters are '{settings.listener.sms_number_allowed_chars}'.\n"
                                                                                                                      f"number='{number}'")
-            if char in list(settings.sms_number_replace_chars):
+            if char in list(settings.listener.sms_number_replace_chars):
                 char = ""
             _number += char
         number = _number
         del _number
 
         # replace zero number
-        if settings.sms_replace_zero_numbers is not None:
+        if settings.listener.sms_replace_zero_numbers is not None:
             if number.startswith("0"):
-                number = settings.sms_replace_zero_numbers + number[1:]
+                number = settings.listener.sms_replace_zero_numbers + number[1:]
 
         # check a message
-        if len(message) > settings.sms_message_max_size:
+        if len(message) > settings.listener.sms_message_max_size:
             return self.handle_response(caller=self, log_level=logging.ERROR, success=False, sms_id=None, result=f"Received message is too long. "
-                                                                                                                 f"Max size is '{settings.sms_message_max_size}'.\n"
+                                                                                                                 f"Max size is '{settings.listener.sms_message_max_size}'.\n"
                                                                                                                  f"message_size={len(message)}")
 
         logger.debug(f"Validating SMS ... done")
 
         # log sms
-        if settings.sms_logging:
+        if settings.listener.sms_logging:
             logger.debug(f"SMS:\nnumber={number}\nmessage='{message}'")
 
         # queue sms

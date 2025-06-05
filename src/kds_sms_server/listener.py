@@ -13,7 +13,7 @@ from kds_sms_server.server.ui.server import UiServer
 IGNORED_LOGGERS_LIKE = ["sqlalchemy", "pymysql", "asyncio", "parso", "engineio", "socketio", "python_multipart.multipart"]
 # noinspection PyArgumentList
 logger = LoggerSingleton(name=__name__,
-                         settings=settings.log_server,
+                         settings=settings.listener,
                          ignored_loggers_like=IGNORED_LOGGERS_LIKE,
                          init=True)
 
@@ -25,7 +25,7 @@ class SmsListener:
         # initialize servers
         logger.info("Initializing servers ...")
         self._server: list[BaseServer] = []
-        for server_config_name, server_config in settings.sms_server.items():
+        for server_config_name, server_config in settings.listener.server.items():
             if len(server_config_name) > 20:
                 logger.error(f"Server name '{server_config_name}' is too long. Max size is 20 characters.")
                 sys.exit(1)

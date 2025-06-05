@@ -17,7 +17,7 @@ from kds_sms_server.gateways.vonage.gateway import VonageGateway
 IGNORED_LOGGERS_LIKE = ["sqlalchemy", "pymysql"]
 # noinspection PyArgumentList
 logger = LoggerSingleton(name=__name__,
-                         settings=settings.log_server,
+                         settings=settings.worker,
                          ignored_loggers_like=IGNORED_LOGGERS_LIKE,
                          init=True)
 
@@ -35,13 +35,13 @@ class SmsWorker(TaskManager):
 
     def __init__(self):
         logger.info(f"Initializing SMS-Worker ...")
-        super().__init__(name="SMS-Worker", worker_count=settings.sms_background_worker_count, daemon=True, logger=logger)
+        super().__init__(name="SMS-Worker", worker_count=settings.worker.worker_count, daemon=True, logger=logger)
 
         # initialize gateway
         logger.info("Initializing gateways ...")
         self._next_sms_gateway_index: int | None = None
         self._gateways: list[BaseGateway] = []
-        for gateway_config_name, gateway_config in settings.sms_gateways.items():
+        for gateway_config_name, gateway_config in settings.worker.gateways.items():
             if len(gateway_config_name) > 20:
                 logger.error(f"Gateway name '{gateway_config_name}' is too long. Max size is 20 characters.")
                 sys.exit(1)
@@ -65,8 +65,8 @@ class SmsWorker(TaskManager):
 
         # create tasks
         logger.info("Initializing tasks ...")
-        Task(name="Handle SMS", manager=self, trigger=EverySeconds(settings.sms_handle_interval), payload=self.handle_sms)
-        Task(name="Cleanup SMS", manager=self, trigger=EverySeconds(settings.sms_cleanup_interval), payload=self.cleanup_sms)
+        Task(name="Handle SMS", manager=self, trigger=EverySeconds(settings.worker.sms_handle_interval), payload=self.handle_sms)
+        Task(name="Cleanup SMS", manager=self, trigger=EverySeconds(settings.worker.sms_cleanup_interval), payload=self.cleanup_sms)
         logger.debug("Initializing tasks ... done")
 
         logger.debug(f"Initializing SMS-Worker ... done")
@@ -117,10 +117,10 @@ class SmsWorker(TaskManager):
 
                 sms_logger = logging.Logger(name=f"{logger.name}", )
                 sms_logger_handler = self.SmsLogHandler(buffer_target=add_sms_log)
-                sms_logger_handler.setLevel(settings.log_worker.log_level.logging_level)
+                sms_logger_handler.setLevel(settings.worker.log_level.logging_level)
                 sms_logger_handler.setFormatter(logging.Formatter("%(name)s - %(levelname)s - %(message)s"))
                 sms_logger.addHandler(sms_logger_handler)
-                sms_logger.setLevel(settings.log_worker.log_level.logging_level)
+                sms_logger.setLevel(settings.worker.log_level.logging_level)
 
                 # send sms with gateways
                 with LoggingContext(sms_logger, ignore_loggers_like=IGNORED_LOGGERS_LIKE):
@@ -164,7 +164,7 @@ class SmsWorker(TaskManager):
 
     def cleanup_sms(self):
         try:
-            cleanup_datetime = datetime.now() - timedelta(seconds=settings.sms_cleanup_max_age)
+            cleanup_datetime = datetime.now() - timedelta(seconds=settings.worker.sms_cleanup_max_age)
             expression = and_(Sms.status != SmsStatus.QUEUED,
                               or_(
                                   and_(

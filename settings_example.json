@@ -1,69 +1,93 @@
 {
-  "debug": true,
-  "log_server": {
-    "log_level": "DEBUG"
-  },
-  "log_worker": {
-    "log_level": "DEBUG"
-  },
-  "db_file": "sqlite.db",
-  "sms_replace_zero_numbers": "+49",
-  "sms_server": {
-    "File 1": {
-      "type": "file",
-      "debug": true,
-      "directory": "file1"
-    },
-    "File 2": {
-      "type": "file",
-      "debug": true,
-      "directory": "file2"
-    },
-    "TCP 1": {
-      "type": "tcp",
-      "debug": true,
-      "host": "0.0.0.0",
-      "port": 3456,
-      "success_message": "SMS mit Message-Reference 999 ok"
-    },
-    "TCP 2": {
-      "type": "tcp",
-      "debug": true,
-      "host": "0.0.0.0",
-      "port": 3457,
-      "success_message": "SMS mit Message-Reference 999 ok"
-    },
-    "API 1": {
-      "type": "api",
-      "debug": true,
-      "host": "0.0.0.0",
-      "port": 8000,
-      "docs_web_path": "/docs",
-      "redoc_web_path": "/redocs",
-      "authentication_enabled": true,
-      "authentication_accounts": {
-        "test": "test"
-      }
-    },
-    "API 2": {
-      "type": "api",
-      "debug": true,
-      "host": "0.0.0.0",
-      "port": 8001,
-      "docs_web_path": "/docs",
-      "redoc_web_path": "/redocs",
-      "authentication_enabled": true,
-      "authentication_accounts": {
-        "test": "test"
+  "listener": {
+    "log_level": "DEBUG",
+    "sms_replace_zero_numbers": "+49",
+    "server": {
+      "File 1": {
+        "type": "file",
+        "debug": true,
+        "directory": "file1"
+      },
+      "File 2": {
+        "type": "file",
+        "debug": true,
+        "directory": "file2"
+      },
+      "TCP 1": {
+        "type": "tcp",
+        "debug": true,
+        "host": "0.0.0.0",
+        "port": 3456,
+        "success_message": "SMS mit Message-Reference 999 ok"
+      },
+      "TCP 2": {
+        "type": "tcp",
+        "debug": true,
+        "host": "0.0.0.0",
+        "port": 3457,
+        "success_message": "SMS mit Message-Reference 999 ok"
+      },
+      "API 1": {
+        "type": "api",
+        "debug": true,
+        "host": "0.0.0.0",
+        "port": 8000,
+        "docs_web_path": "/docs",
+        "redoc_web_path": "/redocs",
+        "authentication_enabled": true,
+        "authentication_accounts": {
+          "test": "test"
+        }
+      },
+      "API 2": {
+        "type": "api",
+        "debug": true,
+        "host": "0.0.0.0",
+        "port": 8001,
+        "docs_web_path": "/docs",
+        "redoc_web_path": "/redocs",
+        "authentication_enabled": true,
+        "authentication_accounts": {
+          "test": "test"
+        }
+      },
+      "UI 1": {
+        "type": "ui",
+        "debug": true,
+        "host": "0.0.0.0",
+        "port": 8002,
+        "authentication_enabled": true,
+        "authentication_accounts": {
+          "test": "test"
+        }
+      },
+      "UI 2": {
+        "type": "ui",
+        "debug": true,
+        "host": "0.0.0.0",
+        "port": 8003,
+        "authentication_enabled": true,
+        "authentication_accounts": {
+          "test": "test"
+        }
       }
     }
   },
-  "sms_gateways": {
-    "Vonage API": {
-      "type": "vonage",
-      "dry_run": true,
-      "api_key": "xxx",
-      "api_secret": "xxx"
+  "worker": {
+    "log_level": "DEBUG",
+    "gateways": {
+      "Vonage API": {
+        "type": "vonage",
+        "dry_run": true,
+        "api_key": "xxx",
+        "api_secret": "xxx"
+      }
     }
-  }
+  },
+  "db_host": "localhost",
+  "db_port": 3306,
+  "db_protocol": "mysql+pymysql",
+  "db_name": "kds-sms-server",
+  "db_username": "kds-sms-server",
+  "db_password": "xxx"
 }
