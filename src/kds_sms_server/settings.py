@@ -37,14 +37,14 @@ class Settings(FileConfig, BaseSettings, SqlalchemySettings):
 
     # branding
     class BrandingSettings(BaseModel):
-        title: str = Field(default=__title__)
-        description: str = Field(default=__description__)
-        version: str = Field(default=__version__)
-        author: str = Field(default=__author__)
-        author_email: str = Field(default=__author_email__)
-        license: str = Field(default=__license__)
-        license_url: str = Field(default=__license_url__)
-        terms_of_service: str = Field(default=__terms_of_service__)
+        title: str = Field(default=__title__, title="Branding Title", description="Branding title.")
+        description: str = Field(default=__description__, title="Branding Description", description="Branding description.")
+        version: str = Field(default=__version__, title="Branding Version", description="Branding version.")
+        author: str = Field(default=__author__, title="Branding Author", description="Branding author.")
+        author_email: str = Field(default=__author_email__, title="Branding Author Email", description="Branding author email.")
+        license: str = Field(default=__license__, title="Branding License", description="Branding license.")
+        license_url: str = Field(default=__license_url__, title="Branding License URL", description="Branding license URL.")
+        terms_of_service: str = Field(default=__terms_of_service__, title="Branding Terms of Service", description="Branding terms of service.")
 
     branding: BrandingSettings = Field(default_factory=BrandingSettings, title="Branding Settings", description="Branding settings.")
 
