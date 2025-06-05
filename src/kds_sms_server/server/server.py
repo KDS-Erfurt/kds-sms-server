@@ -133,8 +133,9 @@ class BaseServer(Base, Thread):
         if result.endswith(".") or result.endswith(":"):
             result = result[:-1]
         e = ""
-        if not success and isinstance(success, Exception):
+        if isinstance(success, Exception):
             e = str(success)
+            success = False
         if not success and self.config.debug:
             result = f"{result}:\n{e}"
         else:
