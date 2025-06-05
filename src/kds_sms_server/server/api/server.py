@@ -15,7 +15,7 @@ from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from fastapi.responses import FileResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-from kds_sms_server.assets import ASSETS_PATH
+from kds_sms_server.statics import ASSETS_PATH
 from kds_sms_server.db import Sms, SmsStatus
 from kds_sms_server.server.server import BaseServer
 from starlette.requests import Request

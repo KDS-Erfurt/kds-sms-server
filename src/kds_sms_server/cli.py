@@ -3,7 +3,7 @@ from typing import Literal
 
 import typer
 
-from kds_sms_server.assets.ascii_logo import ASCII_LOGO
+from kds_sms_server.statics.ascii_logo import ASCII_LOGO
 from kds_sms_server.console import console
 from kds_sms_server.settings import settings
 

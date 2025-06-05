@@ -13,7 +13,7 @@ from starlette_admin.actions import row_action, action
 from starlette_admin.contrib.sqla import Admin, ModelView
 from starlette_admin.exceptions import ActionFailed
 
-from kds_sms_server.assets import ASSETS_PATH
+from kds_sms_server.statics import ASSETS_PATH
 from kds_sms_server.db import Sms, SmsStatus, db
 from kds_sms_server.server.server import BaseServer
 from kds_sms_server.settings import settings
@@ -164,6 +164,10 @@ class Ui(Admin):
                          title="Test",
                          base_url="/",
                          templates_dir=str(templates_dir),
+                         statics_dir=ASSETS_PATH,
+                         logo_url="/statics/logo.png",
+                         login_logo_url="/statics/logo.png",
+                         favicon_url="/statics/favicon.ico",
                          debug=ui_server.config.debug)
         self.ui_server = ui_server
 
