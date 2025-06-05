@@ -5,10 +5,14 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import uvicorn
-from fastapi import FastAPI, Request
-from starlette.routing import Route
+from fastapi import FastAPI, Request, Response
 from fastapi.responses import RedirectResponse
+from starlette.middleware import Middleware
+from starlette.middleware.sessions import SessionMiddleware
+from starlette.routing import Route
 from starlette_admin import fields as sa_fields
+from starlette_admin.auth import AdminConfig, AdminUser, AuthProvider
+from starlette_admin.exceptions import LoginFailed, FormValidationError
 from starlette_admin.actions import row_action, action
 from starlette_admin.contrib.sqla import Admin, ModelView
 from starlette_admin.exceptions import ActionFailed
@@ -24,7 +28,48 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class SmsView(ModelView):
+class UiAuthProvider(AuthProvider):
+    ui: "Ui"
+
+    async def login(self,
+                    username: str,
+                    password: str,
+                    remember_me: bool,
+                    request: Request,
+                    response: Response) -> Response:
+        if username not in self.ui.ui_server.config.authentication_accounts:
+            if self.ui.ui_server.config.debug:
+                raise FormValidationError({"username": "Username not found!"})
+            raise LoginFailed("Invalid username or password!")
+        if self.ui.ui_server.config.authentication_accounts[username] != password:
+            if self.ui.ui_server.config.debug:
+                raise FormValidationError({"password": "Password incorrect!"})
+            raise LoginFailed("Invalid username or password!")
+
+        # save username in session
+        request.session.update({"username": username})
+        return response
+
+    async def is_authenticated(self, request) -> bool:
+        if request.session.get("username", None) in self.ui.ui_server.config.authentication_accounts:
+            return True
+        return False
+
+    def get_admin_config(self, request: Request) -> AdminConfig:
+        return AdminConfig(
+            app_title=f"Hello, {request.session["username"].capitalize()}!",
+            logo_url=None,
+        )
+
+    def get_admin_user(self, request: Request) -> AdminUser:
+        return AdminUser(username=request.session["username"], photo_url=None)
+
+    async def logout(self, request: Request, response: Response) -> Response:
+        request.session.clear()
+        return response
+
+
+class UiSmsView(ModelView):
     page_size = 100
     page_size_options = [5, 10, 25, 50, 75, 100, -1]
     fields = [sa_fields.IntegerField("id"),
@@ -160,6 +205,8 @@ class Ui(Admin):
         templates_dir = Path(__file__).parent / "templates"
         if not templates_dir.is_dir():
             raise FileNotFoundError(f"Template directory '{templates_dir}' not found.")
+        auth_provider = UiAuthProvider(allow_paths=["/statics/logo.png"])
+        auth_provider.ui = self
         super().__init__(engine=db().engine,
                          title="Test",
                          base_url="/",
@@ -168,11 +215,13 @@ class Ui(Admin):
                          logo_url="/statics/logo.png",
                          login_logo_url="/statics/logo.png",
                          favicon_url="/statics/favicon.ico",
+                         auth_provider=auth_provider,
+                         middlewares=[Middleware(SessionMiddleware, secret_key="qwe")],
                          debug=ui_server.config.debug)
         self.ui_server = ui_server
 
         # add views
-        self.sms_view = SmsView(self)
+        self.sms_view = UiSmsView(self)
         self.add_view(self.sms_view)
 
         # replace the root route
@@ -219,6 +268,11 @@ class UiServer(BaseServer, FastAPI):
                          lifespan=self._stated_done,
                          debug=self.config.debug)
         self.title = f"{settings.branding.title} - {self.name}"
+        self.description = settings.branding.description
+        self.version = f"v{settings.branding.version}"
+        self.terms_of_service = settings.branding.terms_of_service
+        self.contact = {"name": settings.branding.author, "email": settings.branding.author_email}
+        self.license_info = {"name": settings.branding.license, "url": settings.branding.license_url}
 
         # create ui
         logger.info(f"Create ui for {self} ...")
@@ -258,21 +312,6 @@ class UiServer(BaseServer, FastAPI):
 
     def exit(self):
         ...
-
-    # async def get_api_credentials_from_token(self, token: str) -> tuple[str, str]:
-    #     if not self.config.authentication_enabled:
-    #         raise HTTPException(status_code=401, detail="Authentication is disabled.")
-    #     if ":" not in token:
-    #         raise HTTPException(status_code=401, detail="Invalid authentication credentials")
-    #     split_token = token.split(":")
-    #     if len(split_token) != 2:
-    #         raise HTTPException(status_code=401, detail="Invalid authentication credentials")
-    #     api_key, api_secret = split_token
-    #     if api_key not in self.config.authentication_accounts:
-    #         raise HTTPException(status_code=401, detail="API key not found.")
-    #     if api_secret != self.config.authentication_accounts[api_key]:
-    #         raise HTTPException(status_code=401, detail="API secret is incorrect.")
-    #     return api_key, api_secret
 
     # noinspection DuplicatedCode
     def handle_request(self, caller: None, **kwargs) -> Any | None:
