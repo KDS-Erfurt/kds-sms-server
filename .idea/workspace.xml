@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fbbb106e-c2b2-423e-b63f-12025486cf3a" name="Changes" comment="Refactor settings architecture: encapsulate Listener and Worker settings as nested classes, simplify environment prefix configuration, and adjust worker initialization references.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="fbbb106e-c2b2-423e-b63f-12025486cf3a" name="Changes" comment="Replace `schema_extra` with `json_schema_extra` in API model configurations for enhanced validation support." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -60,7 +58,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Python.__main__.executor": "Debug",
     "Python.admin.executor": "Debug",
-    "Python.init-db.executor": "Debug",
+    "Python.init-db.executor": "Run",
     "Python.listener.executor": "Debug",
     "Python.serve.executor": "Debug",
     "Python.test_api_thread.executor": "Debug",
@@ -239,6 +237,15 @@
     <configuration name="docker-compose.yml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker - localhost">
       <deployment type="docker-compose.yml">
         <settings>
+          <option name="envFilePath" value="" />
+          <option name="envVars">
+            <list>
+              <DockerEnvVarImpl>
+                <option name="name" value="DATA_DIR" />
+                <option name="value" value="./opt/kds-sms-server" />
+              </DockerEnvVarImpl>
+            </list>
+          </option>
           <option name="sourceFilePath" value="docker-compose.yml" />
         </settings>
       </deployment>
@@ -281,7 +288,7 @@
       <workItem from="1749098040806" duration="20000" />
       <workItem from="1749098275327" duration="28000" />
       <workItem from="1749098315636" duration="14000" />
-      <workItem from="1749098567089" duration="15934000" />
+      <workItem from="1749098567089" duration="16659000" />
     </task>
     <task id="LOCAL-00001" summary="Add new dependencies: email-validator and python-multipart&#10;&#10;Updated `pyproject.toml` to include `email-validator` and `python-multipart` as dependencies. Corresponding packages and metadata have also been added to `pdm.lock`. These changes ensure support for email validation and multipart parsing.">
       <option name="closed" value="true" />
@@ -579,7 +586,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749114241097</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="Replace `schema_extra` with `json_schema_extra` in API model configurations for enhanced validation support.">
+      <option name="closed" value="true" />
+      <created>1749115240207</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1749115240207</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -598,7 +613,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Extract `BaseConfig` for shared configuration logic in servers and gateways&#10;&#10;Refactored the configuration structure by extracting a new `BaseConfig` class to centralize shared logic across server and gateway configuration classes. Updated `BaseServerConfig` and `BaseGatewayConfig` to inherit from `BaseConfig`, simplifying code and improving reusability. Adjusted relevant imports and property methods accordingly." />
     <MESSAGE value="Update dependencies and lockfile for latest versions&#10;&#10;Upgraded multiple dependencies, including `typer` (0.16.0), `uvicorn` (0.34.3), and `wiederverwendbar` (0.8.4) with `rich` and `sqlalchemy` extras. Added `greenlet` and `sqlalchemy` packages to support compatibility with updated requirements. Updated `pdm.lock` and `pyproject.toml` accordingly to reflect these changes." />
     <MESSAGE value="Refactor server and gateway initialization for improved modularity&#10;&#10;Streamlined the initialization process for servers and gateways by introducing reusable base classes. Enhanced `SmsServer` to dynamically load configurations and initialize components from `settings`. Adjusted server lifecycle methods to better handle startup and runtime behaviors, improving overall modularity and maintainability. Updated associated imports and configuration structures throughout the project." />
     <MESSAGE value="Add `db.py` with database models and utility functions&#10;&#10;Introduced a new `db.py` module, including the `Db` singleton-based database utility and `Messages` SQLAlchemy model. Added `MessageStatus` enum for message lifecycle states (`queued`, `sent`, `error`). This sets up foundational database support for message management in the KDS SMS server." />
@@ -623,7 +637,8 @@
     <MESSAGE value="Refactor settings architecture: separate Listener and Worker-specific configurations, adjust initialization logic, and update references accordingly." />
     <MESSAGE value="Refactor `UiServer` to replace Starlette with FastAPI, enhance SMS view configuration, and revise route handling." />
     <MESSAGE value="Refactor settings architecture: encapsulate Listener and Worker settings as nested classes, simplify environment prefix configuration, and adjust worker initialization references." />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor settings architecture: encapsulate Listener and Worker settings as nested classes, simplify environment prefix configuration, and adjust worker initialization references." />
+    <MESSAGE value="Replace `schema_extra` with `json_schema_extra` in API model configurations for enhanced validation support." />
+    <option name="LAST_COMMIT_MESSAGE" value="Replace `schema_extra` with `json_schema_extra` in API model configurations for enhanced validation support." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -657,8 +672,8 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/kds_sms_server$init_db.coverage" NAME="init-db Coverage Results" MODIFIED="1749098909071" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/kds_sms_server$listener.coverage" NAME="listener Coverage Results" MODIFIED="1749114416720" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/kds_sms_server$init_db.coverage" NAME="init-db Coverage Results" MODIFIED="1749115066478" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/kds_sms_server$listener.coverage" NAME="listener Coverage Results" MODIFIED="1749115217967" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$admin.coverage" NAME="admin Coverage Results" MODIFIED="1749100378783" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$worker.coverage" NAME="worker Coverage Results" MODIFIED="1749113709216" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$serve.coverage" NAME="serve Coverage Results" MODIFIED="1749050994537" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
