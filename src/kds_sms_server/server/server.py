@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 class BaseServer(Base, Thread):
+    __str_columns__ = ["name",
+                       ("debug", "config_host")]
     def __init__(self, name: str, config: "BaseServerConfig"):
         self._is_started = False
         Base.__init__(self, name=name, config=config)
@@ -28,6 +30,10 @@ class BaseServer(Base, Thread):
     @property
     def config(self) -> Union["BaseServerConfig", Any]:
         return super().config
+
+    @property
+    def config_debug(self) -> bool:
+        return self.config.debug
 
     def run(self):
         logger.info(f"Starting {self} ...")

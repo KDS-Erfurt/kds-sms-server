@@ -11,6 +11,9 @@ logger = logging.getLogger(__name__)
 
 
 class BaseGateway(Base):
+    __str_columns__ = ["name",
+                       ("dry_run", "config_dry_run")]
+
     def __init__(self, name: str, config: "BaseGatewayConfig"):
         Base.__init__(self, name=name, config=config)
 
@@ -21,6 +24,10 @@ class BaseGateway(Base):
     @property
     def config(self) -> Union["BaseGatewayConfig", Any]:
         return super().config
+
+    @property
+    def config_dry_run(self) -> bool:
+        return self.config.dry_run
 
     @property
     def state(self) -> bool:

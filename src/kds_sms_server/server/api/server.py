@@ -14,6 +14,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from fastapi.responses import FileResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from starlette.types import ASGIApp
 
 from kds_sms_server import __title__, __description__, __version__, __author__, __author_email__, __license__
 from kds_sms_server.assets import ASSETS_PATH
@@ -120,6 +121,13 @@ class SmsAbortError(BaseModel):
 
 
 class ApiServer(BaseServer, FastAPI):
+    __str_columns__ = ["name",
+                       ("debug", "config_host"),
+                       ("host", "config_host"),
+                       ("port", "config_port"),
+                       ("allowed_networks", "config_allowed_networks"),
+                       ("authentication_enabled", "config_authentication_enabled")]
+
     def __init__(self, name: str, config: "ApiServerConfig"):
         BaseServer.__init__(self, name=name, config=config)
 
@@ -299,6 +307,22 @@ class ApiServer(BaseServer, FastAPI):
     @property
     def config(self) -> "ApiServerConfig":
         return super().config
+
+    @property
+    def config_host(self) -> str:
+        return str(self.config.host)
+
+    @property
+    def config_port(self) -> int:
+        return self.config.port
+
+    @property
+    def config_allowed_networks(self) -> list[str]:
+        return [str(allowed_network) for allowed_network in self.config.allowed_networks]
+
+    @property
+    def config_authentication_enabled(self) -> bool:
+        return self.config.authentication_enabled
 
     @staticmethod
     @asynccontextmanager

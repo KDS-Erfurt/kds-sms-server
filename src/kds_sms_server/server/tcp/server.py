@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING, Any
 import chardet
 
 from kds_sms_server.server.server import BaseServer
-from kds_sms_server.settings import settings
 
 if TYPE_CHECKING:
     from kds_sms_server.server.tcp.config import TcpServerConfig
@@ -31,6 +30,12 @@ class TcpServerHandler(socketserver.BaseRequestHandler):
 
 
 class TcpServer(BaseServer, socketserver.TCPServer):
+    __str_columns__ = ["name",
+                       ("debug", "config_host"),
+                       ("host", "config_host"),
+                       ("port", "config_port"),
+                       ("allowed_networks", "config_allowed_networks")]
+
     def __init__(self, name: str, config: "TcpServerConfig"):
         BaseServer.__init__(self, name=name, config=config)
 
@@ -46,6 +51,18 @@ class TcpServer(BaseServer, socketserver.TCPServer):
     @property
     def config(self) -> "TcpServerConfig":
         return super().config
+
+    @property
+    def config_host(self) -> str:
+        return str(self.config.host)
+
+    @property
+    def config_port(self) -> int:
+        return self.config.port
+
+    @property
+    def config_allowed_networks(self) -> list[str]:
+        return [str(allowed_network) for allowed_network in self.config.allowed_networks]
 
     def enter(self):
         self.stated_done()
