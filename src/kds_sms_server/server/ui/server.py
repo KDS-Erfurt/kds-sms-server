@@ -1,6 +1,7 @@
 import logging
 from contextlib import asynccontextmanager
 from ipaddress import IPv4Address
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import uvicorn
@@ -146,9 +147,13 @@ class SmsView(ModelView):
 
 class Ui(Admin):
     def __init__(self, ui_server: "UiServer"):
+        templates_dir = Path(__file__).parent / "templates"
+        if not templates_dir.is_dir():
+            raise FileNotFoundError(f"Template directory '{templates_dir}' not found.")
         super().__init__(engine=db().engine,
                          title="Test",
                          base_url="/",
+                         templates_dir=str(templates_dir),
                          debug=ui_server.config.debug)
         self.ui_server = ui_server
 
