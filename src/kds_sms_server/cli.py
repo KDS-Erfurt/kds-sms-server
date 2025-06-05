@@ -3,16 +3,15 @@ from typing import Literal
 
 import typer
 
-from kds_sms_server import __title__, __description__, __author__, __author_email__, __version__, __license__
-
 from kds_sms_server.assets.ascii_logo import ASCII_LOGO
 from kds_sms_server.console import console
+from kds_sms_server.settings import settings
 
 cli_app = typer.Typer()
 
 
 def print_header(mode: Literal["info", "server", "worker", "cli"]):
-    first_line = f"Starting {__title__}"
+    first_line = f"Starting {settings.branding.title}"
     if mode == "info":
         first_line += " ..."
     elif mode == "server":
@@ -24,23 +23,23 @@ def print_header(mode: Literal["info", "server", "worker", "cli"]):
     console.print(first_line)
     console.print(ASCII_LOGO)
     console.print("_________________________________________________________________________________\n")
-    console.print(f"{__description__}")
-    console.print(f"by {__author__}({__author_email__})")
-    console.print(f"version: {__version__}")
-    console.print(f"License: {__license__}")
+    console.print(f"{settings.branding.description}")
+    console.print(f"by {settings.branding.author}({settings.branding.author_email})")
+    console.print(f"version: {settings.branding.version}")
+    console.print(f"License: {settings.branding.license}")
     console.print("_________________________________________________________________________________")
 
 
 def main_loop(mode: Literal["server", "worker"]):
-    console.print(f"{__title__} - {mode.capitalize()} is ready. Press CTRL+C to quit.")
+    console.print(f"{settings.branding.title} - {mode.capitalize()} is ready. Press CTRL+C to quit.")
     try:
         while True:
             time.sleep(0.001)
     except KeyboardInterrupt:
-        console.print(f"KeyboardInterrupt received. Stopping {__title__} - {mode.capitalize()} ...")
+        console.print(f"KeyboardInterrupt received. Stopping {settings.branding.title} - {mode.capitalize()} ...")
 
 
-@cli_app.command(name="version", help=f"Show the version of {__title__}.")
+@cli_app.command(name="version", help=f"Show the version of {settings.branding.title}.")
 def version_command() -> None:
     """
     Show the version of KDSM Manager.
@@ -52,7 +51,7 @@ def version_command() -> None:
     print_header(mode="info")
 
 
-@cli_app.command(name="listener", help=f"Start the {__title__} - listener.")
+@cli_app.command(name="listener", help=f"Start the {settings.branding.title} - listener.")
 def listener_command():
     """
     Start the server.
@@ -76,7 +75,7 @@ def listener_command():
     main_loop(mode="server")
 
 
-@cli_app.command(name="worker", help=f"Start the {__title__} - worker.")
+@cli_app.command(name="worker", help=f"Start the {settings.branding.title} - worker.")
 def worker_command():
     """
     Start the worker.

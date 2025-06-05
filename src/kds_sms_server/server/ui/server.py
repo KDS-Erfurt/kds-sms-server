@@ -11,15 +11,12 @@ from fastapi.responses import RedirectResponse
 from starlette_admin import fields as sa_fields
 from starlette_admin.actions import row_action, action
 from starlette_admin.contrib.sqla import Admin, ModelView
-from starlette_admin.exceptions import StarletteAdminException, ActionFailed
+from starlette_admin.exceptions import ActionFailed
 
-from kds_sms_server import __title__, __description__, __version__, __author__, __author_email__, __license__
 from kds_sms_server.assets import ASSETS_PATH
 from kds_sms_server.db import Sms, SmsStatus, db
 from kds_sms_server.server.server import BaseServer
 from kds_sms_server.settings import settings
-
-# from starlette.requests import Request
 
 if TYPE_CHECKING:
     from kds_sms_server.server.ui.config import UiServerConfig
@@ -58,7 +55,7 @@ class SmsView(ModelView):
         if not settings.listener.sms_logging:
             # noinspection PyUnresolvedReferences
             self.exclude_fields_from_detail.append(Sms.message)
-        super().__init__(Sms, label=f"{__title__} - UI", icon="fa fa-message")
+        super().__init__(Sms, label="SMS", icon="fa fa-message")
         self.ui = ui
 
     def can_edit(self, request: Request) -> bool:
@@ -170,8 +167,6 @@ class Ui(Admin):
                          debug=ui_server.config.debug)
         self.ui_server = ui_server
 
-        self.qwe = "123"
-
         # add views
         self.sms_view = SmsView(self)
         self.add_view(self.sms_view)
@@ -219,13 +214,12 @@ class UiServer(BaseServer, FastAPI):
                          redoc_url=None,
                          lifespan=self._stated_done,
                          debug=self.config.debug)
+        self.title = f"{settings.branding.title} - {self.name}"
 
         # create ui
         logger.info(f"Create ui for {self} ...")
         self._ui = Ui(self)
         logger.debug(f"Create ui for {self} ... done")
-
-        # self.get("/", name="admin:index")(self.root)
 
         self.init_done()
 

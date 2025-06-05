@@ -8,6 +8,7 @@ from wiederverwendbar.sqlalchemy import SqlalchemySettings
 from wiederverwendbar.logger import LoggerSettings
 from wiederverwendbar.pydantic import FileConfig
 
+from kds_sms_server import __title__, __description__, __author__, __author_email__, __version__, __license__, __license_url__, __terms_of_service__
 from kds_sms_server.server.file.config import FileServerConfig
 from kds_sms_server.server.tcp.config import TcpServerConfig
 from kds_sms_server.server.api.config import ApiServerConfig
@@ -36,7 +37,14 @@ class Settings(FileConfig, BaseSettings, SqlalchemySettings):
 
     # branding
     class BrandingSettings(BaseModel):
-        ...
+        title: str = Field(default=__title__)
+        description: str = Field(default=__description__)
+        version: str = Field(default=__version__)
+        author: str = Field(default=__author__)
+        author_email: str = Field(default=__author_email__)
+        license: str = Field(default=__license__)
+        license_url: str = Field(default=__license_url__)
+        terms_of_service: str = Field(default=__terms_of_service__)
 
     branding: BrandingSettings = Field(default_factory=BrandingSettings, title="Branding Settings", description="Branding settings.")
 

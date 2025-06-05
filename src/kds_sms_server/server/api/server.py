@@ -15,11 +15,12 @@ from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from fastapi.responses import FileResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-from kds_sms_server import __title__, __description__, __version__, __author__, __author_email__, __license__
 from kds_sms_server.assets import ASSETS_PATH
 from kds_sms_server.db import Sms, SmsStatus
 from kds_sms_server.server.server import BaseServer
 from starlette.requests import Request
+
+from kds_sms_server.settings import settings
 
 if TYPE_CHECKING:
     from kds_sms_server.server.api.config import ApiServerConfig
@@ -28,26 +29,18 @@ logger = logging.getLogger(__name__)
 
 
 class InfoApiModel(BaseModel):
-    title: str = Field(default="Application Title", title="Application Title", description="The title of the application.")
-    description: str = Field(default="Application Description", title="Application Description", description="The description of the application.")
-    version: str = Field(default="Application Version", title="Application Version", description="The version of the application.")
-    author: str = Field(default="Application Author", title="Application Author", description="The author of the application.")
-    author_email: str = Field(default="Application Author Email", title="Application Author Email", description="The author email of the application.")
-    license: str = Field(default="Application License", title="Application License", description="The license of the application.")
-
-    def __init__(self, /, **data: Any):
-        data["title"] = __title__
-        data["description"] = __description__
-        data["version"] = "v" + __version__
-        data["version_full"] = __version__
-        data["version_major"] = __version__.split(".")[0]
-        data["version_minor"] = __version__.split(".")[1]
-        data["version_bugfix"] = __version__.split(".")[2]
-        data["author"] = __author__
-        data["author_email"] = __author_email__
-        data["license"] = __license__
-
-        super().__init__(**data)
+    title: str = Field(default=settings.branding.title, title="Application Title", description="The title of the application.")
+    description: str = Field(default=settings.branding.description, title="Application Description", description="The description of the application.")
+    version: str = Field(default=settings.branding.version, title="Application Version", description="The version of the application.")
+    version_full: str = Field(default=settings.branding.version, title="Application Version Full", description="The full version of the application.")
+    version_major: int = Field(default=int(settings.branding.version.split(".")[0]), title="Application Version Major", description="The major version of the application.")
+    version_minor: int = Field(default=int(settings.branding.version.split(".")[1]), title="Application Version Minor", description="The minor version of the application.")
+    version_bugfix: int = Field(default=int(settings.branding.version.split(".")[2]), title="Application Version Bugfix", description="The bugfix version of the application.")
+    author: str = Field(default=settings.branding.author, title="Application Author", description="The author of the application.")
+    author_email: str = Field(default=settings.branding.author_email, title="Application Author Email", description="The author email of the application.")
+    license: str = Field(default=settings.branding.license, title="Application License", description="The license of the application.")
+    license_url: str = Field(default=settings.branding.license_url, title="Application License URL", description="The license URL of the application.")
+    terms_of_service: str = Field(default=settings.branding.terms_of_service, title="Application Terms of Service", description="The terms of service of the application.")
 
 
 class SmsSendApiModel(BaseModel):
@@ -126,18 +119,18 @@ class ApiServer(BaseServer, FastAPI):
         FastAPI.__init__(self,
                          lifespan=self._stated_done,
                          debug=self.config.debug,
-                         title=f"{__title__} - {self.name}",
-                         summary=f"{__title__} API",
-                         description=__description__,
-                         version=__version__,
-                         terms_of_service="https://www.kds-kg.de/impressum",
+                         title=f"{settings.branding.title} - {self.name}",
+                         summary=f"{settings.branding.title} API",
+                         description=settings.branding.description,
+                         version=settings.branding.version,
+                         terms_of_service=settings.branding.terms_of_service,
                          docs_url=None,
                          redoc_url=None,
-                         contact={"name": __author__, "email": __author_email__},
-                         license_info={"name": __license__, "url": "https://www.gnu.org/licenses/gpl-3.0.html"})
+                         contact={"name": settings.branding.author, "email": settings.branding.author_email},
+                         license_info={"name": settings.branding.license, "url": settings.branding.license_url})
 
         if self.config.docs_web_path is not None or self.config.redoc_web_path is not None:
-            @self.get('/favicon.ico',
+            @self.get("/favicon.ico",
                       include_in_schema=False)
             async def favicon() -> FileResponse:
                 return FileResponse(ASSETS_PATH / "favicon.ico")
@@ -147,7 +140,7 @@ class ApiServer(BaseServer, FastAPI):
                       include_in_schema=False)
             async def swagger():
                 return get_swagger_ui_html(openapi_url="/openapi.json",
-                                           title=f"{__title__} - API Docs",
+                                           title=f"{settings.branding.title} - API Docs",
                                            swagger_favicon_url="/favicon.ico")
 
         if self.config.redoc_web_path is not None:
@@ -155,7 +148,7 @@ class ApiServer(BaseServer, FastAPI):
                       include_in_schema=False)
             async def redoc():
                 return get_redoc_html(openapi_url="/openapi.json",
-                                      title=f"{__title__} - API Docs",
+                                      title=f"{settings.branding.title} - API Docs",
                                       redoc_favicon_url="/favicon.ico")
 
         async def validate_token(token: Annotated[str, Depends(OAuth2PasswordBearer(tokenUrl="/auth"))]) -> tuple[str, str]:
