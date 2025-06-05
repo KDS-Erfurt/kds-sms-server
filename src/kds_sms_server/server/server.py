@@ -1,7 +1,6 @@
 import logging
 from abc import abstractmethod
 from datetime import datetime
-from ipaddress import IPv4Address
 from threading import Thread
 from typing import Any, TYPE_CHECKING, Union
 
@@ -56,9 +55,7 @@ class BaseServer(Base, Thread):
     def exit(self):
         ...
 
-    def handle_request(self, caller: Any, client_ip: IPv4Address, client_port: int, **kwargs) -> Any | None:
-        logger.debug(f"{self} - Accept message:\nclient='{client_ip}'\nport={client_port}")
-
+    def handle_request(self, caller: Any, **kwargs) -> Any | None:
         logger.debug(f"{self} - Progressing SMS data ...")
         try:
             number, message = self.handle_sms_data(caller=caller, **kwargs)

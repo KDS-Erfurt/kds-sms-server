@@ -352,16 +352,19 @@ class ApiServer(BaseServer, FastAPI):
         return api_key, api_secret
 
     # noinspection DuplicatedCode
-    def handle_request(self, caller: Any, client_ip: IPv4Address, client_port: int, **kwargs) -> Any | None:
+    def handle_request(self, caller: Any, **kwargs) -> Any | None:
         # check if client ip is allowed
         allowed = False
         for network in self.config.allowed_networks:
-            if client_ip in network:
+            if kwargs["client_ip"] in network:
                 allowed = True
                 break
         if not allowed:
-            return self.handle_response(caller=self, log_level=logging.ERROR, success=False, sms_id=None, result=f"Client IP address '{client_ip}' is not allowed.")
-        return super().handle_request(caller=caller, client_ip=client_ip, client_port=client_port, **kwargs)
+            return self.handle_response(caller=self, log_level=logging.ERROR, success=False, sms_id=None, result=f"Client IP address '{kwargs["client_ip"]}' is not allowed.")
+
+        logger.debug(f"{self} - Accept message:\nclient='{kwargs["client_ip"]}'\nport={kwargs["client_ip"]}")
+
+        return super().handle_request(caller=caller, **kwargs)
 
     def handle_sms_data(self, caller: None, **kwargs) -> tuple[str, str]:
         return kwargs["number"], kwargs["message"]
@@ -429,7 +432,7 @@ class ApiServer(BaseServer, FastAPI):
         except Exception as e:
             self.handle_response(caller=self, log_level=logging.ERROR, success=e, sms_id=None, result=f"Error while parsing client IP address.")
             raise RuntimeError("This should never happen.")
-        return self.handle_request(caller=None, client_ip=client_ip, client_port=client_port, number=number, message=message)
+        return self.handle_request(caller=None, number=number, message=message, client_ip=client_ip, client_port=client_port)
 
     async def reset_sms(self,
                         sms_id: int) -> SmsStatusApiModel:
