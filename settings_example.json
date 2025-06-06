@@ -17,15 +17,13 @@
         "type": "tcp",
         "debug": true,
         "host": "0.0.0.0",
-        "port": 3456,
-        "success_message": "SMS mit Message-Reference 999 ok"
+        "port": 3456
       },
       "TCP 2": {
         "type": "tcp",
         "debug": true,
         "host": "0.0.0.0",
-        "port": 3457,
-        "success_message": "SMS mit Message-Reference 999 ok"
+        "port": 3457
       },
       "API 1": {
         "type": "api",
@@ -59,7 +57,8 @@
         "authentication_enabled": true,
         "authentication_accounts": {
           "test": "test"
-        }
+        },
+        "session_secret_key": "0123456789012345678901234567890123456789012345678901234567890123"
       },
       "UI 2": {
         "type": "ui",
@@ -69,7 +68,8 @@
         "authentication_enabled": true,
         "authentication_accounts": {
           "test": "test"
-        }
+        },
+        "session_secret_key": "0123456789012345678901234567890123456789012345678901234567890123"
       }
     }
   },
@@ -81,13 +81,15 @@
         "dry_run": true,
         "api_key": "xxx",
         "api_secret": "xxx"
+      },
+      "Teltonika Modem 1": {
+        "type": "teltonika",
+        "ip": "xxx.xxx.xxx.xx",
+        "port": 80,
+        "username": "xxx",
+        "password": "xxx"
       }
     }
   },
-  "db_host": "localhost",
-  "db_port": 3306,
-  "db_protocol": "mysql+pymysql",
-  "db_name": "kds-sms-server",
-  "db_username": "kds-sms-server",
-  "db_password": "xxx"
+  "db_file": "sqlite.db"
 }
