@@ -1,9 +1,5 @@
-<p align="center">
-  <a href="#"><img src="https://github.com/JuliusKoenig/sms-server/blob/main/docs/logo.png" alt="SMS Broker"></a>
-</p>
-<p align="center">
-    <em>A broker server for sending SMS.</em>
-</p>
+![image](logo.png)
+<div style="text-align: center;">A broker server for sending SMS.</div>
 
 ---
 ## Installation :pick:
