@@ -111,7 +111,7 @@ def init_db_command():
     from sms_broker.db import db
 
     # print header
-    print_header(mode="server")
+    print_header(mode="listener")
 
     # init db
     console.print("Initializing database ...")
