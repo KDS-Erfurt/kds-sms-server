@@ -3,12 +3,12 @@ import time
 
 from wiederverwendbar.logger import LoggerSingleton
 
-from kds_sms_server.settings import settings
-from kds_sms_server.server.server import BaseServer
-from kds_sms_server.server.file.server import FileServer
-from kds_sms_server.server.tcp.server import TcpServer
-from kds_sms_server.server.api.server import ApiServer
-from kds_sms_server.server.ui.server import UiServer
+from sms_broker.settings import settings
+from sms_broker.server.server import BaseServer
+from sms_broker.server.file.server import FileServer
+from sms_broker.server.tcp.server import TcpServer
+from sms_broker.server.api.server import ApiServer
+from sms_broker.server.ui.server import UiServer
 
 IGNORED_LOGGERS_LIKE = ["sqlalchemy", "pymysql", "asyncio", "parso", "engineio", "socketio", "python_multipart.multipart"]
 # noinspection PyArgumentList

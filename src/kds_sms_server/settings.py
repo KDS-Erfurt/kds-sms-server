@@ -9,15 +9,15 @@ from wiederverwendbar.sqlalchemy import SqlalchemySettings
 from wiederverwendbar.logger import LoggerSettings
 from wiederverwendbar.pydantic import FileConfig
 
-from kds_sms_server import __title__, __description__, __author__, __author_email__, __version__, __license__, __license_url__, __terms_of_service__
-from kds_sms_server.server.file.config import FileServerConfig
-from kds_sms_server.server.tcp.config import TcpServerConfig
-from kds_sms_server.server.api.config import ApiServerConfig
-from kds_sms_server.server.ui.config import UiServerConfig
-from kds_sms_server.gateways.teltonika.config import TeltonikaGatewayConfig
-from kds_sms_server.gateways.vonage.config import VonageGatewayConfig
+from sms_broker import __title__, __description__, __author__, __author_email__, __version__, __license__, __license_url__, __terms_of_service__
+from sms_broker.server.file.config import FileServerConfig
+from sms_broker.server.tcp.config import TcpServerConfig
+from sms_broker.server.api.config import ApiServerConfig
+from sms_broker.server.ui.config import UiServerConfig
+from sms_broker.gateways.teltonika.config import TeltonikaGatewayConfig
+from sms_broker.gateways.vonage.config import VonageGatewayConfig
 
-ENV_PREFIX = "KDS_SMS_SERVER_"
+ENV_PREFIX = "SMS_BROKER_"
 
 AVAILABLE_SERVER_CONFIGS = Union[
     FileServerConfig,

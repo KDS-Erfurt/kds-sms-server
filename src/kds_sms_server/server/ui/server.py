@@ -17,13 +17,13 @@ from starlette_admin.actions import row_action, action
 from starlette_admin.contrib.sqla import Admin, ModelView
 from starlette_admin.exceptions import ActionFailed
 
-from kds_sms_server.statics import ASSETS_PATH
-from kds_sms_server.db import Sms, SmsStatus, db
-from kds_sms_server.server.server import BaseServer
-from kds_sms_server.settings import settings
+from sms_broker.statics import ASSETS_PATH
+from sms_broker.db import Sms, SmsStatus, db
+from sms_broker.server.server import BaseServer
+from sms_broker.settings import settings
 
 if TYPE_CHECKING:
-    from kds_sms_server.server.ui.config import UiServerConfig
+    from sms_broker.server.ui.config import UiServerConfig
 
 logger = logging.getLogger(__name__)
 

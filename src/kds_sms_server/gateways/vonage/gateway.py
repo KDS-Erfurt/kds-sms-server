@@ -5,10 +5,10 @@ from typing import Literal, TYPE_CHECKING
 from vonage import Vonage, Auth, HttpClientOptions
 from vonage_sms import SmsMessage, SmsResponse
 
-from kds_sms_server.gateways.gateway import BaseGateway
+from sms_broker.gateways.gateway import BaseGateway
 
 if TYPE_CHECKING:
-    from kds_sms_server.gateways.vonage.config import VonageGatewayConfig
+    from sms_broker.gateways.vonage.config import VonageGatewayConfig
 
 logger = logging.getLogger(__name__)
 

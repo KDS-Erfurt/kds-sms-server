@@ -6,7 +6,7 @@ from sqlalchemy import Column, Integer, DateTime, VARCHAR
 from wiederverwendbar.singleton import Singleton
 from wiederverwendbar.sqlalchemy import SqlalchemyDb, Base, EnumValueStr
 
-from kds_sms_server.settings import settings
+from sms_broker.settings import settings
 
 
 class Db(SqlalchemyDb, metaclass=Singleton):

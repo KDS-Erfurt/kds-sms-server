@@ -7,10 +7,10 @@ from typing import TYPE_CHECKING, Any
 import chardet
 from pydantic import BaseModel, Field
 
-from kds_sms_server.server.server import BaseServer
+from sms_broker.server.server import BaseServer
 
 if TYPE_CHECKING:
-    from kds_sms_server.server.file.config import FileServerConfig
+    from sms_broker.server.file.config import FileServerConfig
 
 logger = logging.getLogger(__name__)
 

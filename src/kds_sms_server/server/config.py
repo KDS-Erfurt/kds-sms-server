@@ -1,6 +1,6 @@
 from pydantic import Field
 
-from kds_sms_server.base import BaseConfig
+from sms_broker.base import BaseConfig
 
 
 class BaseServerConfig(BaseConfig):

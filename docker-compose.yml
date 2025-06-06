@@ -15,9 +15,9 @@ services:
     networks:
       - "backend"
     volumes:
-      - "${DATA_DIR:-./opt}/server:/opt/kds-sms-server"
+      - "${DATA_DIR:-./opt}/server:/opt/sms-broker"
     environment:
-      KDS_SMS_SERVER_SETTINGS_FILE: "/opt/kds-sms-server/settings.json"
+      SMS_BROKER_SETTINGS_FILE: "/opt/sms-broker/settings.json"
   db:
     image: "mariadb:${DB_VERSION:-latest}"
     restart: 'always'
@@ -29,8 +29,8 @@ services:
       - "${DATA_DIR:-./opt}/db:/var/lib/mysql"
     environment:
       MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-xxx}"
-      MYSQL_DATABASE: "${DB_DATABASE:-kds-sms-server}"
-      MYSQL_USER: "${DB_USER:-kds-sms-server}"
+      MYSQL_DATABASE: "${DB_DATABASE:-sms-broker}"
+      MYSQL_USER: "${DB_USER:-sms-broker}"
       MYSQL_PASSWORD: "${DB_PASSWORD:-xxx}"
     healthcheck:
       test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]

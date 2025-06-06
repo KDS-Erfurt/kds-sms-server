@@ -4,12 +4,12 @@ from datetime import datetime
 from threading import Thread
 from typing import Any, TYPE_CHECKING, Union
 
-from kds_sms_server.base import Base
-from kds_sms_server.db import Sms, SmsStatus
-from kds_sms_server.settings import settings
+from sms_broker.base import Base
+from sms_broker.db import Sms, SmsStatus
+from sms_broker.settings import settings
 
 if TYPE_CHECKING:
-    from kds_sms_server.server.config import BaseServerConfig
+    from sms_broker.server.config import BaseServerConfig
 
 logger = logging.getLogger(__name__)
 

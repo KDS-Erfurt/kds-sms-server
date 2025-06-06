@@ -1,7 +1,7 @@
 from pydantic import Field
 from enum import Enum
 
-from kds_sms_server.gateways.config import BaseGatewayConfig
+from sms_broker.gateways.config import BaseGatewayConfig
 
 
 class TeltonikaGatewayConfig(BaseGatewayConfig):

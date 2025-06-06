@@ -8,11 +8,11 @@ from sqlalchemy import and_, or_
 from wiederverwendbar.logger import LoggerSingleton, LoggingContext, remove_logger
 from wiederverwendbar.task_manger import TaskManager, Task, EverySeconds
 
-from kds_sms_server.db import Sms, SmsStatus
-from kds_sms_server.settings import settings
-from kds_sms_server.gateways.gateway import BaseGateway
-from kds_sms_server.gateways.teltonika.gateway import TeltonikaGateway
-from kds_sms_server.gateways.vonage.gateway import VonageGateway
+from sms_broker.db import Sms, SmsStatus
+from sms_broker.settings import settings
+from sms_broker.gateways.gateway import BaseGateway
+from sms_broker.gateways.teltonika.gateway import TeltonikaGateway
+from sms_broker.gateways.vonage.gateway import VonageGateway
 
 IGNORED_LOGGERS_LIKE = ["sqlalchemy", "pymysql"]
 # noinspection PyArgumentList

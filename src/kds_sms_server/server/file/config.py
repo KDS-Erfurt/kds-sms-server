@@ -3,7 +3,7 @@ from pathlib import Path
 
 from pydantic import Field
 
-from kds_sms_server.server.config import BaseServerConfig
+from sms_broker.server.config import BaseServerConfig
 
 
 class FileServerConfig(BaseServerConfig):

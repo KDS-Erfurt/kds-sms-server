@@ -57,7 +57,7 @@ deactivate
 ```shell
 systemctl stop sms-broker-listener.service
 systemctl stop sms-broker-worker.service
-sms-broker listener # Or kds-sms-server worker 
+sms-broker listener # Or sms-broker worker 
 systemctl start sms-broker-listener.service
 systemctl start sms-broker-worker.service
 ```

@@ -4,10 +4,10 @@ from typing import TYPE_CHECKING
 import requests
 from pythonping import ping
 
-from kds_sms_server.gateways.gateway import BaseGateway
+from sms_broker.gateways.gateway import BaseGateway
 
 if TYPE_CHECKING:
-    from kds_sms_server.gateways.teltonika.config import TeltonikaGatewayConfig
+    from sms_broker.gateways.teltonika.config import TeltonikaGatewayConfig
 
 logger = logging.getLogger(__name__)
 

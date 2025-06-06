@@ -2,10 +2,10 @@ import logging
 from abc import abstractmethod
 from typing import TYPE_CHECKING, Union, Any
 
-from kds_sms_server.base import Base
+from sms_broker.base import Base
 
 if TYPE_CHECKING:
-    from kds_sms_server.gateways.config import BaseGatewayConfig
+    from sms_broker.gateways.config import BaseGatewayConfig
 
 logger = logging.getLogger(__name__)
 

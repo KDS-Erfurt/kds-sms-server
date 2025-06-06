@@ -6,10 +6,10 @@ from typing import TYPE_CHECKING, Any
 
 import chardet
 
-from kds_sms_server.server.server import BaseServer
+from sms_broker.server.server import BaseServer
 
 if TYPE_CHECKING:
-    from kds_sms_server.server.tcp.config import TcpServerConfig
+    from sms_broker.server.tcp.config import TcpServerConfig
 
 logger = logging.getLogger(__name__)
 

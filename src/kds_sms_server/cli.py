@@ -3,23 +3,25 @@ from typing import Literal
 
 import typer
 
-from kds_sms_server.statics.ascii_logo import ASCII_LOGO
-from kds_sms_server.console import console
-from kds_sms_server.settings import settings
+from sms_broker.statics.ascii_logo import ASCII_LOGO
+from sms_broker.console import console
+from sms_broker.settings import settings
 
 cli_app = typer.Typer()
 
 
-def print_header(mode: Literal["info", "server", "worker", "cli"]):
+def print_header(mode: Literal["info", "listener", "worker", "cli"]):
     first_line = f"Starting {settings.branding.title}"
     if mode == "info":
         first_line += " ..."
-    elif mode == "server":
-        first_line += " - Server ..."
+    elif mode == "listener":
+        first_line += " - Listener ..."
     elif mode == "worker":
         first_line += " - Worker ..."
     elif mode == "cli":
         first_line += " - CLI ..."
+    else:
+        raise RuntimeError("Unknown mode!")
     console.print(first_line)
     console.print(ASCII_LOGO)
     console.print("_________________________________________________________________________________\n")
@@ -30,7 +32,7 @@ def print_header(mode: Literal["info", "server", "worker", "cli"]):
     console.print("_________________________________________________________________________________")
 
 
-def main_loop(mode: Literal["server", "worker"]):
+def main_loop(mode: Literal["listener", "worker"]):
     console.print(f"{settings.branding.title} - {mode.capitalize()} is ready. Press CTRL+C to quit.")
     try:
         while True:
@@ -42,7 +44,7 @@ def main_loop(mode: Literal["server", "worker"]):
 @cli_app.command(name="version", help=f"Show the version of {settings.branding.title}.")
 def version_command() -> None:
     """
-    Show the version of KDSM Manager.
+    Show the version of SMS Broker.
 
     :return: None
     """
@@ -54,16 +56,16 @@ def version_command() -> None:
 @cli_app.command(name="listener", help=f"Start the {settings.branding.title} - listener.")
 def listener_command():
     """
-    Start the server.
+    Start the listener.
 
     :return: None
     """
 
-    from kds_sms_server.db import db
-    from kds_sms_server.listener import SmsListener
+    from sms_broker.db import db
+    from sms_broker.listener import SmsListener
 
     # print header
-    print_header(mode="server")
+    print_header(mode="listener")
 
     # init db
     db().create_all()
@@ -72,7 +74,7 @@ def listener_command():
     SmsListener()
 
     # entering main loop
-    main_loop(mode="server")
+    main_loop(mode="listener")
 
 
 @cli_app.command(name="worker", help=f"Start the {settings.branding.title} - worker.")
@@ -83,11 +85,11 @@ def worker_command():
     :return: None
     """
 
-    from kds_sms_server.db import db
-    from kds_sms_server.worker import SmsWorker
+    from sms_broker.db import db
+    from sms_broker.worker import SmsWorker
 
     # print header
-    print_header(mode="server")
+    print_header(mode="listener")
 
     # init db
     db().create_all()
@@ -96,7 +98,7 @@ def worker_command():
     SmsWorker()
 
     # entering main loop
-    main_loop(mode="server")
+    main_loop(mode="listener")
 
 
 @cli_app.command(name="init-db", help="Initialize database.")
@@ -106,7 +108,7 @@ def init_db_command():
     :return: None
     """
 
-    from kds_sms_server.db import db
+    from sms_broker.db import db
 
     # print header
     print_header(mode="server")

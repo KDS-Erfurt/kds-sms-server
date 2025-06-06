@@ -15,15 +15,15 @@ from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from fastapi.responses import FileResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-from kds_sms_server.statics import ASSETS_PATH
-from kds_sms_server.db import Sms, SmsStatus
-from kds_sms_server.server.server import BaseServer
+from sms_broker.statics import ASSETS_PATH
+from sms_broker.db import Sms, SmsStatus
+from sms_broker.server.server import BaseServer
 from starlette.requests import Request
 
-from kds_sms_server.settings import settings
+from sms_broker.settings import settings
 
 if TYPE_CHECKING:
-    from kds_sms_server.server.api.config import ApiServerConfig
+    from sms_broker.server.api.config import ApiServerConfig
 
 logger = logging.getLogger(__name__)
 
