@@ -14,7 +14,7 @@ deactivate
 # setup settings.json in /opt/sms-broker
 sms-broker init-db
 echo """[Unit]
-Description=KDS SMS Server - Listener - Responsible for receiving SMS as well as for the general API and UI.
+Description=SMS Broker - Listener - Responsible for receiving SMS as well as for the general API and UI.
 After=multi-user.target
 
 [Service]
@@ -26,7 +26,7 @@ ExecStart=/opt/sms-broker/bin/sms-broker listener
 [Install]
 WantedBy=multi-user.target""" > /etc/systemd/system/sms-broker-listener.service
 echo """[Unit]
-Description=KDS SMS Server - Worker - Responsible for processing SMS and database cleanup processes.
+Description=SMS Broker - Worker - Responsible for processing SMS and database cleanup processes.
 After=multi-user.target
 
 [Service]
