@@ -57,7 +57,7 @@ class UiAuthProvider(AuthProvider):
 
     def get_admin_config(self, request: Request) -> AdminConfig:
         return AdminConfig(
-            app_title=f"Hello, {request.session["username"].capitalize()}!",
+            app_title=f"Hello, {request.session['username'].capitalize()}!",
             logo_url=None,
         )
 
@@ -325,9 +325,9 @@ class UiServer(BaseServer, FastAPI):
                 allowed = True
                 break
         if not allowed:
-            return self.handle_response(caller=self, log_level=logging.ERROR, success=False, sms_id=None, result=f"Client IP address '{kwargs["client_ip"]}' is not allowed.")
+            return self.handle_response(caller=self, log_level=logging.ERROR, success=False, sms_id=None, result=f"Client IP address '{kwargs['client_ip']}' is not allowed.")
 
-        logger.debug(f"{self} - Accept message:\nclient='{kwargs["client_ip"]}'\nport={kwargs["client_ip"]}")
+        logger.debug(f"{self} - Accept message:\nclient='{kwargs['client_ip']}'\nport={kwargs['client_ip']}")
 
         return super().handle_request(caller=caller, **kwargs)
 

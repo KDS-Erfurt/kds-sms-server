@@ -72,7 +72,7 @@ class FileServer(BaseServer):
 
     # noinspection DuplicatedCode
     def handle_request(self, caller: None, **kwargs) -> Any | None:
-        logger.debug(f"{self} - Accept message:\nfile_path='{kwargs["file_path"]}'")
+        logger.debug(f"{self} - Accept message:\nfile_path='{kwargs['file_path']}'")
         return super().handle_request(caller=caller, **kwargs)
 
     def handle_sms_data(self, caller: None, **kwargs) -> tuple[str, str] | None:
