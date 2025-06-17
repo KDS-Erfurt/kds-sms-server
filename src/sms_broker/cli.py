@@ -10,28 +10,6 @@ from sms_broker.settings import settings
 cli_app = typer.Typer()
 
 
-def print_header(mode: Literal["info", "listener", "worker", "cli"]):
-    first_line = f"Starting {settings.branding.title}"
-    if mode == "info":
-        first_line += " ..."
-    elif mode == "listener":
-        first_line += " - Listener ..."
-    elif mode == "worker":
-        first_line += " - Worker ..."
-    elif mode == "cli":
-        first_line += " - CLI ..."
-    else:
-        raise RuntimeError("Unknown mode!")
-    console.print(first_line)
-    console.print(ASCII_LOGO)
-    console.print("_________________________________________________________________________________\n")
-    console.print(f"{settings.branding.description}")
-    console.print(f"by {settings.branding.author}({settings.branding.author_email})")
-    console.print(f"version: {settings.branding.version}")
-    console.print(f"License: {settings.branding.license}")
-    console.print("_________________________________________________________________________________")
-
-
 def main_loop(mode: Literal["listener", "worker"]):
     console.print(f"{settings.branding.title} - {mode.capitalize()} is ready. Press CTRL+C to quit.")
     try:
@@ -50,7 +28,7 @@ def version_command() -> None:
     """
 
     # print header
-    print_header(mode="info")
+    console.print(ASCII_LOGO)
 
 
 @cli_app.command(name="listener", help=f"Start the {settings.branding.title} - listener.")
@@ -65,7 +43,8 @@ def listener_command():
     from sms_broker.listener import SmsListener
 
     # print header
-    print_header(mode="listener")
+    console.print(f"Starting {settings.branding.title} - Listener ...")
+    console.print(ASCII_LOGO)
 
     # init db
     db().create_all()
@@ -89,7 +68,8 @@ def worker_command():
     from sms_broker.worker import SmsWorker
 
     # print header
-    print_header(mode="listener")
+    console.print(f"Starting {settings.branding.title} - Worker ...")
+    console.print(ASCII_LOGO)
 
     # init db
     db().create_all()
@@ -111,9 +91,9 @@ def init_db_command():
     from sms_broker.db import db
 
     # print header
-    print_header(mode="listener")
+    console.print(ASCII_LOGO)
 
     # init db
-    console.print("Initializing database ...")
+    console.print(f"Initializing database for {settings.branding.title} ...")
     db().create_all()
-    console.print("Initializing database ... done")
+    console.print("Done")
