@@ -41,13 +41,18 @@ class VonageGateway(BaseGateway):
         log_msg = f"balance={balance.value}\n" \
                   f"auto_reload={balance.auto_reload}"
 
-        logger.debug(f"Check result for {self}:\n{log_msg}")
+        logger.debug(f"Checking account balance for {self}:\n{log_msg}")
 
         if balance.value >= self._config.check_min_balance:
+            logger.debug(f"Balance for {self} is enough.")
             return True
         if self._config.check_auto_balance:
             if balance.auto_reload:
+                logger.debug(f"Balance for {self} is not enough. But auto_reload is enabled.")
                 return True
+            logger.warning(f"Balance for {self} is not enough and auto_reload is disabled.")
+        else:
+            logger.warning(f"Balance for {self} is not enough.")
         return False
 
     def _send_sms(self, number: str, message: str) -> tuple[bool, str]:
