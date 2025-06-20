@@ -11,7 +11,7 @@
         {% block navbar %}
             {% if current_user or i18n_config.language_switcher %}
                 <header class="navbar navbar-expand-md navbar-light d-none d-lg-flex d-print-none">
-                    <div class="container-xl">
+                    <div class="container" style="max-width: 100%">
                         <h1 class="navbar-brand navbar-brand-autodark mr-3">
                             <a class="brand-link" href="{{ url_for(__name__ ~ ':index') }}">
                                 {% if logo_url %}
