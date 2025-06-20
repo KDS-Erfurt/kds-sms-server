@@ -4,12 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fbbb106e-c2b2-423e-b63f-12025486cf3a" name="Changes" comment="Update dependencies: add `art` library version 6.5 and enhance `wiederverwendbar` dependencies with FastAPI, Typer, and Uvicorn.">
-      <change beforePath="$PROJECT_DIR$/src/sms_broker/gateways/teltonika/gateway.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sms_broker/gateways/teltonika/gateway.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sms_broker/gateways/vonage/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sms_broker/gateways/vonage/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sms_broker/gateways/vonage/gateway.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sms_broker/gateways/vonage/gateway.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sms_broker/server/api/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sms_broker/server/api/server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sms_broker/worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sms_broker/worker.py" afterDir="false" />
+    <list default="true" id="fbbb106e-c2b2-423e-b63f-12025486cf3a" name="Changes" comment="Add `check_balance` field to Vonage config and skip balance check if disabled">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pdm.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pdm.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +48,10 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/src/sms_broker/cli.py" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -110,7 +113,7 @@
       <recent name="$PROJECT_DIR$/src/kds_sms_server/server" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.worker">
+  <component name="RunManager" selected="Python.listener">
     <configuration name="--info" type="PythonConfigurationType" factoryName="Python">
       <module name="sms-broker" />
       <option name="ENV_FILES" value="" />
@@ -282,13 +285,27 @@
       </deployment>
       <method v="2" />
     </configuration>
+    <configuration name="docker-compose.yml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="sourceFilePath" value="docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
     <list>
+      <item itemvalue="Docker.docker-compose.yml: Compose Deployment" />
       <item itemvalue="Python.--info" />
       <item itemvalue="Python.--version" />
       <item itemvalue="Python.init-db" />
       <item itemvalue="Python.worker" />
       <item itemvalue="Python.listener" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Docker.docker-compose.yml: Compose Deployment" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -320,55 +337,7 @@
       <workItem from="1749466173072" duration="379000" />
       <workItem from="1749548159021" duration="647000" />
       <workItem from="1749562042580" duration="1345000" />
-      <workItem from="1750409103187" duration="6787000" />
-    </task>
-    <task id="LOCAL-00019" summary="Refactor `cli.py` to improve command structure and enhance functionality&#10;&#10;Revised `cli.py` with clearer command definitions and improved help information. Added new commands: `init-db` for database initialization and updated `serve` and `version` commands for enhanced clarity. Moved logging initialization and server start logic to better align with modularity principles. Adjusted imports and added necessary dependencies for streamlined execution.">
-      <option name="closed" value="true" />
-      <created>1749043197370</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1749043197370</updated>
-    </task>
-    <task id="LOCAL-00020" summary="Remove legacy server and gateway implementations&#10;&#10;Deleted outdated `api.py`, `tcp.py`, `teltonika.py`, and `vonage.py` files to clean up deprecated code. Migrated relevant logic to the new modular structure with updated configurations and gateway/server implementations.">
-      <option name="closed" value="true" />
-      <created>1749051117110</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1749051117110</updated>
-    </task>
-    <task id="LOCAL-00021" summary="Add IntelliJ IDEA project configuration files for `kds-sms-server`">
-      <option name="closed" value="true" />
-      <created>1749098777948</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1749098777948</updated>
-    </task>
-    <task id="LOCAL-00022" summary="Add IntelliJ IDEA project configuration files for `kds-sms-server`">
-      <option name="closed" value="true" />
-      <created>1749098788375</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1749098788375</updated>
-    </task>
-    <task id="LOCAL-00023" summary="Add IntelliJ IDEA project configuration files to support SQLite setup and custom run configurations.">
-      <option name="closed" value="true" />
-      <created>1749098949418</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1749098949418</updated>
-    </task>
-    <task id="LOCAL-00024" summary="Add IntelliJ IDEA project configuration files to support SQLite setup and custom run configurations.">
-      <option name="closed" value="true" />
-      <created>1749099029525</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1749099029525</updated>
+      <workItem from="1750409103187" duration="7701000" />
     </task>
     <task id="LOCAL-00025" summary="Add IntelliJ IDEA project configuration files to support SQLite setup and custom run configurations.">
       <option name="closed" value="true" />
@@ -714,7 +683,55 @@
       <option name="project" value="LOCAL" />
       <updated>1750414212157</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="Remove commented-out `get_info` method from API server.">
+      <option name="closed" value="true" />
+      <created>1750416035247</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1750416035247</updated>
+    </task>
+    <task id="LOCAL-00069" summary="Refactor worker logging: use `get_level_number` for log level and simplify log formatter">
+      <option name="closed" value="true" />
+      <created>1750416044926</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1750416044926</updated>
+    </task>
+    <task id="LOCAL-00070" summary="Update IDE configuration: rename project modules and paths from `kds-sms-server` to `sms-broker`.">
+      <option name="closed" value="true" />
+      <created>1750416058438</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1750416058438</updated>
+    </task>
+    <task id="LOCAL-00071" summary="Improve logging in Teltonika gateway: add debug log for successful ping and warning log for unsuccessful ping.">
+      <option name="closed" value="true" />
+      <created>1750416069997</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1750416069997</updated>
+    </task>
+    <task id="LOCAL-00072" summary="Improve logging in Vonage gateway: add detailed debug and warning logs for balance checks.">
+      <option name="closed" value="true" />
+      <created>1750416092354</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1750416092354</updated>
+    </task>
+    <task id="LOCAL-00073" summary="Add `check_balance` field to Vonage config and skip balance check if disabled">
+      <option name="closed" value="true" />
+      <created>1750416112343</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1750416112343</updated>
+    </task>
+    <option name="localTasksCounter" value="74" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -733,12 +750,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Refactor settings architecture: encapsulate Listener and Worker settings as nested classes, simplify environment prefix configuration, and adjust worker initialization references." />
-    <MESSAGE value="Replace `schema_extra` with `json_schema_extra` in API model configurations for enhanced validation support." />
-    <MESSAGE value="Update `.gitignore`, adjust IDEA workspace settings and executor configurations, and add environment variable setup for Docker deployment." />
-    <MESSAGE value="Add `docker-compose.yml` with MySQL service configuration for backend network setup." />
-    <MESSAGE value="Initialize database in CLI server and worker startup routines." />
-    <MESSAGE value="Fix Python 3.11 support." />
     <MESSAGE value="Update `.gitignore`: exclude PDM Python environment file (`.pdm-python`)." />
     <MESSAGE value="Update PyPi project URL in GitHub Actions workflow configuration." />
     <MESSAGE value="Renaming Project to sms-broker" />
@@ -758,7 +769,13 @@
     <MESSAGE value="Refactor API server: streamline branding settings, remove unused `InfoApiModel`, and adjust token dependency usage." />
     <MESSAGE value="Refactor server: update branding settings property names for consistency." />
     <MESSAGE value="Update dependencies: add `art` library version 6.5 and enhance `wiederverwendbar` dependencies with FastAPI, Typer, and Uvicorn." />
-    <option name="LAST_COMMIT_MESSAGE" value="Update dependencies: add `art` library version 6.5 and enhance `wiederverwendbar` dependencies with FastAPI, Typer, and Uvicorn." />
+    <MESSAGE value="Remove commented-out `get_info` method from API server." />
+    <MESSAGE value="Refactor worker logging: use `get_level_number` for log level and simplify log formatter" />
+    <MESSAGE value="Update IDE configuration: rename project modules and paths from `kds-sms-server` to `sms-broker`." />
+    <MESSAGE value="Improve logging in Teltonika gateway: add debug log for successful ping and warning log for unsuccessful ping." />
+    <MESSAGE value="Improve logging in Vonage gateway: add detailed debug and warning logs for balance checks." />
+    <MESSAGE value="Add `check_balance` field to Vonage config and skip balance check if disabled" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add `check_balance` field to Vonage config and skip balance check if disabled" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -782,10 +799,10 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/sms_broker$worker.coverage" NAME="worker Coverage Results" MODIFIED="1750415901474" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/sms_broker$worker.coverage" NAME="worker Coverage Results" MODIFIED="1750415962583" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$__main__.coverage" NAME="serve Coverage Results" MODIFIED="1747164167285" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$admin.coverage" NAME="admin Coverage Results" MODIFIED="1749100378783" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/sms_broker$listener.coverage" NAME="listener Coverage Results" MODIFIED="1750414585027" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/sms_broker$listener.coverage" NAME="listener Coverage Results" MODIFIED="1750416859974" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$serve.coverage" NAME="serve Coverage Results" MODIFIED="1749050994537" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$test_api_thread.coverage" NAME="test_api_thread Coverage Results" MODIFIED="1749019490091" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
     <SUITE FILE_PATH="coverage/sms_server$listener.coverage" NAME="listener Coverage Results" MODIFIED="1749213703023" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
