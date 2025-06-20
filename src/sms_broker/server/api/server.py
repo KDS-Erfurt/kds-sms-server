@@ -313,9 +313,6 @@ class ApiServer(BaseServer, FastAPI):
             result = self.config.error_result
         return SmsSendApiModel(error=True, sms_id=sms_id, result=result)
 
-    # async def get_info(self) -> InfoApiModel:
-    #     return InfoApiModel()
-
     async def auth(self, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
         if not self.config.authentication_enabled:
             raise HTTPException(status_code=401, detail="Authentication is disabled.")
