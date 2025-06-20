@@ -1,37 +1,22 @@
 import time
 from typing import Literal
 
-import typer
-
-from sms_broker.statics.ascii_logo import ASCII_LOGO
-from sms_broker.console import console
 from sms_broker.settings import settings
+from wiederverwendbar.typer import Typer
 
-cli_app = typer.Typer()
+cli_app = Typer(settings=settings)
 
 
 def main_loop(mode: Literal["listener", "worker"]):
-    console.print(f"{settings.branding.title} - {mode.capitalize()} is ready. Press CTRL+C to quit.")
+    cli_app.console.print(f"{settings.branding_title} - {mode.capitalize()} is ready. Press CTRL+C to quit.")
     try:
         while True:
             time.sleep(0.001)
     except KeyboardInterrupt:
-        console.print(f"KeyboardInterrupt received. Stopping {settings.branding.title} - {mode.capitalize()} ...")
+        cli_app.console.print(f"KeyboardInterrupt received. Stopping {settings.branding_title} - {mode.capitalize()} ...")
 
 
-@cli_app.command(name="version", help=f"Show the version of {settings.branding.title}.")
-def version_command() -> None:
-    """
-    Show the version of SMS Broker.
-
-    :return: None
-    """
-
-    # print header
-    console.print(ASCII_LOGO)
-
-
-@cli_app.command(name="listener", help=f"Start the {settings.branding.title} - listener.")
+@cli_app.command(name="listener", help=f"Start the {settings.branding_title} - listener.")
 def listener_command():
     """
     Start the listener.
@@ -43,8 +28,8 @@ def listener_command():
     from sms_broker.listener import SmsListener
 
     # print header
-    console.print(f"Starting {settings.branding.title} - Listener ...")
-    console.print(ASCII_LOGO)
+    cli_app.console.print(f"Starting {settings.branding_title} - Listener ...")
+    cli_app.console.print(f"[white]{cli_app.title_header}[/white]")
 
     # init db
     db().create_all()
@@ -56,7 +41,7 @@ def listener_command():
     main_loop(mode="listener")
 
 
-@cli_app.command(name="worker", help=f"Start the {settings.branding.title} - worker.")
+@cli_app.command(name="worker", help=f"Start the {settings.branding_title} - worker.")
 def worker_command():
     """
     Start the worker.
@@ -68,8 +53,8 @@ def worker_command():
     from sms_broker.worker import SmsWorker
 
     # print header
-    console.print(f"Starting {settings.branding.title} - Worker ...")
-    console.print(ASCII_LOGO)
+    cli_app.console.print(f"Starting {settings.branding_title} - Worker ...")
+    cli_app.console.print(f"[white]{cli_app.title_header}[/white]")
 
     # init db
     db().create_all()
@@ -91,9 +76,9 @@ def init_db_command():
     from sms_broker.db import db
 
     # print header
-    console.print(ASCII_LOGO)
+    cli_app.console.print(f"[white]{cli_app.title_header}[/white]")
 
     # init db
-    console.print(f"Initializing database for {settings.branding.title} ...")
+    cli_app.console.print(f"Initializing database for {settings.branding_title} ...")
     db().create_all()
-    console.print("Done")
+    cli_app.console.print("Done")
