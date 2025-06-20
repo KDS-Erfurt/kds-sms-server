@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:f8067d829b339052625359400ee0865f15f025e5062c0d09cf220c86dd84b902"
+content_hash = "sha256:ba18dbe35e7e40d31d761b4586a3899485dd5ddfad0a6af428dc47d81733ba18"
 
 [[metadata.targets]]
 requires_python = ">=3.11"
@@ -39,6 +39,17 @@ dependencies = [
 files = [
     {file = "anyio-4.9.0-py3-none-any.whl", hash = "sha256:9f76d541cad6e36af7beb62e978876f3b41e3e04f2c1fbf0884604c0a9c4d93c"},
     {file = "anyio-4.9.0.tar.gz", hash = "sha256:673c0c244e15788651a4ff38710fea9675823028a6f08a5eda409e0c9840a028"},
+]
+
+[[package]]
+name = "art"
+version = "6.5"
+requires_python = ">=3.6"
+summary = "ASCII Art Library For Python"
+groups = ["default"]
+files = [
+    {file = "art-6.5-py3-none-any.whl", hash = "sha256:70706408144c45c666caab690627d5c74aea7b6c7ce8cc968408ddeef8d84afd"},
+    {file = "art-6.5.tar.gz", hash = "sha256:a98d77b42c278697ec6cf4b5bdcdfd997f6b2425332da078d4e31e31377d1844"},
 ]
 
 [[package]]
@@ -1247,13 +1258,17 @@ files = [
 [[package]]
 name = "wiederverwendbar"
 version = "0.9.0"
-extras = ["rich", "sqlalchemy"]
+extras = ["fastapi", "sqlalchemy", "typer", "uvicorn"]
 requires_python = ">=3.9"
 summary = "A collection of scripts, classes and tools they are \\\"wiederverwendbar\\\"."
 groups = ["default"]
 dependencies = [
+    "art>=6.5",
+    "fastapi>=0.115.13",
     "rich>=14.0.0",
     "sqlalchemy>=2.0.41",
+    "typer>=0.16.0",
+    "uvicorn>=0.34.3",
     "wiederverwendbar==0.9.0",
 ]
 files = [
