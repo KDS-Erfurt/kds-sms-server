@@ -30,8 +30,10 @@ class TeltonikaGateway(BaseGateway):
         logger.debug(f"Check result for {self}:\n{log_msg}")
 
         if result.success():
+            logger.debug(f"Ping for {self} was successful.")
             return True
         else:
+            logger.warning(f"Ping for {self} was unsuccessful.")
             return False
 
     def _send_sms(self, number: str, message: str) -> tuple[bool, str]:
