@@ -39,7 +39,7 @@ jobs:
 
     environment:
       name: PyPi
-      url: https://pypi.org/project/sms-broker/
+      url: https://pypi.org/project/kds-sms-server/
 
     steps:
       - name: Retrieve release distributions

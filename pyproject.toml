@@ -1,9 +1,9 @@
 [project]
-name = "sms-broker"
+name = "kds-sms-server"
 dynamic = ["version"]
 description = "A broker server for sending SMS."
 authors = [
-    { name = "Julius Koenig", email = "info@bastelquartier.de" },
+    { name = "Julius Koenig", email = "julius.koenig@kds-kg.de" },
 ]
 dependencies = ["typer>=0.16.0", "chardet>=5.2.0", "requests>=2.32.4", "pythonping>=1.1.4", "vonage>=4.4.3", "python-multipart>=0.0.20", "email-validator>=2.2.0", "starlette-admin[i18n]>=0.15.1", "pymysql>=1.1.1", "itsdangerous>=2.2.0", "wiederverwendbar[fastapi,sqlalchemy,typer,uvicorn]>=0.9.1"]
 requires-python = ">=3.11"
@@ -11,7 +11,7 @@ readme = "README.md"
 license = { file = "LICENSE" }
 
 [project.scripts]
-sms-broker = "sms_broker.cli:cli_app"
+kds-sms-server = "kds_sms_server.cli:cli_app"
 
 [build-system]
 requires = ["pdm-backend"]
@@ -22,7 +22,7 @@ distribution = true
 
 [tool.pdm.version]
 source = "file"
-path = "src/sms_broker/__init__.py"
+path = "src/kds_sms_server/__init__.py"
 
 [tool.pdm.scripts]
 push-tags = { shell = "git push origin --tags" }

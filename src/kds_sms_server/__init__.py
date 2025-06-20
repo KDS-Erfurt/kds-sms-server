@@ -1,0 +1,8 @@
+__title__ = "KDS SMS Server"
+__description__ = "A broker server for sending SMS."
+__version__ = "3.3.0"
+__author__ = "Kirchhoff Datensysteme Services GmbH & Co. KG - Julius Koenig"
+__author_email__ = "julius.koenig@kds-kg.de"
+__license__ = "GPL-3.0"
+__license_url__ = "https://www.gnu.org/licenses/gpl-3.0.md"
+__terms_of_service__ = "https://www.kds-kg.de/impressum"

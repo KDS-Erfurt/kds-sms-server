@@ -1,8 +1,0 @@
-__title__ = "SMS Broker"
-__description__ = "A broker server for sending SMS."
-__version__ = "3.3.0"
-__author__ = "Julius Koenig"
-__author_email__ = "info@bastelquartier.de"
-__license__ = "GPL-3.0"
-__license_url__ = "https://www.gnu.org/licenses/gpl-3.0.md"
-__terms_of_service__ = "https://bastelquartier.de/terms-of-service"
