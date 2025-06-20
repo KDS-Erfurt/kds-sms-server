@@ -4,12 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fbbb106e-c2b2-423e-b63f-12025486cf3a" name="Changes" comment="Refactor CLI header and logo handling: remove `print_header` function, enhance `ASCII_LOGO` with dynamic branding details.">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sms_broker/cli.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sms_broker/cli.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sms_broker/statics/ascii_logo.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sms_broker/statics/ascii_logo.py" afterDir="false" />
+    <list default="true" id="fbbb106e-c2b2-423e-b63f-12025486cf3a" name="Changes" comment="Update dependencies: add `art` library version 6.5 and enhance `wiederverwendbar` dependencies with FastAPI, Typer, and Uvicorn.">
+      <change beforePath="$PROJECT_DIR$/src/sms_broker/gateways/teltonika/gateway.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sms_broker/gateways/teltonika/gateway.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sms_broker/gateways/vonage/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sms_broker/gateways/vonage/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sms_broker/gateways/vonage/gateway.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sms_broker/gateways/vonage/gateway.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sms_broker/server/api/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sms_broker/server/api/server.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sms_broker/worker.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sms_broker/worker.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,15 +40,14 @@
     &quot;assignee&quot;: &quot;JuliusKoenig&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/JuliusKoenig/sms-server.git&quot;,
-    &quot;accountId&quot;: &quot;8abec109-5513-45b1-9b10-023e6808f11c&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/JuliusKoenig/sms-broker.git",
+    "accountId": "8abec109-5513-45b1-9b10-023e6808f11c"
   }
-}</component>
+}]]></component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/.venv/lib/python3.13/site-packages/fastapi/dependencies/utils.py" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/.venv/lib/python3.13/site-packages/fastapi/openapi/docs.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/sms_broker/cli.py" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
@@ -61,56 +60,59 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Docker.docker-compose.yml: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.__main__.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.admin.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.init-db.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.listener.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.serve.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.test_api_thread.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.worker.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/julius/CurrentWork/sms-server/docs&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Docker.docker-compose.yml: Compose Deployment.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.--info.executor": "Debug",
+    "Python.__main__.executor": "Debug",
+    "Python.admin.executor": "Debug",
+    "Python.init-db.executor": "Debug",
+    "Python.listener.executor": "Debug",
+    "Python.serve.executor": "Debug",
+    "Python.settings.executor": "Debug",
+    "Python.test_api_thread.executor": "Debug",
+    "Python.worker.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "C:/Users/Julius/CurrentWork/sms-broker/src/sms_broker/statics",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mariadb&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mariadb"
     ],
-    &quot;stardust.markdown.MarkdownSplitEditorSuppressor:keyList&quot;: []
+    "stardust.markdown.MarkdownSplitEditorSuppressor:keyList": []
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Julius\CurrentWork\sms-broker\src\sms_broker\statics" />
+      <recent name="C:\Users\Julius\CurrentWork\sms-broker" />
       <recent name="$PROJECT_DIR$/docs" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src/kds_sms_server/server/ui/templates" />
-      <recent name="$PROJECT_DIR$/src/kds_sms_server/server" />
-      <recent name="$PROJECT_DIR$/src/kds_sms_server/gateways" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Julius\CurrentWork\sms-broker\tools" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src/kds_sms_server/server" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.listener">
-    <configuration name="init-db" type="PythonConfigurationType" factoryName="Python">
-      <module name="kds-sms-server" />
+  <component name="RunManager" selected="Python.worker">
+    <configuration name="--info" type="PythonConfigurationType" factoryName="Python">
+      <module name="sms-broker" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -133,7 +135,73 @@
           <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
         </ENTRIES>
       </EXTENSION>
-      <option name="SCRIPT_NAME" value="kds_sms_server" />
+      <option name="SCRIPT_NAME" value="sms_broker" />
+      <option name="PARAMETERS" value="--info" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="true" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="--version" type="PythonConfigurationType" factoryName="Python">
+      <module name="sms-broker" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <EXTENSION ID="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </EXTENSION>
+      <option name="SCRIPT_NAME" value="sms_broker" />
+      <option name="PARAMETERS" value="--version" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="true" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="init-db" type="PythonConfigurationType" factoryName="Python">
+      <module name="sms-broker" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <EXTENSION ID="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        </ENTRIES>
+      </EXTENSION>
+      <option name="SCRIPT_NAME" value="sms_broker" />
       <option name="PARAMETERS" value="init-db" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -143,7 +211,7 @@
       <method v="2" />
     </configuration>
     <configuration name="listener" type="PythonConfigurationType" factoryName="Python">
-      <module name="kds-sms-server" />
+      <module name="sms-broker" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -166,7 +234,7 @@
           <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
         </ENTRIES>
       </EXTENSION>
-      <option name="SCRIPT_NAME" value="kds_sms_server" />
+      <option name="SCRIPT_NAME" value="sms_broker" />
       <option name="PARAMETERS" value="listener" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -175,41 +243,8 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="version" type="PythonConfigurationType" factoryName="Python">
-      <module name="kds-sms-server" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <EXTENSION ID="net.ashald.envfile">
-        <option name="IS_ENABLED" value="false" />
-        <option name="IS_SUBST" value="false" />
-        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
-        <option name="IS_IGNORE_MISSING_FILES" value="false" />
-        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
-        <ENTRIES>
-          <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
-        </ENTRIES>
-      </EXTENSION>
-      <option name="SCRIPT_NAME" value="kds_sms_server" />
-      <option name="PARAMETERS" value="version" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="true" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="worker" type="PythonConfigurationType" factoryName="Python">
-      <module name="kds-sms-server" />
+      <module name="sms-broker" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -232,7 +267,7 @@
           <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
         </ENTRIES>
       </EXTENSION>
-      <option name="SCRIPT_NAME" value="kds_sms_server" />
+      <option name="SCRIPT_NAME" value="sms_broker" />
       <option name="PARAMETERS" value="worker" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -247,35 +282,13 @@
       </deployment>
       <method v="2" />
     </configuration>
-    <configuration name="docker-compose.yml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker - localhost">
-      <deployment type="docker-compose.yml">
-        <settings>
-          <option name="envFilePath" value="" />
-          <option name="envVars">
-            <list>
-              <DockerEnvVarImpl>
-                <option name="name" value="DATA_DIR" />
-                <option name="value" value="./opt/kds-sms-server" />
-              </DockerEnvVarImpl>
-            </list>
-          </option>
-          <option name="sourceFilePath" value="docker-compose.yml" />
-        </settings>
-      </deployment>
-      <method v="2" />
-    </configuration>
     <list>
-      <item itemvalue="Docker.docker-compose.yml: Compose Deployment" />
+      <item itemvalue="Python.--info" />
+      <item itemvalue="Python.--version" />
       <item itemvalue="Python.init-db" />
-      <item itemvalue="Python.listener" />
-      <item itemvalue="Python.version" />
       <item itemvalue="Python.worker" />
+      <item itemvalue="Python.listener" />
     </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Docker.docker-compose.yml: Compose Deployment" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -307,86 +320,7 @@
       <workItem from="1749466173072" duration="379000" />
       <workItem from="1749548159021" duration="647000" />
       <workItem from="1749562042580" duration="1345000" />
-    </task>
-    <task id="LOCAL-00009" summary="Add log_console_format setting to configure console log format&#10;&#10;Introduced a new setting, `log_console_format`, in `settings.py` to allow customization of console log output. This enhances flexibility when defining logging formats for different environments. Minor formatting adjustment in `cli.py` was also made for consistency.">
-      <option name="closed" value="true" />
-      <created>1747164221126</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1747164221126</updated>
-    </task>
-    <task id="LOCAL-00010" summary="Refactor naming and configuration structure for servers and gateways&#10;&#10;Renamed core server and gateway classes for consistency (`SMSServer` → `SmsServer`, `TCPServer` → `TcpServer`, `APIServer` → `ApiServer`, etc.). Updated related configuration class names and settings, introducing better structure (`BaseConfig` → `BaseGatewayConfig`, `AVAILABLE_CONFIGS` → `AVAILABLE_GATEWAY_CONFIGS`, etc.). Adjusted imports and usage throughout the project accordingly. Also added a base server configuration validation class for improved initialization handling.">
-      <option name="closed" value="true" />
-      <created>1749028686726</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1749028686726</updated>
-    </task>
-    <task id="LOCAL-00011" summary="Rename `tcp_server.py` → `tcp.py` and `api_server.py` → `api.py` with updated imports">
-      <option name="closed" value="true" />
-      <created>1749029390889</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1749029390889</updated>
-    </task>
-    <task id="LOCAL-00012" summary="Add Field annotations for gateway configuration validation&#10;&#10;Enhanced gateway configuration classes (`teltonika.py`, `base.py`, and `vonage.py`) with `pydantic.Field` annotations to provide default values, titles, and descriptions. This improves schema validation, documentation, and usability.">
-      <option name="closed" value="true" />
-      <created>1749029772337</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1749029772337</updated>
-    </task>
-    <task id="LOCAL-00013" summary="Extract `BaseConfig` for shared configuration logic in servers and gateways&#10;&#10;Refactored the configuration structure by extracting a new `BaseConfig` class to centralize shared logic across server and gateway configuration classes. Updated `BaseServerConfig` and `BaseGatewayConfig` to inherit from `BaseConfig`, simplifying code and improving reusability. Adjusted relevant imports and property methods accordingly.">
-      <option name="closed" value="true" />
-      <created>1749031766608</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1749031766608</updated>
-    </task>
-    <task id="LOCAL-00014" summary="Update dependencies and lockfile for latest versions&#10;&#10;Upgraded multiple dependencies, including `typer` (0.16.0), `uvicorn` (0.34.3), and `wiederverwendbar` (0.8.4) with `rich` and `sqlalchemy` extras. Added `greenlet` and `sqlalchemy` packages to support compatibility with updated requirements. Updated `pdm.lock` and `pyproject.toml` accordingly to reflect these changes.">
-      <option name="closed" value="true" />
-      <created>1749041418550</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1749041418550</updated>
-    </task>
-    <task id="LOCAL-00015" summary="Refactor server and gateway initialization for improved modularity&#10;&#10;Streamlined the initialization process for servers and gateways by introducing reusable base classes. Enhanced `SmsServer` to dynamically load configurations and initialize components from `settings`. Adjusted server lifecycle methods to better handle startup and runtime behaviors, improving overall modularity and maintainability. Updated associated imports and configuration structures throughout the project.">
-      <option name="closed" value="true" />
-      <created>1749041457229</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1749041457229</updated>
-    </task>
-    <task id="LOCAL-00016" summary="Add `db.py` with database models and utility functions&#10;&#10;Introduced a new `db.py` module, including the `Db` singleton-based database utility and `Messages` SQLAlchemy model. Added `MessageStatus` enum for message lifecycle states (`queued`, `sent`, `error`). This sets up foundational database support for message management in the KDS SMS server.">
-      <option name="closed" value="true" />
-      <created>1749043122742</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1749043122742</updated>
-    </task>
-    <task id="LOCAL-00017" summary="Update `settings.py` to integrate `SqlalchemySettings` and enhance field validation&#10;&#10;Replaced `UvicornServerSettings` with `SqlalchemySettings` in the `Settings` class for database integration. Added constraints to SMS-related fields (`sms_data_max_size`, `sms_number_max_size`, `sms_message_max_size`) for improved validation. Introduced new logging settings to ignore specific loggers by exact matches or patterns.">
-      <option name="closed" value="true" />
-      <created>1749043164967</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1749043164967</updated>
-    </task>
-    <task id="LOCAL-00018" summary="Add `logger.py` to initialize and manage logger instances&#10;&#10;Introduced a `logger.py` module for centralized logging functionality. Utilized `LoggerSingleton` to handle logger initialization based on module name and settings. This ensures consistent logging configuration across the KDS SMS server.">
-      <option name="closed" value="true" />
-      <created>1749043183605</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1749043183605</updated>
+      <workItem from="1750409103187" duration="6787000" />
     </task>
     <task id="LOCAL-00019" summary="Refactor `cli.py` to improve command structure and enhance functionality&#10;&#10;Revised `cli.py` with clearer command definitions and improved help information. Added new commands: `init-db` for database initialization and updated `serve` and `version` commands for enhanced clarity. Moved logging initialization and server start logic to better align with modularity principles. Adjusted imports and added necessary dependencies for streamlined execution.">
       <option name="closed" value="true" />
@@ -700,7 +634,87 @@
       <option name="project" value="LOCAL" />
       <updated>1749216407141</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="Update dependencies: bump versions for FastAPI, Pydantic, Requests, and Wiederverwendbar in `pdm.lock` and `pyproject.toml`.">
+      <option name="closed" value="true" />
+      <created>1750409410842</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1750409410842</updated>
+    </task>
+    <task id="LOCAL-00059" summary="Rename executable file `PtcpSend.exe` to `tcp_socket_send.exe` for consistency.">
+      <option name="closed" value="true" />
+      <created>1750409417660</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1750409417660</updated>
+    </task>
+    <task id="LOCAL-00060" summary="Update static assets: replace favicon and logo files">
+      <option name="closed" value="true" />
+      <created>1750413632535</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1750413632535</updated>
+    </task>
+    <task id="LOCAL-00061" summary="Refactor settings: replace `BaseSettings` with `TyperSettings` and streamline branding configuration.">
+      <option name="closed" value="true" />
+      <created>1750414139559</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1750414139559</updated>
+    </task>
+    <task id="LOCAL-00062" summary="Remove deprecated `ascii_logo.py` file.">
+      <option name="closed" value="true" />
+      <created>1750414152388</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1750414152388</updated>
+    </task>
+    <task id="LOCAL-00063" summary="Remove unused `Console` instance from `console.py`.">
+      <option name="closed" value="true" />
+      <created>1750414159179</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1750414159179</updated>
+    </task>
+    <task id="LOCAL-00064" summary="Refactor CLI: integrate `Typer` with settings and replace `console` usage with `cli_app.console`.">
+      <option name="closed" value="true" />
+      <created>1750414176558</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1750414176558</updated>
+    </task>
+    <task id="LOCAL-00065" summary="Refactor API server: streamline branding settings, remove unused `InfoApiModel`, and adjust token dependency usage.">
+      <option name="closed" value="true" />
+      <created>1750414190234</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1750414190234</updated>
+    </task>
+    <task id="LOCAL-00066" summary="Refactor server: update branding settings property names for consistency.">
+      <option name="closed" value="true" />
+      <created>1750414199281</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1750414199281</updated>
+    </task>
+    <task id="LOCAL-00067" summary="Update dependencies: add `art` library version 6.5 and enhance `wiederverwendbar` dependencies with FastAPI, Typer, and Uvicorn.">
+      <option name="closed" value="true" />
+      <created>1750414212157</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1750414212157</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -719,17 +733,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Refactor `ApiServer` initialization to improve code readability." />
-    <MESSAGE value="Introduce `UiServer`: add a UI server implementation with configuration, views, and admin interface." />
-    <MESSAGE value="Extend functionality of `UiServer`: implement SMS views and actions, add IP handling, and enhance exception management." />
-    <MESSAGE value="Add HTML templates for `UiServer` and integrate template directory validation." />
-    <MESSAGE value="Refactor `SmsStatusApiModel` and database schema: remove `SmsStatus` enum from API model, adjust column length for `result` and `log`." />
-    <MESSAGE value="Add `PyMySQL` dependency to enable MySQL support." />
-    <MESSAGE value="Add IntelliJ IDEA data source configuration for MySQL" />
-    <MESSAGE value="Exclude `.venv` directory from IntelliJ IDEA project structure." />
-    <MESSAGE value="Add detailed and list HTML templates for `UiServer` views." />
-    <MESSAGE value="Refactor settings architecture: separate Listener and Worker-specific configurations, adjust initialization logic, and update references accordingly." />
-    <MESSAGE value="Refactor `UiServer` to replace Starlette with FastAPI, enhance SMS view configuration, and revise route handling." />
     <MESSAGE value="Refactor settings architecture: encapsulate Listener and Worker settings as nested classes, simplify environment prefix configuration, and adjust worker initialization references." />
     <MESSAGE value="Replace `schema_extra` with `json_schema_extra` in API model configurations for enhanced validation support." />
     <MESSAGE value="Update `.gitignore`, adjust IDEA workspace settings and executor configurations, and add environment variable setup for Docker deployment." />
@@ -744,7 +747,18 @@
     <MESSAGE value="Rename project file to align with rebranded name `sms-broker`." />
     <MESSAGE value="Update `settings_example.json`: remove unnecessary success messages, add session secret keys, switch database to SQLite, and add Teltonika modem configuration." />
     <MESSAGE value="Complete rebranding of `kds-sms-server` to `sms-broker` across all modules, configurations, and documentation." />
-    <option name="LAST_COMMIT_MESSAGE" value="Complete rebranding of `kds-sms-server` to `sms-broker` across all modules, configurations, and documentation." />
+    <MESSAGE value="Refactor CLI header and logo handling: remove `print_header` function, enhance `ASCII_LOGO` with dynamic branding details." />
+    <MESSAGE value="Update dependencies: bump versions for FastAPI, Pydantic, Requests, and Wiederverwendbar in `pdm.lock` and `pyproject.toml`." />
+    <MESSAGE value="Rename executable file `PtcpSend.exe` to `tcp_socket_send.exe` for consistency." />
+    <MESSAGE value="Update static assets: replace favicon and logo files" />
+    <MESSAGE value="Refactor settings: replace `BaseSettings` with `TyperSettings` and streamline branding configuration." />
+    <MESSAGE value="Remove deprecated `ascii_logo.py` file." />
+    <MESSAGE value="Remove unused `Console` instance from `console.py`." />
+    <MESSAGE value="Refactor CLI: integrate `Typer` with settings and replace `console` usage with `cli_app.console`." />
+    <MESSAGE value="Refactor API server: streamline branding settings, remove unused `InfoApiModel`, and adjust token dependency usage." />
+    <MESSAGE value="Refactor server: update branding settings property names for consistency." />
+    <MESSAGE value="Update dependencies: add `art` library version 6.5 and enhance `wiederverwendbar` dependencies with FastAPI, Typer, and Uvicorn." />
+    <option name="LAST_COMMIT_MESSAGE" value="Update dependencies: add `art` library version 6.5 and enhance `wiederverwendbar` dependencies with FastAPI, Typer, and Uvicorn." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -768,15 +782,20 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/kds_sms_server$init_db.coverage" NAME="init-db Coverage Results" MODIFIED="1749115066478" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/kds_sms_server$listener.coverage" NAME="listener Coverage Results" MODIFIED="1749116262868" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/sms_broker$worker.coverage" NAME="worker Coverage Results" MODIFIED="1750415901474" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/kds_sms_server$__main__.coverage" NAME="serve Coverage Results" MODIFIED="1747164167285" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$admin.coverage" NAME="admin Coverage Results" MODIFIED="1749100378783" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/kds_sms_server$worker.coverage" NAME="worker Coverage Results" MODIFIED="1749113709216" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/sms_server$listener.coverage" NAME="listener Coverage Results" MODIFIED="1749213703023" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/sms_server$worker.coverage" NAME="worker Coverage Results" MODIFIED="1749213316381" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/sms_broker$listener.coverage" NAME="listener Coverage Results" MODIFIED="1750414585027" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$serve.coverage" NAME="serve Coverage Results" MODIFIED="1749050994537" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/kds_sms_server$test_api_thread.coverage" NAME="test_api_thread Coverage Results" MODIFIED="1749019490091" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
-    <SUITE FILE_PATH="coverage/kds_sms_server$__main__.coverage" NAME="serve Coverage Results" MODIFIED="1747164167285" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/sms_server$listener.coverage" NAME="listener Coverage Results" MODIFIED="1749213703023" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/sms_broker$init_db.coverage" NAME="init-db Coverage Results" MODIFIED="1750412176295" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/kds_sms_server$worker.coverage" NAME="worker Coverage Results" MODIFIED="1749113709216" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/kds_sms_server$listener.coverage" NAME="listener Coverage Results" MODIFIED="1749116262868" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/sms_server$worker.coverage" NAME="worker Coverage Results" MODIFIED="1749213316381" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/kds_sms_server$init_db.coverage" NAME="init-db Coverage Results" MODIFIED="1749115066478" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/sms_server$init_db.coverage" NAME="init-db Coverage Results" MODIFIED="1749216480313" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/sms_broker$settings.coverage" NAME="settings Coverage Results" MODIFIED="1750410333666" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/sms_broker" />
+    <SUITE FILE_PATH="coverage/sms_broker$__main__.coverage" NAME="--info Coverage Results" MODIFIED="1750412287450" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
