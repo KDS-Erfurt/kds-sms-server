@@ -10,9 +10,7 @@ from typing import TYPE_CHECKING, Annotated, Any
 import uvicorn
 from pydantic import BaseModel, Field
 
-from fastapi import FastAPI, Depends, HTTPException
-from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
-from fastapi.responses import FileResponse
+from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from sms_broker.statics import ASSETS_PATH
@@ -21,26 +19,12 @@ from sms_broker.server.server import BaseServer
 from starlette.requests import Request
 
 from sms_broker.settings import settings
+from wiederverwendbar.fastapi import FastAPI
 
 if TYPE_CHECKING:
     from sms_broker.server.api.config import ApiServerConfig
 
 logger = logging.getLogger(__name__)
-
-
-class InfoApiModel(BaseModel):
-    title: str = Field(default=settings.branding.title, title="Application Title", description="The title of the application.")
-    description: str = Field(default=settings.branding.description, title="Application Description", description="The description of the application.")
-    version: str = Field(default=settings.branding.version, title="Application Version", description="The version of the application.")
-    version_full: str = Field(default=settings.branding.version, title="Application Version Full", description="The full version of the application.")
-    version_major: int = Field(default=int(settings.branding.version.split(".")[0]), title="Application Version Major", description="The major version of the application.")
-    version_minor: int = Field(default=int(settings.branding.version.split(".")[1]), title="Application Version Minor", description="The minor version of the application.")
-    version_bugfix: int = Field(default=int(settings.branding.version.split(".")[2]), title="Application Version Bugfix", description="The bugfix version of the application.")
-    author: str = Field(default=settings.branding.author, title="Application Author", description="The author of the application.")
-    author_email: str = Field(default=settings.branding.author_email, title="Application Author Email", description="The author email of the application.")
-    license: str = Field(default=settings.branding.license, title="Application License", description="The license of the application.")
-    license_url: str = Field(default=settings.branding.license_url, title="Application License URL", description="The license URL of the application.")
-    terms_of_service: str = Field(default=settings.branding.terms_of_service, title="Application Terms of Service", description="The terms of service of the application.")
 
 
 class SmsSendApiModel(BaseModel):
@@ -119,48 +103,25 @@ class ApiServer(BaseServer, FastAPI):
         FastAPI.__init__(self,
                          lifespan=self._stated_done,
                          debug=self.config.debug,
-                         title=f"{settings.branding.title} - {self.name}",
-                         description=settings.branding.description,
-                         version=f"v{settings.branding.version}",
-                         terms_of_service=settings.branding.terms_of_service,
-                         docs_url=None,
-                         redoc_url=None,
-                         contact={"name": settings.branding.author, "email": settings.branding.author_email},
-                         license_info={"name": settings.branding.license, "url": settings.branding.license_url})
+                         title=f"{settings.branding_title} - {self.name}",
+                         description=settings.branding_description,
+                         version=f"v{settings.branding_version}",
+                         terms_of_service=settings.branding_terms_of_service,
+                         favicon=ASSETS_PATH / "favicon.ico",
+                         docs_url=self.config.docs_web_path,
+                         redoc_url=self.config.redoc_web_path,
+                         contact={"name": settings.branding_author, "email": settings.branding_author_email},
+                         license_info={"name": settings.branding_license, "url": settings.branding_license_url})
 
-        if self.config.docs_web_path is not None or self.config.redoc_web_path is not None:
-            @self.get("/favicon.ico",
-                      include_in_schema=False)
-            async def favicon() -> FileResponse:
-                return FileResponse(ASSETS_PATH / "favicon.ico")
+        self.init_done()
 
-        if self.config.docs_web_path is not None:
-            @self.get(self.config.docs_web_path,
-                      include_in_schema=False)
-            async def swagger():
-                return get_swagger_ui_html(openapi_url="/openapi.json",
-                                           title=f"{settings.branding.title} - {self.name}",
-                                           swagger_favicon_url="/favicon.ico")
+    def setup(self) -> None:
+        super().setup()
 
-        if self.config.redoc_web_path is not None:
-            @self.get(self.config.redoc_web_path,
-                      include_in_schema=False)
-            async def redoc():
-                return get_redoc_html(openapi_url="/openapi.json",
-                                      title=f"{settings.branding.title} - {self.name}",
-                                      redoc_favicon_url="/favicon.ico")
-
-        async def validate_token(token: Annotated[str, Depends(OAuth2PasswordBearer(tokenUrl="/auth"))]) -> tuple[str, str]:
-            return await self.get_api_credentials_from_token(token=token)
+        # async def validate_token() -> tuple[str, str]:
+        #     return await self.get_api_credentials_from_token(token=token)
 
         if self.config.authentication_enabled:
-            @self.get(path="/info",
-                      summary="Get the application info.",
-                      tags=["API version 1"],
-                      responses={401: {"model": Unauthorized}})
-            async def get_info(_=Depends(validate_token)) -> InfoApiModel:
-                return await self.get_info()
-
             @self.post(path="/auth",
                        summary="Authenticate against server.",
                        tags=["API version 1"])
@@ -176,7 +137,7 @@ class ApiServer(BaseServer, FastAPI):
                                limit: int = 100,
                                page: int = 1,
                                query: str = "{}",
-                               _=Depends(validate_token)) -> list[
+                               _=Depends(self.get_api_credentials_from_token)) -> list[
                 SmsStatusApiModel]:
                 return await self.list_sms(order_by=order_by,
                                            order_desc=order_desc,
@@ -190,7 +151,7 @@ class ApiServer(BaseServer, FastAPI):
                       responses={401: {"model": Unauthorized},
                                  404: {"model": SmsNotFoundError}})
             async def get_sms(sms_id: int,
-                              _=Depends(validate_token)) -> SmsStatusApiModel:
+                              _=Depends(self.get_api_credentials_from_token)) -> SmsStatusApiModel:
                 return await self.get_sms(sms_id=sms_id)
 
             @self.post(path="/sms",
@@ -200,7 +161,7 @@ class ApiServer(BaseServer, FastAPI):
             async def send_sms(request: Request,
                                number: str,
                                message: str,
-                               _=Depends(validate_token)) -> SmsSendApiModel:
+                               _=Depends(self.get_api_credentials_from_token)) -> SmsSendApiModel:
                 return await self.send_sms(request=request,
                                            number=number,
                                            message=message)
@@ -211,7 +172,7 @@ class ApiServer(BaseServer, FastAPI):
                         responses={401: {"model": Unauthorized},
                                    404: {"model": SmsNotFoundError}})
             async def reset_sms(sms_id: int,
-                                _=Depends(validate_token)) -> SmsStatusApiModel:
+                                _=Depends(self.get_api_credentials_from_token)) -> SmsStatusApiModel:
                 return await self.reset_sms(sms_id=sms_id)
 
             @self.delete(path="/sms/{sms_id}",
@@ -222,16 +183,9 @@ class ApiServer(BaseServer, FastAPI):
                                           "description": "Aborting SMS is not allowed."},
                                     404: {"model": SmsNotFoundError}})
             async def abort_sms(sms_id: int,
-                                _=Depends(validate_token)) -> SmsStatusApiModel:
+                                _=Depends(self.get_api_credentials_from_token)) -> SmsStatusApiModel:
                 return await self.abort_sms(sms_id=sms_id)
         else:
-            @self.get(path="/info",
-                      summary="Get the application info.",
-                      tags=["API version 1"],
-                      responses={401: {"model": Unauthorized}})
-            async def get_info() -> InfoApiModel:
-                return await self.get_info()
-
             @self.get(path="/sms",
                       summary="List SMS.",
                       tags=["API version 1"],
@@ -284,8 +238,6 @@ class ApiServer(BaseServer, FastAPI):
             async def abort_sms(sms_id: int) -> SmsStatusApiModel:
                 return await self.abort_sms(sms_id=sms_id)
 
-        self.init_done()
-
     @property
     def config(self) -> "ApiServerConfig":
         return super().config
@@ -318,7 +270,7 @@ class ApiServer(BaseServer, FastAPI):
     def exit(self):
         ...
 
-    async def get_api_credentials_from_token(self, token: str) -> tuple[str, str]:
+    async def get_api_credentials_from_token(self, token: Annotated[str, Depends(OAuth2PasswordBearer(tokenUrl="/auth"))]) -> tuple[str, str]:
         if not self.config.authentication_enabled:
             raise HTTPException(status_code=401, detail="Authentication is disabled.")
         if ":" not in token:
@@ -361,8 +313,8 @@ class ApiServer(BaseServer, FastAPI):
             result = self.config.error_result
         return SmsSendApiModel(error=True, sms_id=sms_id, result=result)
 
-    async def get_info(self) -> InfoApiModel:
-        return InfoApiModel()
+    # async def get_info(self) -> InfoApiModel:
+    #     return InfoApiModel()
 
     async def auth(self, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
         if not self.config.authentication_enabled:
