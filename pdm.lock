@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:a3961783f4e7f4233a60a08acc85693f42ac277590305149a52af54b9e028c9f"
+content_hash = "sha256:f8067d829b339052625359400ee0865f15f025e5062c0d09cf220c86dd84b902"
 
 [[metadata.targets]]
 requires_python = ">=3.11"
@@ -313,7 +313,7 @@ files = [
 
 [[package]]
 name = "fastapi"
-version = "0.115.12"
+version = "0.115.13"
 requires_python = ">=3.8"
 summary = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
 groups = ["default"]
@@ -323,8 +323,8 @@ dependencies = [
     "typing-extensions>=4.8.0",
 ]
 files = [
-    {file = "fastapi-0.115.12-py3-none-any.whl", hash = "sha256:e94613d6c05e27be7ffebdd6ea5f388112e5e430c8f7d6494a9d1d88d43e814d"},
-    {file = "fastapi-0.115.12.tar.gz", hash = "sha256:1e2c2a2646905f9e83d32f04a3f86aff4a286669c6c950ca95b5fd68c2602681"},
+    {file = "fastapi-0.115.13-py3-none-any.whl", hash = "sha256:0a0cab59afa7bab22f5eb347f8c9864b681558c278395e94035a741fc10cd865"},
+    {file = "fastapi-0.115.13.tar.gz", hash = "sha256:55d1d25c2e1e0a0a50aceb1c8705cd932def273c102bff0b1c1da88b3c6eb307"},
 ]
 
 [[package]]
@@ -508,7 +508,7 @@ files = [
 
 [[package]]
 name = "pydantic"
-version = "2.11.5"
+version = "2.11.7"
 requires_python = ">=3.9"
 summary = "Data validation using Python type hints"
 groups = ["default"]
@@ -519,8 +519,8 @@ dependencies = [
     "typing-inspection>=0.4.0",
 ]
 files = [
-    {file = "pydantic-2.11.5-py3-none-any.whl", hash = "sha256:f9c26ba06f9747749ca1e5c94d6a85cb84254577553c8785576fd38fa64dc0f7"},
-    {file = "pydantic-2.11.5.tar.gz", hash = "sha256:7f853db3d0ce78ce8bbb148c401c2cdd6431b3473c0cdff2755c7690952a7b7a"},
+    {file = "pydantic-2.11.7-py3-none-any.whl", hash = "sha256:dde5df002701f6de26248661f6835bbe296a47bf73990135c7d07ce741b9623b"},
+    {file = "pydantic-2.11.7.tar.gz", hash = "sha256:d989c3c6cb79469287b1569f7447a17848c998458d49ebe294e975b9baf0f0db"},
 ]
 
 [[package]]
@@ -689,7 +689,7 @@ files = [
 
 [[package]]
 name = "requests"
-version = "2.32.3"
+version = "2.32.4"
 requires_python = ">=3.8"
 summary = "Python HTTP for Humans."
 groups = ["default"]
@@ -700,8 +700,8 @@ dependencies = [
     "urllib3<3,>=1.21.1",
 ]
 files = [
-    {file = "requests-2.32.3-py3-none-any.whl", hash = "sha256:70761cfe03c773ceb22aa2f671b4757976145175cdfca038c02654d061d6dcc6"},
-    {file = "requests-2.32.3.tar.gz", hash = "sha256:55365417734eb18255590a9ff9eb97e9e1da868d4ccd6402399eaf68af20a760"},
+    {file = "requests-2.32.4-py3-none-any.whl", hash = "sha256:27babd3cda2a6d50b30443204ee89830707d396671944c998b5975b031ac2b2c"},
+    {file = "requests-2.32.4.tar.gz", hash = "sha256:27d0316682c8a29834d3264820024b62a36942083d52caf2f14c0591336d3422"},
 ]
 
 [[package]]
@@ -1230,23 +1230,23 @@ files = [
 
 [[package]]
 name = "wiederverwendbar"
-version = "0.8.6"
+version = "0.9.0"
 requires_python = ">=3.9"
 summary = "A collection of scripts, classes and tools they are \\\"wiederverwendbar\\\"."
 groups = ["default"]
 dependencies = [
     "devtools>=0.12.2",
     "pydantic-settings>=2.9.1",
-    "pydantic>=2.11.5",
+    "pydantic>=2.11.7",
 ]
 files = [
-    {file = "wiederverwendbar-0.8.6-py3-none-any.whl", hash = "sha256:33e842331c357a5f4cc44c80ba339b1b19a56d371868e4900cadf799ba884643"},
-    {file = "wiederverwendbar-0.8.6.tar.gz", hash = "sha256:d87637aa78908e056724dc1cce264b9c531fb74d98b877f0a4efe05a112f2ed1"},
+    {file = "wiederverwendbar-0.9.0-py3-none-any.whl", hash = "sha256:6d9cf11b4094899c0bf562b08464fdf59fc955c75c2704a718e3688caadf0b76"},
+    {file = "wiederverwendbar-0.9.0.tar.gz", hash = "sha256:236ab253211a2bbc0ccc7824b1c01ce1e9ee82a96b00c4fff71645ddbdd3b71d"},
 ]
 
 [[package]]
 name = "wiederverwendbar"
-version = "0.8.6"
+version = "0.9.0"
 extras = ["rich", "sqlalchemy"]
 requires_python = ">=3.9"
 summary = "A collection of scripts, classes and tools they are \\\"wiederverwendbar\\\"."
@@ -1254,9 +1254,9 @@ groups = ["default"]
 dependencies = [
     "rich>=14.0.0",
     "sqlalchemy>=2.0.41",
-    "wiederverwendbar==0.8.6",
+    "wiederverwendbar==0.9.0",
 ]
 files = [
-    {file = "wiederverwendbar-0.8.6-py3-none-any.whl", hash = "sha256:33e842331c357a5f4cc44c80ba339b1b19a56d371868e4900cadf799ba884643"},
-    {file = "wiederverwendbar-0.8.6.tar.gz", hash = "sha256:d87637aa78908e056724dc1cce264b9c531fb74d98b877f0a4efe05a112f2ed1"},
+    {file = "wiederverwendbar-0.9.0-py3-none-any.whl", hash = "sha256:6d9cf11b4094899c0bf562b08464fdf59fc955c75c2704a718e3688caadf0b76"},
+    {file = "wiederverwendbar-0.9.0.tar.gz", hash = "sha256:236ab253211a2bbc0ccc7824b1c01ce1e9ee82a96b00c4fff71645ddbdd3b71d"},
 ]
