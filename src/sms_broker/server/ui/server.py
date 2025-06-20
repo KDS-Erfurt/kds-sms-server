@@ -270,12 +270,12 @@ class UiServer(BaseServer, FastAPI):
                          redoc_url=None,
                          lifespan=self._stated_done,
                          debug=self.config.debug)
-        self.title = f"{settings.branding.title} - {self.name}"
-        self.description = settings.branding.description
-        self.version = f"v{settings.branding.version}"
-        self.terms_of_service = settings.branding.terms_of_service
-        self.contact = {"name": settings.branding.author, "email": settings.branding.author_email}
-        self.license_info = {"name": settings.branding.license, "url": settings.branding.license_url}
+        self.title = f"{settings.branding_title} - {self.name}"
+        self.description = settings.branding_description
+        self.version = f"v{settings.branding_version}"
+        self.terms_of_service = settings.branding_terms_of_service
+        self.contact = {"name": settings.branding_author, "email": settings.branding_author_email}
+        self.license_info = {"name": settings.branding_license, "url": settings.branding_license_url}
 
         # create ui
         logger.info(f"Create ui for {self} ...")
