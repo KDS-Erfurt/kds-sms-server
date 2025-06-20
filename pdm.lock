@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:ba18dbe35e7e40d31d761b4586a3899485dd5ddfad0a6af428dc47d81733ba18"
+content_hash = "sha256:e6aae598efd86bcb13f1efa8eb46f3de8785c5266c7b153000fe1d3dd60ce4ec"
 
 [[metadata.targets]]
 requires_python = ">=3.11"
@@ -1241,7 +1241,7 @@ files = [
 
 [[package]]
 name = "wiederverwendbar"
-version = "0.9.0"
+version = "0.9.1"
 requires_python = ">=3.9"
 summary = "A collection of scripts, classes and tools they are \\\"wiederverwendbar\\\"."
 groups = ["default"]
@@ -1251,13 +1251,13 @@ dependencies = [
     "pydantic>=2.11.7",
 ]
 files = [
-    {file = "wiederverwendbar-0.9.0-py3-none-any.whl", hash = "sha256:6d9cf11b4094899c0bf562b08464fdf59fc955c75c2704a718e3688caadf0b76"},
-    {file = "wiederverwendbar-0.9.0.tar.gz", hash = "sha256:236ab253211a2bbc0ccc7824b1c01ce1e9ee82a96b00c4fff71645ddbdd3b71d"},
+    {file = "wiederverwendbar-0.9.1-py3-none-any.whl", hash = "sha256:631eb0ea7134843ada6bb84dae0d22b13384bc759baab2c932389789dab251d1"},
+    {file = "wiederverwendbar-0.9.1.tar.gz", hash = "sha256:293ccca055d7b702f5798c92820545c7189cfa5039e86c402c60e10770ec04c2"},
 ]
 
 [[package]]
 name = "wiederverwendbar"
-version = "0.9.0"
+version = "0.9.1"
 extras = ["fastapi", "sqlalchemy", "typer", "uvicorn"]
 requires_python = ">=3.9"
 summary = "A collection of scripts, classes and tools they are \\\"wiederverwendbar\\\"."
@@ -1269,9 +1269,9 @@ dependencies = [
     "sqlalchemy>=2.0.41",
     "typer>=0.16.0",
     "uvicorn>=0.34.3",
-    "wiederverwendbar==0.9.0",
+    "wiederverwendbar==0.9.1",
 ]
 files = [
-    {file = "wiederverwendbar-0.9.0-py3-none-any.whl", hash = "sha256:6d9cf11b4094899c0bf562b08464fdf59fc955c75c2704a718e3688caadf0b76"},
-    {file = "wiederverwendbar-0.9.0.tar.gz", hash = "sha256:236ab253211a2bbc0ccc7824b1c01ce1e9ee82a96b00c4fff71645ddbdd3b71d"},
+    {file = "wiederverwendbar-0.9.1-py3-none-any.whl", hash = "sha256:631eb0ea7134843ada6bb84dae0d22b13384bc759baab2c932389789dab251d1"},
+    {file = "wiederverwendbar-0.9.1.tar.gz", hash = "sha256:293ccca055d7b702f5798c92820545c7189cfa5039e86c402c60e10770ec04c2"},
 ]
