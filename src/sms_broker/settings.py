@@ -2,12 +2,12 @@ import os
 from pathlib import Path
 from typing import Union
 
-from pydantic import Field, BaseModel
-from pydantic_settings import BaseSettings
+from pydantic import Field
 from wiederverwendbar.sqlalchemy import SqlalchemySettings
 
 from wiederverwendbar.logger import LoggerSettings
 from wiederverwendbar.pydantic import FileConfig
+from wiederverwendbar.typer import TyperSettings
 
 from sms_broker import __title__, __description__, __author__, __author_email__, __version__, __license__, __license_url__, __terms_of_service__
 from sms_broker.server.file.config import FileServerConfig
@@ -32,25 +32,7 @@ AVAILABLE_GATEWAY_CONFIGS = Union[
 ]
 
 
-class Settings(FileConfig, BaseSettings, SqlalchemySettings):
-    model_config = {
-        "env_prefix": ENV_PREFIX,
-        "case_sensitive": False
-    }
-
-    # branding
-    class BrandingSettings(BaseModel):
-        title: str = Field(default=__title__, title="Branding Title", description="Branding title.")
-        description: str = Field(default=__description__, title="Branding Description", description="Branding description.")
-        version: str = Field(default=__version__, title="Branding Version", description="Branding version.")
-        author: str = Field(default=__author__, title="Branding Author", description="Branding author.")
-        author_email: str = Field(default=__author_email__, title="Branding Author Email", description="Branding author email.")
-        license: str = Field(default=__license__, title="Branding License", description="Branding license.")
-        license_url: str = Field(default=__license_url__, title="Branding License URL", description="Branding license URL.")
-        terms_of_service: str = Field(default=__terms_of_service__, title="Branding Terms of Service", description="Branding terms of service.")
-
-    branding: BrandingSettings = Field(default_factory=BrandingSettings, title="Branding Settings", description="Branding settings.")
-
+class Settings(FileConfig, TyperSettings, SqlalchemySettings):
     # listener
     class ListenerSettings(LoggerSettings):
         # sms
@@ -88,4 +70,13 @@ class Settings(FileConfig, BaseSettings, SqlalchemySettings):
 
 
 # noinspection PyArgumentList
-settings = Settings(file_path=Path(os.environ.get(f"{ENV_PREFIX}SETTINGS_FILE", "settings.json")), file_must_exist="yes_print")
+settings = Settings(file_path=Path(os.environ.get(f"{ENV_PREFIX}SETTINGS_FILE", "settings.json")),
+                    file_must_exist="yes_print",
+                    branding_title=__title__,
+                    branding_description=__description__,
+                    branding_version=__version__,
+                    branding_author=__author__,
+                    branding_author_email=__author_email__,
+                    branding_license=__license__,
+                    branding_license_url=__license_url__,
+                    branding_terms_of_service=__terms_of_service__,)
