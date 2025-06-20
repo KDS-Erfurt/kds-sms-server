@@ -37,6 +37,8 @@ class VonageGateway(BaseGateway):
 
     def _check(self) -> bool:
         vonage = self.get_vonage_instance(mode="check")
+        if not self.config.check_balance:
+            return True
         balance = vonage.account.get_balance()
         log_msg = f"balance={balance.value}\n" \
                   f"auto_reload={balance.auto_reload}"
