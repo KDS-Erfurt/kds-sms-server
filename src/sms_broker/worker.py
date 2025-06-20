@@ -117,10 +117,10 @@ class SmsWorker(TaskManager):
 
                 sms_logger = logging.Logger(name=f"{logger.name}", )
                 sms_logger_handler = self.SmsLogHandler(buffer_target=add_sms_log)
-                sms_logger_handler.setLevel(settings.worker.log_level.logging_level)
-                sms_logger_handler.setFormatter(logging.Formatter("%(name)s - %(levelname)s - %(message)s"))
+                sms_logger_handler.setLevel(settings.worker.log_level.get_level_number())
+                sms_logger_handler.setFormatter(logging.Formatter("%(levelname)s - %(message)s"))
                 sms_logger.addHandler(sms_logger_handler)
-                sms_logger.setLevel(settings.worker.log_level.logging_level)
+                sms_logger.setLevel(settings.worker.log_level.get_level_number())
 
                 # send sms with gateways
                 with LoggingContext(sms_logger, ignore_loggers_like=IGNORED_LOGGERS_LIKE):
